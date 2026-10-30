@@ -57,8 +57,9 @@ fun methodLabel(context: Context, name: String): String {
 fun hijriDate(locale: Locale): String = runCatching {
     val cal = android.icu.util.IslamicCalendar()
     cal.calculationType = android.icu.util.IslamicCalendar.CalculationType.ISLAMIC_UMALQURA
-    val fmt = android.icu.text.DateFormat.getDateInstance(cal, android.icu.text.DateFormat.LONG, android.icu.util.ULocale.forLocale(locale))
-    fmt.format(cal.time)
+    cal.timeInMillis = System.currentTimeMillis()
+    val fmt = android.icu.text.DateFormat.getInstanceForSkeleton(cal, "dMMMMy", android.icu.util.ULocale.forLocale(locale))
+    fmt.format(cal.time).replace(Regex("^AH\\s+|\\s+AH$"), "")
 }.getOrDefault("")
 
 @SuppressLint("MissingPermission")

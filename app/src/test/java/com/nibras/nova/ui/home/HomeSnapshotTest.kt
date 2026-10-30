@@ -35,8 +35,11 @@ import java.io.File
 class HomeSnapshotTest {
     @get:Rule val rule = createAndroidComposeRule<androidx.activity.ComponentActivity>()
 
-    private fun shot(name: String, rtl: Boolean) {
+    private fun shot(name: String, rtl: Boolean, prayer: Boolean = false) {
         val dir = System.getenv("SNAPSHOT_DIR"); assumeTrue(dir != null)
+        if (prayer) com.nibras.nova.core.prayer.PrayerPrefs(rule.activity).apply {
+            enabled = true; useLocation = false; lat = 40.4093; lng = 49.8671; tz = "Asia/Baku"; cityName = "Bakı"; country = "AZ"
+        }
         rule.setContent {
             CompositionLocalProvider(LocalLayoutDirection provides if (rtl) LayoutDirection.Rtl else LayoutDirection.Ltr) {
                 MaterialTheme(colorScheme = darkColorScheme()) {
@@ -46,6 +49,7 @@ class HomeSnapshotTest {
                             Box(Modifier.padding(horizontal = 20.dp)) {
                                 HomeSearchBar("", {}, {}, "Google", false, {}, {}, {}, androidx.compose.ui.res.stringResource(com.nibras.nova.R.string.home_search_hint))
                             }
+                            if (prayer) Box(Modifier.padding(horizontal = 20.dp)) { PrayerCard() }
                             Row(Modifier.padding(horizontal = 14.dp)) {
                                 listOf("Google" to "https://google.com", "YouTube" to "https://youtube.com", "GitHub" to "https://github.com", "Nibras" to "https://nibrascode.com").forEach { (t, u) ->
                                     QuickTile(t, {}, modifier = Modifier.weight(1f)) { TileIcon(u, t) }
@@ -71,6 +75,7 @@ class HomeSnapshotTest {
         File(dir, "$name.png").outputStream().use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
     }
 
+    @Test @Config(qualifiers = "az-w412dp-h915dp-xxhdpi") fun latestAz() = shot("home_latest_az", false, prayer = true)
     @Test @Config(qualifiers = "az-w411dp-h891dp-xxhdpi") fun az() = shot("home_az", false)
     @Test @Config(qualifiers = "ar-w411dp-h891dp-xxhdpi") fun ar() = shot("home_ar", true)
     @Test @Config(qualifiers = "en-w411dp-h891dp-xxhdpi") fun en() = shot("home_en", false)
