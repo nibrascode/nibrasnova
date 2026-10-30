@@ -95,6 +95,7 @@ fun BrowserScreen(
     onNavigateToUserScripts: () -> Unit,
     onNavigateToSettings: () -> Unit
 ) {
+    val pinGuard = com.nibras.nova.ui.parental.rememberPinGuard()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val fullScreenVideo by viewModel.fullScreenCustomView.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -573,7 +574,7 @@ fun BrowserScreen(
                     viewModel.captureAndShareFullScrollingScreenshot(context)
                 },
                 NovaQuickCommand("cmd_panic", L.s(R.string.t_emergency_panic_shred_wipe_all_exit), L.s(R.string.t_security)) {
-                    viewModel.triggerEmergencyPanicShred(context as? Activity)
+                    pinGuard { viewModel.triggerEmergencyPanicShred(context as? Activity) }
                 }
             )
         }
@@ -623,7 +624,7 @@ fun BrowserScreen(
             onGeneratePageQrCode = viewModel::showQrGeneratorForActiveTab,
             onAddHomeScreenShortcut = viewModel::addActivePageToHomeScreen,
             onSharePage = { viewModel.shareActivePage(context) },
-            onTriggerEmergencyPanicShred = { viewModel.triggerEmergencyPanicShred(context as? Activity) },
+            onTriggerEmergencyPanicShred = { pinGuard { viewModel.triggerEmergencyPanicShred(context as? Activity) } },
             onOpenPrivacyDashboard = onNavigateToPrivacy,
             onOpenSettings = onNavigateToSettings
         )

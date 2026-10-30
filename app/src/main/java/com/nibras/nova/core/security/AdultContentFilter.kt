@@ -16,6 +16,10 @@ object AdultContentFilter {
 
     @Volatile private var domains: Set<String> = emptySet()
     @Volatile private var loaded = false
+    @Volatile private var custom: Set<String> = emptySet()
+
+    /** Extra domains a parent added (PIN-protected). Matched with subdomains. */
+    fun setCustomDomains(d: Set<String>) { custom = d }
     private var appContext: Context? = null
 
     fun init(context: Context) {
@@ -67,8 +71,9 @@ object AdultContentFilter {
         ensureLoaded()
         var h = host.lowercase().trimEnd('.')
         val set = domains
+        val extra = custom
         while (true) {
-            if (h in set) return true
+            if (h in set || h in extra) return true
             val dot = h.indexOf('.')
             if (dot < 0 || h.indexOf('.', dot + 1) < 0) return false // stop at registrable "x.tld"
             h = h.substring(dot + 1)

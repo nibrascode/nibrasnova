@@ -18,4 +18,15 @@ class CityDatabaseTest {
     }
     @Test fun makkahInSaudi() { assertTrue(db.citiesIn("SA", "mecca").isNotEmpty() || db.citiesIn("SA", "makkah").isNotEmpty()) }
     @Test fun countrySearch() { assertTrue(db.sortedCountries(Locale.ENGLISH, "azer").any { it.first == "AZ" }) }
+
+    @Test fun azerbaijaniNames() {
+        for (q in listOf("Bakı", "Baki", "baku", "Gəncə", "gence", "Ganja")) assertTrue(q, db.citiesIn("AZ", q).isNotEmpty())
+        assertEquals("Bakı", db.citiesIn("AZ", "baku").first().displayName("az"))
+    }
+    @Test fun makkahLocalized() {
+        assertTrue(db.citiesIn("SA", "Məkkə").any { it.name == "Makkah" })
+        assertTrue(db.citiesIn("SA", "مكة").any { it.name == "Makkah" })
+        assertTrue(db.citiesIn("SA", "Мекка").any { it.name == "Makkah" })
+    }
+    @Test fun foldingMatchesTurkishLetters() { assertTrue(db.citiesIn("TR", "istanbul").isNotEmpty()); assertTrue(db.citiesIn("TR", "İzmir").isNotEmpty()) }
 }

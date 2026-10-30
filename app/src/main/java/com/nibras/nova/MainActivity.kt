@@ -86,7 +86,7 @@ class MainActivity : FragmentActivity() {
                 highContrastTurquoise = settings?.highContrastAccent ?: true
             ) {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    if (settings != null) {
+                    if (settings != null) com.nibras.nova.ui.parental.UsageLimitGate {
                         NovaNavHost(
                             isFirstLaunch = settings!!.isFirstLaunch,
                             incomingUrlFlow = incomingUrlFlow,

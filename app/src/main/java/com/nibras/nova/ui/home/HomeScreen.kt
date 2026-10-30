@@ -29,6 +29,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material.icons.filled.Bookmarks
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Download
@@ -115,6 +116,7 @@ fun HomeScreen(
     val homeContext = LocalContext.current
     val pinnedToastText = stringResource(R.string.home_pinned_toast)
     var moreExpanded by remember { mutableStateOf(false) }
+    var showQibla by remember { mutableStateOf(false) }
     val lang = homeContext.resources.configuration.locales[0].language
     fun open(url: String) = viewModel.submitSearchOrUrl(rawQuery = url, openInPrivate = isPrivateInputMode, onNavigateToBrowser = onOpenBrowser)
     val voiceLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -180,7 +182,7 @@ fun HomeScreen(
                 }
             }
 
-            item { Box(Modifier.padding(horizontal = 20.dp)) { PrayerCard() } }
+            item { Box(Modifier.padding(horizontal = 20.dp)) { PrayerCard(onQibla = { showQibla = true }) } }
 
             // 3. Quick-link tiles: user shortcuts (defaults when empty), pinned Nibras, add
             item {
@@ -289,10 +291,13 @@ fun HomeScreen(
                     leadingIcon = { Icon(Icons.Default.VisibilityOff, null) },
                     onClick = { dismiss(); isPrivateInputMode = !isPrivateInputMode }
                 )
+                DropdownMenuItem(text = { Text(stringResource(R.string.qb_title)) }, leadingIcon = { Icon(Icons.Default.Explore, null) }, onClick = { dismiss(); showQibla = true })
                 DropdownMenuItem(text = { Text(L.s(R.string.t_settings)) }, leadingIcon = { Icon(Icons.Default.Settings, null) }, onClick = { dismiss(); onOpenSettings() })
             }
         )
         }
+
+        if (showQibla) QiblaDialog(onDismiss = { showQibla = false })
 
         // Search Engine Quick Selector Bottom Sheet
         if (showEnginePickerSheet) {

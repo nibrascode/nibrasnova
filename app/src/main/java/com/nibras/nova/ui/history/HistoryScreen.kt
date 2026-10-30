@@ -59,6 +59,7 @@ fun HistoryScreen(
     onOpenBrowser: () -> Unit,
     viewModel: HistoryViewModel = hiltViewModel()
 ) {
+    val pinGuard = com.nibras.nova.ui.parental.rememberPinGuard()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     var showClearRangeDialog by remember { mutableStateOf(false) }
     val dateFormat = remember { SimpleDateFormat("MMM d, HH:mm", Locale.getDefault()) }
@@ -193,7 +194,7 @@ fun HistoryScreen(
             },
             confirmButton = {
                 Button(onClick = {
-                    viewModel.clearByRange(selectedRange)
+                    pinGuard { viewModel.clearByRange(selectedRange) }
                     showClearRangeDialog = false
                 }) {
                     Text(L.s(R.string.t_clear_data))

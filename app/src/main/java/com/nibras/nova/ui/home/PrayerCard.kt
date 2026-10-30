@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MyLocation
+import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material.icons.filled.NightsStay
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -70,7 +71,7 @@ fun coarseLocation(context: Context): Pair<Double, Double>? {
 }
 
 @Composable
-fun PrayerCard(modifier: Modifier = Modifier) {
+fun PrayerCard(modifier: Modifier = Modifier, onQibla: () -> Unit = {}) {
     val context = LocalContext.current
     val prefs = remember { PrayerPrefs(context) }
     var version by remember { mutableIntStateOf(0) }
@@ -123,6 +124,7 @@ fun PrayerCard(modifier: Modifier = Modifier) {
                 Text(stringResource(R.string.pr_in, PrayerEngine.formatCountdown(next.atEpochMs - now)), color = Color(0xFFFFD27A), fontSize = 13.sp)
             }
         }
+        IconButton(onClick = onQibla) { Icon(Icons.Default.Explore, stringResource(R.string.qb_title), tint = Color(0xFFFFD27A)) }
     }
 
     if (showSetup) {
@@ -130,7 +132,7 @@ fun PrayerCard(modifier: Modifier = Modifier) {
             onDismiss = { showSetup = false },
             onUseLocation = { permLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION); showSetup = false },
             onPick = { c ->
-                prefs.useLocation = false; prefs.cityName = c.name; prefs.lat = c.lat; prefs.lng = c.lng
+                prefs.useLocation = false; prefs.cityName = c.displayName(context.resources.configuration.locales[0].language); prefs.lat = c.lat; prefs.lng = c.lng
                 prefs.tz = c.tz; prefs.country = c.country
                 version++; showSetup = false
             },
@@ -196,9 +198,9 @@ private fun CityPickerDialog(
                     LazyColumn(Modifier.heightIn(max = 320.dp)) {
                         items(list, key = { it.name + it.lat + it.lng }) { c ->
                             Text(
-                                c.name,
+                                c.displayName(locale.language),
                                 modifier = Modifier.fillMaxWidth().clickable { onPick(c) }.padding(vertical = 10.dp),
-                                fontWeight = if (c.name == selectedCity) FontWeight.Bold else FontWeight.Normal
+                                fontWeight = if (c.displayName(locale.language) == selectedCity) FontWeight.Bold else FontWeight.Normal
                             )
                         }
                     }

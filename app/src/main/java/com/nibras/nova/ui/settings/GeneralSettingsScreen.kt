@@ -62,6 +62,13 @@ private sealed class SettingRow(@StringRes val title: Int, @StringRes val info: 
     class TextInput(title: Int, info: Int, val value: String, val onChange: (String) -> Unit) : SettingRow(title, info)
 }
 
+private fun SettingRow.guarded(g: (() -> Unit) -> Unit): SettingRow = when (this) {
+    is SettingRow.Nav -> SettingRow.Nav(title, info, value) { g { onClick() } }
+    is SettingRow.Toggle -> SettingRow.Toggle(title, info, checked) { v -> g { onChange(v) } }
+    is SettingRow.Choice -> SettingRow.Choice(title, info, options) { i -> g { onSelect(i) } }
+    is SettingRow.TextInput -> SettingRow.TextInput(title, info, value) { v -> g { onChange(v) } }
+}
+
 private class SettingGroup(@StringRes val title: Int, val rows: List<SettingRow>)
 
 fun externalLinkPolicyLabelRes(policy: ExternalLinkPolicy): Int = when (policy) {
@@ -99,7 +106,18 @@ fun GeneralSettingsScreen(
     var prOn by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(prayerPrefs.enabled) }
     var prMethod by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(prayerPrefs.method) }
     val prMethods = com.nibras.nova.core.prayer.PrayerEngine.METHODS
-    val groups = listOf(
+    val parental = androidx.compose.runtime.remember { com.nibras.nova.core.parental.ParentalControls.get(context) }
+    val guard = com.nibras.nova.ui.parental.rememberPinGuard()
+    var showParental by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+    var entryUnlocked by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(!(parental.pin.hasPin && parental.lockSettingsScreen)) }
+    if (!entryUnlocked) {
+        com.nibras.nova.ui.parental.PinPromptDialog(
+            stringResource(R.string.pc_enter_pin), onSuccess = { entryUnlocked = true }, onDismiss = onBack
+        )
+        return
+    }
+    if (showParental) com.nibras.nova.ui.parental.ParentalControlsDialog(onDismiss = { showParental = false })
+    val rawGroups = listOf(
         SettingGroup(
             R.string.grp_general, listOf(
                 SettingRow.Nav(R.string.set_language, R.string.set_language_info) {
@@ -179,6 +197,12 @@ fun GeneralSettingsScreen(
             )
         )
     )
+    val groups = (rawGroups + SettingGroup(
+        R.string.grp_parental, listOf(
+            SettingRow.Nav(R.string.pc_title, R.string.pc_row_info,
+                value = stringResource(if (parental.pin.hasPin) R.string.pc_status_on else R.string.pc_status_off)) { showParental = true }
+        )
+    )).map { g -> SettingGroup(g.title, g.rows.map { it.guarded(guard) }) }
 
     // Resolve titles for filtering (stringResource must be called in composition)
     val titleTexts = groups.flatMap { g -> g.rows.map { it.title } }.distinct()

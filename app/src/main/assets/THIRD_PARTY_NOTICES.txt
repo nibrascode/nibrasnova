@@ -4,7 +4,7 @@ adult_domains.txt.gz
   Clefspeare13/pornhosts (MIT), Snuff hosts. Used only for on-device blocking.
 
 cities15000.tsv.gz
-  City names, coordinates and time zones from GeoNames (https://www.geonames.org/),
+  City names, coordinates and time zones from GeoNames (https://www.geonames.org/) — cities15000 and alternateNamesV2
   cities15000 dataset, licensed under CC BY 4.0. Reduced and compressed for offline use.
 
 adhan2 (com.batoulapps.adhan) — MIT License — prayer time calculation.

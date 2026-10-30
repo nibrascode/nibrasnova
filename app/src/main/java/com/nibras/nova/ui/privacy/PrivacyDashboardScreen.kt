@@ -66,6 +66,7 @@ fun PrivacyDashboardScreen(
     onBack: () -> Unit,
     viewModel: PrivacyViewModel = hiltViewModel()
 ) {
+    val pinGuard = com.nibras.nova.ui.parental.rememberPinGuard()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     var showClearDataDialog by remember { mutableStateOf(false) }
@@ -448,7 +449,7 @@ fun PrivacyDashboardScreen(
             },
             confirmButton = {
                 Button(onClick = {
-                    viewModel.executeDataWipe(
+                    pinGuard { viewModel.executeDataWipe(
                         clearHistory = clearHistory,
                         clearCookies = clearCookies,
                         clearCache = clearCache,
@@ -458,7 +459,7 @@ fun PrivacyDashboardScreen(
                         scope.launch {
                             snackbarHostState.showSnackbar(L.s(R.string.t_selected_browsing_data_cleared))
                         }
-                    }
+                    } }
                 }) {
                     Text(L.s(R.string.t_clear_now))
                 }
