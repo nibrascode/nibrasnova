@@ -94,7 +94,7 @@ fun AboutScreen(
             OutlinedButton(onClick = { openUrl(NovaLinks.FEATURES) }, modifier = Modifier.fillMaxWidth()) {
                 Text(stringResource(R.string.set_features))
             }
-            OutlinedButton(onClick = { openUrl(NovaLinks.PRIVACY_POLICY) }, modifier = Modifier.fillMaxWidth()) {
+            OutlinedButton(onClick = { openUrl(NovaLinks.privacyPolicy(context)) }, modifier = Modifier.fillMaxWidth()) {
                 Text(stringResource(R.string.set_privacy_policy))
             }
             OutlinedButton(onClick = { openUrl(NovaLinks.WEBSITE) }, modifier = Modifier.fillMaxWidth()) {

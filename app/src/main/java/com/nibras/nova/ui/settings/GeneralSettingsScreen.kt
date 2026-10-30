@@ -196,7 +196,7 @@ fun GeneralSettingsScreen(
             R.string.grp_about, listOf(
                 SettingRow.Nav(R.string.set_about, R.string.set_about_info, onClick = onOpenAboutScreen),
                 SettingRow.Nav(R.string.set_features, R.string.set_features_info) { openUrl(NovaLinks.FEATURES) },
-                SettingRow.Nav(R.string.set_privacy_policy, R.string.set_privacy_policy_info) { openUrl(NovaLinks.PRIVACY_POLICY) },
+                SettingRow.Nav(R.string.set_privacy_policy, R.string.set_privacy_policy_info) { openUrl(NovaLinks.privacyPolicy(context)) },
                 SettingRow.Nav(R.string.set_website, R.string.set_website_info) { openUrl(NovaLinks.WEBSITE) }
             )
         )

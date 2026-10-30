@@ -13,6 +13,10 @@ ksp {
 }
 
 android {
+    lint {
+        // values-zh intentionally holds only the privacy-policy strings.
+        disable += "MissingTranslation"
+    }
     namespace = "com.nibras.nova"
     compileSdk = 36
 
@@ -20,12 +24,13 @@ android {
         applicationId = "com.nibras.nova"
         minSdk = 24
         targetSdk = 36
-        versionCode = 201
+        versionCode = 202
         versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // AGP 8.7 has no androidResources.localeFilters; same effect:
-        resourceConfigurations += listOf("en", "az", "tr", "ru", "ar")
+        // "zh": only the privacy-policy strings are translated (values-zh); the rest falls back to English.
+        resourceConfigurations += listOf("en", "az", "tr", "ru", "ar", "zh")
         vectorDrawables {
             useSupportLibrary = true
         }
