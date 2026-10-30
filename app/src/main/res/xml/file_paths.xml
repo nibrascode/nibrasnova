@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <external-path name="external_downloads" path="Download/" />
+    <external-files-path name="app_downloads" path="Download/" />
+    <cache-path name="shared_screenshots" path="screenshots/" />
+    <cache-path name="exported_bookmarks" path="exports/" />
+    <files-path name="offline_pages" path="saved_pages/" />
+    <files-path name="web_archives" path="web_archives/" />
+</paths>

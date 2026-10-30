@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Outer Turquoise Ring -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M54,54m-30,0a30,30 0,1 1,60 0a30,30 0,1 1,-60 0"
+        android:strokeWidth="4"
+        android:strokeColor="#00E5FF" />
+    <!-- Stylized Nova Star / N Monogram -->
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M42,68L42,40L47,40L61,59L61,40L66,40L66,68L61,68L47,49L47,68Z" />
+</vector>

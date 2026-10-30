@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Browser must be capable of opening HTTP sites when user explicitly navigates or disables HTTPS-Only mode,
+         while trusting only system CAs and blocking silent invalid SSL certificates in NovaWebViewClient. -->
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>
