@@ -79,6 +79,10 @@ import com.nibras.nova.ui.theme.NovaDeepNavy
 import com.nibras.nova.ui.theme.NovaElevatedNavy
 import com.nibras.nova.ui.theme.NovaIncognitoAccent
 import com.nibras.nova.ui.theme.NovaTurquoise
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.nibras.nova.R
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -321,8 +325,8 @@ fun HomeScreen(
                 }
             }
 
-            // 5. Customizable Quick-Access Website Shortcuts
-            if (state.settings.showQuickShortcutsOnHome) {
+            // 5. Quick-Access Website Shortcuts (nibrascode.com is always pinned first)
+            run {
                 item {
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Row(
@@ -331,19 +335,31 @@ fun HomeScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "Quick Access",
+                                text = stringResource(R.string.quick_access_title),
                                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
                                 color = MaterialTheme.colorScheme.onBackground
                             )
                             TextButton(onClick = { showAddShortcutDialog = true }) {
                                 Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
-                                Text(" Add Site")
+                                Text(" " + stringResource(R.string.home_add_site))
                             }
                         }
 
                         Spacer(modifier = Modifier.height(6.dp))
 
-                        val rows = state.shortcuts.chunked(4)
+                        Text(
+                            text = stringResource(R.string.home_shortcuts_hint),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        val homeContext = LocalContext.current
+                        val pinnedToastText = stringResource(R.string.home_pinned_toast)
+                        val pinnedShortcut = QuickShortcut(id = PINNED_NIBRASCODE_ID, title = "nibrascode.com", url = "https://nibrascode.com")
+                        val userShortcuts = if (state.settings.showQuickShortcutsOnHome) {
+                            state.shortcuts.filterNot { it.url.contains("nibrascode.com", ignoreCase = true) }
+                        } else emptyList()
+                        val rows = (listOf(pinnedShortcut) + userShortcuts).chunked(4)
                         rows.forEach { rowItems ->
                             Row(
                                 modifier = Modifier
@@ -364,7 +380,13 @@ fun HomeScreen(
                                                         onNavigateToBrowser = onOpenBrowser
                                                     )
                                                 },
-                                                onLongClick = { editingShortcut = shortcut }
+                                                onLongClick = {
+                                                    if (shortcut.id == PINNED_NIBRASCODE_ID) {
+                                                        Toast.makeText(homeContext, pinnedToastText, Toast.LENGTH_SHORT).show()
+                                                    } else {
+                                                        editingShortcut = shortcut
+                                                    }
+                                                }
                                             )
                                             .padding(vertical = 10.dp, horizontal = 4.dp),
                                         horizontalAlignment = Alignment.CenterHorizontally
@@ -411,11 +433,11 @@ fun HomeScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Recently Visited",
+                            text = stringResource(R.string.recently_visited_title),
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold)
                         )
                         TextButton(onClick = onOpenHistory) {
-                            Text("View All")
+                            Text(stringResource(R.string.home_view_all))
                         }
                     }
                 }
@@ -647,3 +669,6 @@ private fun ShortcutEditorDialog(
         }
     )
 }
+
+/** Sentinel id for the built-in, non-removable nibrascode.com shortcut. */
+private const val PINNED_NIBRASCODE_ID = -100L

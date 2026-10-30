@@ -36,7 +36,7 @@ fun QrGeneratorDialog(
     onDismiss: () -> Unit
 ) {
     var content by remember { mutableStateOf(initialContent) }
-    val qrBitmap = remember(content) { generateQrCodeBitmap(content.ifBlank { "https://nibras.code" }, 512) }
+    val qrBitmap = remember(content) { generateQrCodeBitmap(content.ifBlank { "https://nibrascode.com" }, 512) }
 
     AlertDialog(
         onDismissRequest = onDismiss,

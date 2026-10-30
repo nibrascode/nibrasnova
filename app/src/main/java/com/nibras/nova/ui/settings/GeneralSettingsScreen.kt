@@ -4,31 +4,29 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Code
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Language
-import androidx.compose.material.icons.filled.Palette
-import androidx.compose.material.icons.filled.QrCode2
-import androidx.compose.material.icons.filled.RssFeed
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Security
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -37,6 +35,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,13 +44,31 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.nibras.nova.R
 import com.nibras.nova.domain.model.ExternalLinkPolicy
 import com.nibras.nova.domain.model.UserAgentProfile
 import com.nibras.nova.ui.tools.LanSyncDialog
+
+/** One settings row: short title + ⓘ explanation. */
+private sealed class SettingRow(@StringRes val title: Int, @StringRes val info: Int) {
+    class Nav(title: Int, info: Int, val value: String? = null, val onClick: () -> Unit) : SettingRow(title, info)
+    class Toggle(title: Int, info: Int, val checked: Boolean, val onChange: (Boolean) -> Unit) : SettingRow(title, info)
+    class Choice(title: Int, info: Int, val options: List<Pair<String, Boolean>>, val onSelect: (Int) -> Unit) : SettingRow(title, info)
+    class TextInput(title: Int, info: Int, val value: String, val onChange: (String) -> Unit) : SettingRow(title, info)
+}
+
+private class SettingGroup(@StringRes val title: Int, val rows: List<SettingRow>)
+
+fun externalLinkPolicyLabelRes(policy: ExternalLinkPolicy): Int = when (policy) {
+    ExternalLinkPolicy.ASK_EVERY_TIME -> R.string.link_ask
+    ExternalLinkPolicy.ALWAYS_OPEN_EXTERNAL -> R.string.link_always
+    ExternalLinkPolicy.STAY_IN_BROWSER -> R.string.link_stay
+}
 
 @Composable
 fun GeneralSettingsScreen(
@@ -69,372 +86,257 @@ fun GeneralSettingsScreen(
     val context = LocalContext.current
     var filterQuery by remember { mutableStateOf("") }
     var customHomeDraft by remember(settings.customHomepageUrl) { mutableStateOf(settings.customHomepageUrl) }
+    var infoDialog by remember { mutableStateOf<Pair<Int, Int>?>(null) }
+    val languageUnsupported = stringResource(R.string.set_language_unsupported)
 
-    fun matchesFilter(vararg keywords: String): Boolean {
-        if (filterQuery.isBlank()) return true
-        return keywords.any { it.contains(filterQuery.trim(), ignoreCase = true) }
+    fun openUrl(url: String) {
+        runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url))) }
     }
 
+    val linkPolicyLabels = ExternalLinkPolicy.entries.map { stringResource(externalLinkPolicyLabelRes(it)) }
+
+    val groups = listOf(
+        SettingGroup(
+            R.string.grp_general, listOf(
+                SettingRow.Nav(R.string.set_language, R.string.set_language_info) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        runCatching {
+                            context.startActivity(
+                                Intent(Settings.ACTION_APP_LOCALE_SETTINGS).apply {
+                                    data = Uri.fromParts("package", context.packageName, null)
+                                }
+                            )
+                        }
+                    } else {
+                        Toast.makeText(context, languageUnsupported, Toast.LENGTH_LONG).show()
+                    }
+                },
+                SettingRow.Nav(R.string.set_search, R.string.set_search_info, settings.searchEngine.displayName, onOpenSearchEngineSettings),
+                SettingRow.Nav(R.string.set_theme, R.string.set_theme_info, onClick = onOpenThemeSettings)
+            )
+        ),
+        SettingGroup(
+            R.string.grp_home, listOf(
+                SettingRow.TextInput(R.string.set_homepage, R.string.set_homepage_info, customHomeDraft) {
+                    customHomeDraft = it
+                    viewModel.updateCustomHomepageUrl(it)
+                },
+                SettingRow.Toggle(R.string.set_home_shortcuts, R.string.set_home_shortcuts_info, settings.showQuickShortcutsOnHome) {
+                    viewModel.updateHomepageVisibility(it, settings.showRecentHistoryOnHome)
+                },
+                SettingRow.Toggle(R.string.set_home_recent, R.string.set_home_recent_info, settings.showRecentHistoryOnHome) {
+                    viewModel.updateHomepageVisibility(settings.showQuickShortcutsOnHome, it)
+                }
+            )
+        ),
+        SettingGroup(
+            R.string.grp_browsing, listOf(
+                SettingRow.Toggle(R.string.set_restore_tabs, R.string.set_restore_tabs_info, settings.restoreTabsOnStartup, viewModel::updateRestoreTabsOnStartup),
+                SettingRow.Toggle(R.string.set_bottom_bar, R.string.set_bottom_bar_info, settings.bottomAddressBarReachability, viewModel::updateBottomAddressBarReachability),
+                SettingRow.Toggle(R.string.set_tab_strip, R.string.set_tab_strip_info, settings.enableDesktopTabStrip, viewModel::updateEnableDesktopTabStrip),
+                SettingRow.Toggle(R.string.set_desktop_mode, R.string.set_desktop_mode_info, settings.defaultDesktopMode, viewModel::updateDefaultDesktopMode),
+                SettingRow.Toggle(R.string.set_data_saver, R.string.set_data_saver_info, settings.enableDataSaverMode, viewModel::updateDataSaverMode),
+                SettingRow.Toggle(R.string.set_hibernation, R.string.set_hibernation_info, settings.enableAutoTabHibernation, viewModel::updateAutoTabHibernation),
+                SettingRow.Toggle(R.string.set_bg_audio, R.string.set_bg_audio_info, settings.allowBackgroundAudioPlayback, viewModel::updateAllowBackgroundAudioPlayback),
+                SettingRow.Choice(
+                    R.string.set_user_agent, R.string.set_user_agent_info,
+                    UserAgentProfile.entries.map { it.displayName to (settings.userAgentProfile == it) }
+                ) { viewModel.updateUserAgentProfile(UserAgentProfile.entries[it]) }
+            )
+        ),
+        SettingGroup(
+            R.string.grp_privacy, listOf(
+                SettingRow.Nav(R.string.set_privacy_center, R.string.set_privacy_center_info, onClick = onOpenPrivacyDashboard),
+                SettingRow.Choice(
+                    R.string.set_external_links, R.string.set_external_links_info,
+                    ExternalLinkPolicy.entries.mapIndexed { i, p -> linkPolicyLabels[i] to (settings.externalLinkPolicy == p) }
+                ) { viewModel.updateExternalLinkPolicy(ExternalLinkPolicy.entries[it]) }
+            )
+        ),
+        SettingGroup(
+            R.string.grp_tools, listOf(
+                SettingRow.Nav(R.string.set_lan_sync, R.string.set_lan_sync_info, onClick = viewModel::startLanSyncServer),
+                SettingRow.Nav(R.string.set_rss, R.string.set_rss_info, onClick = onOpenRssReader),
+                SettingRow.Nav(R.string.set_userscripts, R.string.set_userscripts_info, onClick = onOpenUserScriptsManager)
+            )
+        ),
+        SettingGroup(
+            R.string.grp_about, listOf(
+                SettingRow.Nav(R.string.set_about, R.string.set_about_info, onClick = onOpenAboutScreen),
+                SettingRow.Nav(R.string.set_features, R.string.set_features_info) { openUrl(NovaLinks.FEATURES) },
+                SettingRow.Nav(R.string.set_privacy_policy, R.string.set_privacy_policy_info) { openUrl(NovaLinks.PRIVACY_POLICY) },
+                SettingRow.Nav(R.string.set_website, R.string.set_website_info) { openUrl(NovaLinks.WEBSITE) }
+            )
+        )
+    )
+
+    // Resolve titles for filtering (stringResource must be called in composition)
+    val titleTexts = groups.flatMap { g -> g.rows.map { it.title } }.distinct()
+        .associateWith { stringResource(it) }
+    val infoTexts = groups.flatMap { g -> g.rows.map { it.info } }.distinct()
+        .associateWith { stringResource(it) }
+    val q = filterQuery.trim()
+    val visibleGroups = groups.map { g ->
+        g to g.rows.filter { r ->
+            q.isEmpty() || titleTexts[r.title].orEmpty().contains(q, true) || infoTexts[r.info].orEmpty().contains(q, true)
+        }
+    }.filter { it.second.isNotEmpty() }
+
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .systemBarsPadding(),
+        modifier = Modifier.fillMaxSize().systemBarsPadding(),
         topBar = {
             Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.common_back))
                     }
                     Text(
-                        text = "Nibras Nova Settings",
+                        text = stringResource(R.string.settings_title),
                         style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                     )
                 }
-
                 OutlinedTextField(
                     value = filterQuery,
                     onValueChange = { filterQuery = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 4.dp, vertical = 4.dp),
+                    modifier = Modifier.fillMaxWidth().padding(4.dp),
                     shape = RoundedCornerShape(22.dp),
                     singleLine = true,
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-                    placeholder = { Text("Search settings (e.g., language, lan sync, user-agent, doh)…") }
+                    placeholder = { Text(stringResource(R.string.settings_search_hint)) }
                 )
             }
         }
     ) { innerPadding ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
+            modifier = Modifier.fillMaxSize().padding(innerPadding),
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Stage 14.3: Local Wi-Fi / LAN Peer-to-Peer QR Sync Card
-            if (matchesFilter("sync", "wifi", "lan", "qr", "transfer", "peer", "share")) {
+            item {
+                Text(
+                    text = stringResource(R.string.settings_info_hint),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            if (visibleGroups.isEmpty()) {
                 item {
-                    SettingsNavCard(
-                        icon = Icons.Default.QrCode2,
-                        title = "Local Wi-Fi / LAN Peer-to-Peer QR Sync",
-                        subtitle = "Transfer open tabs & bookmarks directly to another phone or PC on your Wi-Fi without cloud servers",
-                        onClick = viewModel::startLanSyncServer
+                    Text(
+                        text = stringResource(R.string.settings_no_results),
+                        modifier = Modifier.fillMaxWidth().padding(32.dp),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
-
-            // Stage 14.1: Multi-Language Application Locale Switcher (AZ, TR, EN, RU, AR)
-            if (matchesFilter("language", "locale", "az", "tr", "ru", "ar", "english", "dil")) {
-                item {
-                    SettingsNavCard(
-                        icon = Icons.Default.Language,
-                        title = "App Language (AZ • TR • EN • RU • AR)",
-                        subtitle = "Switch between Azerbaijani, Turkish, English, Russian, and Arabic (RTL supported)",
-                        onClick = {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                runCatching {
-                                    val intent = Intent(Settings.ACTION_APP_LOCALE_SETTINGS).apply {
-                                        data = Uri.fromParts("package", context.packageName, null)
-                                    }
-                                    context.startActivity(intent)
-                                }
-                            }
-                        }
-                    )
-                }
-            }
-
-            if (matchesFilter("search", "engine", "google", "duckduckgo", "brave", "bing", "startpage")) {
-                item {
-                    SettingsNavCard(
-                        icon = Icons.Default.Search,
-                        title = "Search Engine (${settings.searchEngine.displayName})",
-                        subtitle = "Configure default search provider, custom URL template, and local suggestions",
-                        onClick = onOpenSearchEngineSettings
-                    )
-                }
-            }
-
-            if (matchesFilter("theme", "dark", "light", "wallpaper", "color", "turquoise", "appearance")) {
-                item {
-                    SettingsNavCard(
-                        icon = Icons.Default.Palette,
-                        title = "Theme & Homepage Wallpaper (${settings.themeMode.label})",
-                        subtitle = "Customize Dark/Light appearance, accent intensity, and homepage background",
-                        onClick = onOpenThemeSettings
-                    )
-                }
-            }
-
-            if (matchesFilter("privacy", "security", "adblock", "doh", "proxy", "backup", "fingerprint")) {
-                item {
-                    SettingsNavCard(
-                        icon = Icons.Default.Security,
-                        title = "Privacy, Anti-Fingerprint, DoH & Encrypted Backup",
-                        subtitle = "Canvas/WebGL shield, DNS-over-HTTPS, Custom Proxy, Cookie Whitelist, and AES-256 Backup",
-                        onClick = onOpenPrivacyDashboard
-                    )
-                }
-            }
-
-            if (matchesFilter("script", "userscript", "css", "tampermonkey", "extension", "code")) {
-                item {
-                    SettingsNavCard(
-                        icon = Icons.Default.Code,
-                        title = "UserScripts (JS) & Custom CSS Manager",
-                        subtitle = "Inject custom JavaScript or CSS stylesheets per domain like desktop extensions",
-                        onClick = onOpenUserScriptsManager
-                    )
-                }
-            }
-
-            if (matchesFilter("rss", "atom", "feed", "news", "blog")) {
-                item {
-                    SettingsNavCard(
-                        icon = Icons.Default.RssFeed,
-                        title = "Nova RSS & Atom News Reader",
-                        subtitle = "Manage ad-free XML news and blog subscriptions directly inside Nibras Nova",
-                        onClick = onOpenRssReader
-                    )
-                }
-            }
-
-            if (matchesFilter("user-agent", "profile", "windows", "macos", "safari", "ios", "iphone", "linux", "firefox")) {
-                item {
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-                    ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Text(
-                                text = "Multi-OS User-Agent & Device Simulator",
-                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            UserAgentProfile.entries.forEach { profile ->
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable { viewModel.updateUserAgentProfile(profile) }
-                                        .padding(vertical = 4.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    RadioButton(
-                                        selected = settings.userAgentProfile == profile,
-                                        onClick = { viewModel.updateUserAgentProfile(profile) }
-                                    )
-                                    Text(profile.displayName, style = MaterialTheme.typography.bodyMedium)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (matchesFilter("home", "homepage", "shortcuts", "tabs", "startup", "desktop", "bottom", "audio", "data saver", "hibernation")) {
-                item {
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
+            visibleGroups.forEach { (group, rows) ->
+                item(key = group.title) {
+                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Text(
+                            text = stringResource(group.title),
+                            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.padding(start = 4.dp, top = 4.dp)
+                        )
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(16.dp),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
                         ) {
-                            Text(
-                                text = "Ergonomics, Data Saver & Memory",
-                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                                color = MaterialTheme.colorScheme.primary
-                            )
-
-                            OutlinedTextField(
-                                value = customHomeDraft,
-                                onValueChange = {
-                                    customHomeDraft = it
-                                    viewModel.updateCustomHomepageUrl(it)
-                                },
-                                label = { Text("Homepage Address (use nova://home for Nibras Homepage)") },
-                                singleLine = true,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-
-                            SettingsSwitchItem(
-                                title = "Smart Data Saver & Autoplay Limiter",
-                                subtitle = "Block heavy network images and media autoplay on metered connections",
-                                checked = settings.enableDataSaverMode,
-                                onCheckedChange = viewModel::updateDataSaverMode
-                            )
-
-                            SettingsSwitchItem(
-                                title = "Automatic Tab Hibernation (Memory Saver)",
-                                subtitle = "Hibernate inactive background tabs beyond the 4-tab LRU pool to save RAM",
-                                checked = settings.enableAutoTabHibernation,
-                                onCheckedChange = viewModel::updateAutoTabHibernation
-                            )
-
-                            SettingsSwitchItem(
-                                title = "Bottom Address Bar (One-Handed Mode)",
-                                subtitle = "Dock the OmniAddressBar at the bottom above navigation controls",
-                                checked = settings.bottomAddressBarReachability,
-                                onCheckedChange = viewModel::updateBottomAddressBarReachability
-                            )
-
-                            SettingsSwitchItem(
-                                title = "Desktop Horizontal Tab Strip",
-                                subtitle = "Show a desktop-style top tab bar for instant 1-tap tab switching",
-                                checked = settings.enableDesktopTabStrip,
-                                onCheckedChange = viewModel::updateEnableDesktopTabStrip
-                            )
-
-                            SettingsSwitchItem(
-                                title = "Allow Background Audio & Media Playback",
-                                subtitle = "Keep web audio/podcasts playing when switching tabs or turning screen off",
-                                checked = settings.allowBackgroundAudioPlayback,
-                                onCheckedChange = viewModel::updateAllowBackgroundAudioPlayback
-                            )
-
-                            SettingsSwitchItem(
-                                title = "Restore Open Tabs on Startup",
-                                subtitle = "Reopen your normal tabs automatically when launching Nibras Nova",
-                                checked = settings.restoreTabsOnStartup,
-                                onCheckedChange = viewModel::updateRestoreTabsOnStartup
-                            )
-
-                            SettingsSwitchItem(
-                                title = "Request Desktop Site by Default",
-                                subtitle = "Open new tabs with desktop user-agent and wide viewport",
-                                checked = settings.defaultDesktopMode,
-                                onCheckedChange = viewModel::updateDefaultDesktopMode
-                            )
-
-                            SettingsSwitchItem(
-                                title = "Show Quick-Access Shortcuts on Homepage",
-                                subtitle = "Display customizable pinned websites grid",
-                                checked = settings.showQuickShortcutsOnHome,
-                                onCheckedChange = {
-                                    viewModel.updateHomepageVisibility(it, settings.showRecentHistoryOnHome)
-                                }
-                            )
-
-                            SettingsSwitchItem(
-                                title = "Show Recently Visited Strip on Homepage",
-                                subtitle = "Display recent non-private history items on the homepage",
-                                checked = settings.showRecentHistoryOnHome,
-                                onCheckedChange = {
-                                    viewModel.updateHomepageVisibility(settings.showQuickShortcutsOnHome, it)
-                                }
-                            )
-                        }
-                    }
-                }
-            }
-
-            if (matchesFilter("external", "app", "links", "intent")) {
-                item {
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-                    ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Text(
-                                text = "External Application Link Policy",
-                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            ExternalLinkPolicy.entries.forEach { policy ->
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable { viewModel.updateExternalLinkPolicy(policy) }
-                                        .padding(vertical = 4.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    RadioButton(
-                                        selected = settings.externalLinkPolicy == policy,
-                                        onClick = { viewModel.updateExternalLinkPolicy(policy) }
-                                    )
-                                    Text(policy.label, style = MaterialTheme.typography.bodyMedium)
-                                }
+                            rows.forEachIndexed { index, row ->
+                                if (index > 0) HorizontalDivider(modifier = Modifier.padding(start = 52.dp))
+                                SettingRowView(row) { infoDialog = row.title to row.info }
                             }
                         }
                     }
-                }
-            }
-
-            if (matchesFilter("about", "version", "nibras", "webview", "license")) {
-                item {
-                    SettingsNavCard(
-                        icon = Icons.Default.Info,
-                        title = "About Nibras Nova",
-                        subtitle = "Version 2.0.0-nova-flagship • Nibras Code Ecosystem & Chromium Engine Diagnostics",
-                        onClick = onOpenAboutScreen
-                    )
                 }
             }
         }
     }
 
+    infoDialog?.let { (title, info) ->
+        AlertDialog(
+            onDismissRequest = { infoDialog = null },
+            icon = { Icon(Icons.Outlined.Info, contentDescription = null) },
+            title = { Text(stringResource(title)) },
+            text = { Text(stringResource(info)) },
+            confirmButton = { TextButton(onClick = { infoDialog = null }) { Text(stringResource(R.string.common_ok)) } }
+        )
+    }
+
     lanEndpoint?.let { endpoint ->
-        LanSyncDialog(
-            endpoint = endpoint,
-            onStopAndDismiss = viewModel::stopLanSyncServer
+        LanSyncDialog(endpoint = endpoint, onStopAndDismiss = viewModel::stopLanSyncServer)
+    }
+}
+
+@Composable
+private fun InfoButton(onClick: () -> Unit) {
+    IconButton(onClick = onClick, modifier = Modifier.size(40.dp)) {
+        Icon(
+            Icons.Outlined.Info,
+            contentDescription = stringResource(R.string.common_info),
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(20.dp)
         )
     }
 }
 
 @Composable
-private fun SettingsNavCard(
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    title: String,
-    subtitle: String,
-    onClick: () -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+private fun SettingRowView(row: SettingRow, onInfo: () -> Unit) {
+    val title = stringResource(row.title)
+    when (row) {
+        is SettingRow.Nav -> Row(
+            modifier = Modifier.fillMaxWidth().clickable(onClick = row.onClick).padding(horizontal = 6.dp, vertical = 6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
-            Column(modifier = Modifier.padding(start = 14.dp).weight(1f)) {
-                Text(title, style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold))
-                Text(subtitle, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            InfoButton(onInfo)
+            Column(modifier = Modifier.weight(1f).padding(start = 6.dp)) {
+                Text(title, style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium))
+                row.value?.let {
+                    Text(it, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+            }
+            Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+        is SettingRow.Toggle -> Row(
+            modifier = Modifier.fillMaxWidth().clickable { row.onChange(!row.checked) }.padding(horizontal = 6.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            InfoButton(onInfo)
+            Text(
+                title,
+                modifier = Modifier.weight(1f).padding(start = 6.dp),
+                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium)
+            )
+            Switch(checked = row.checked, onCheckedChange = row.onChange)
+        }
+        is SettingRow.Choice -> Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 6.dp, vertical = 6.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                InfoButton(onInfo)
+                Text(title, modifier = Modifier.padding(start = 6.dp), style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium))
+            }
+            row.options.forEachIndexed { i, (label, selected) ->
+                Row(
+                    modifier = Modifier.fillMaxWidth().clickable { row.onSelect(i) }.padding(start = 40.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(selected = selected, onClick = { row.onSelect(i) })
+                    Text(label, style = MaterialTheme.typography.bodyMedium)
+                }
             }
         }
-    }
-}
-
-@Composable
-private fun SettingsSwitchItem(
-    title: String,
-    subtitle: String,
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column(modifier = Modifier.weight(1f)) {
-            Text(title, style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium))
-            Text(subtitle, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        is SettingRow.TextInput -> Row(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 6.dp, vertical = 6.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            InfoButton(onInfo)
+            OutlinedTextField(
+                value = row.value,
+                onValueChange = row.onChange,
+                label = { Text(title) },
+                singleLine = true,
+                modifier = Modifier.weight(1f).padding(start = 6.dp, end = 6.dp)
+            )
         }
-        Switch(checked = checked, onCheckedChange = onCheckedChange)
     }
 }
