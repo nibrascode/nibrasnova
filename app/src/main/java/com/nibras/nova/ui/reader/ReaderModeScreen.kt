@@ -165,8 +165,8 @@ fun ReaderModeScreen(
                         ) {
                             Text(L.s(R.string.t_font_size_sp, state.fontSizeSp.toInt()), color = fgColor)
                             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                OutlinedButton(onClick = { viewModel.adjustFontSize(-2f) }) { Text("A-") }
-                                OutlinedButton(onClick = { viewModel.adjustFontSize(2f) }) { Text("A+") }
+                                OutlinedButton(onClick = { viewModel.adjustFontSize(-2f) }) { Text(com.nibras.nova.core.common.L.s(com.nibras.nova.R.string.reader_smaller)) }
+                                OutlinedButton(onClick = { viewModel.adjustFontSize(2f) }) { Text(com.nibras.nova.core.common.L.s(com.nibras.nova.R.string.reader_larger)) }
                             }
                         }
 

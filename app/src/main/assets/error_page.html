@@ -36,7 +36,18 @@
 </head>
 <body>
     <div class="badge">!</div>
-    <h1>Unable to Reach Website</h1>
-    <p>Nibras Nova could not establish a reliable connection to the requested destination.</p>
+    <h1 id="t">Unable to Reach Website</h1>
+    <p id="d">Nibras Nova could not establish a reliable connection to the requested destination.</p>
+    <script>
+    (function(){var T={
+    az:["Sayta qoşulmaq mümkün olmadı","Nibras Nova istənilən ünvana etibarlı bağlantı qura bilmədi. İnterneti yoxlayıb yenidən cəhd edin.","Səhifə açılmır"],
+    en:["Unable to Reach Website","Nibras Nova could not establish a reliable connection to the requested destination.","Page Unavailable"],
+    tr:["Siteye ulaşılamadı","Nibras Nova istenen adrese güvenilir bir bağlantı kuramadı. İnterneti kontrol edip tekrar deneyin.","Sayfa açılamıyor"],
+    ru:["Не удалось открыть сайт","Nibras Nova не смог надёжно подключиться к адресу. Проверьте интернет и попробуйте снова.","Страница недоступна"],
+    ar:["تعذّر الوصول إلى الموقع","لم يتمكن Nibras Nova من إنشاء اتصال موثوق بالعنوان المطلوب. تحقّق من الإنترنت وحاول مجددًا.","الصفحة غير متاحة"]};
+    var l=(new URLSearchParams(location.search).get('lang')||navigator.language||'en').slice(0,2);if(!T[l])l='en';
+    document.getElementById('t').textContent=T[l][0];document.getElementById('d').textContent=T[l][1];document.title=T[l][2]+' - Nibras Nova';
+    document.documentElement.lang=l;if(l==='ar')document.documentElement.dir='rtl';})();
+    </script>
 </body>
 </html>

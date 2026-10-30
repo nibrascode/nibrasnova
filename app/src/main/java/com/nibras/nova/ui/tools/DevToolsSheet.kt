@@ -113,7 +113,7 @@ fun DevToolsSheet(
                         selectedTab = 2
                         onRefreshDomAndStorage()
                     },
-                    label = { Text("DOM") }
+                    label = { Text(com.nibras.nova.core.common.L.s(com.nibras.nova.R.string.devtools_dom)) }
                 )
                 FilterChip(
                     selected = selectedTab == 3,
@@ -165,7 +165,7 @@ fun DevToolsSheet(
                         OutlinedTextField(
                             value = jsCommand,
                             onValueChange = { jsCommand = it },
-                            placeholder = { Text("Evaluate JS (e.g. document.title)") },
+                            placeholder = { Text(com.nibras.nova.core.common.L.s(com.nibras.nova.R.string.devtools_eval_hint)) },
                             singleLine = true,
                             modifier = Modifier.weight(1f)
                         )

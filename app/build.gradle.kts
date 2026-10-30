@@ -118,6 +118,7 @@ dependencies {
 
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.webkit)
+    implementation("com.batoulapps.adhan:adhan2:0.0.5")
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)

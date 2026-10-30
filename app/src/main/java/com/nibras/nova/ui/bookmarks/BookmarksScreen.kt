@@ -323,7 +323,7 @@ fun BookmarksScreen(
                     OutlinedTextField(
                         value = url,
                         onValueChange = { url = it },
-                        label = { Text("URL") },
+                        label = { Text(com.nibras.nova.core.common.L.s(com.nibras.nova.R.string.lbl_url)) },
                         singleLine = true
                     )
                 }

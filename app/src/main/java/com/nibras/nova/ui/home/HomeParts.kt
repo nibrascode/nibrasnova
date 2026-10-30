@@ -68,17 +68,17 @@ data class DiscoverItem(
 }
 
 val DISCOVER_ITEMS = listOf(
-    DiscoverItem("programming/python", R.string.kesf_python, R.string.cat_programming, R.drawable.kesf_programming, 6),
-    DiscoverItem("programming/gradle", R.string.kesf_gradle, R.string.cat_programming, R.drawable.kesf_programming, 2),
-    DiscoverItem("resources/android/apk-nedir", R.string.kesf_apk, R.string.cat_android, R.drawable.kesf_site, 2),
+    DiscoverItem("programming/python", R.string.kesf_python, R.string.cat_programming, R.drawable.kesf_python, 6),
+    DiscoverItem("programming/gradle", R.string.kesf_gradle, R.string.cat_programming, R.drawable.kesf_gradle, 2),
+    DiscoverItem("resources/android/apk-nedir", R.string.kesf_apk, R.string.cat_android, R.drawable.kesf_apk, 2),
     DiscoverItem("apps/nibras-pdf", R.string.kesf_nibras_pdf, R.string.cat_app, R.drawable.kesf_nibras_pdf, null),
-    DiscoverItem("programming/kotlin", R.string.kesf_kotlin, R.string.cat_programming, R.drawable.kesf_programming, 2),
+    DiscoverItem("programming/kotlin", R.string.kesf_kotlin, R.string.cat_programming, R.drawable.kesf_kotlin, 2),
     DiscoverItem(
-        "resurslar/pdf-birlesdirmek", R.string.kesf_pdf_merge, R.string.cat_pdf, R.drawable.kesf_site, 2,
+        "resurslar/pdf-birlesdirmek", R.string.kesf_pdf_merge, R.string.cat_pdf, R.drawable.kesf_pdf_merge, 2,
         pathOverride = mapOf("ru" to "/ru/resources/obedinit-pdf")
     ),
     DiscoverItem("apps/nibras-arabic", R.string.kesf_nibras_arabic, R.string.cat_app, R.drawable.kesf_nibras_arabic, null),
-    DiscoverItem("resources/ereb-dili/ereb-elifbasi", R.string.kesf_alphabet, R.string.cat_arabic, R.drawable.kesf_site, 2),
+    DiscoverItem("resources/ereb-dili/ereb-elifbasi", R.string.kesf_alphabet, R.string.cat_arabic, R.drawable.kesf_alphabet, 2),
 )
 
 @Composable

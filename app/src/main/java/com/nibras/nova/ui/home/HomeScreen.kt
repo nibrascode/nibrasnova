@@ -180,6 +180,8 @@ fun HomeScreen(
                 }
             }
 
+            item { Box(Modifier.padding(horizontal = 20.dp)) { PrayerCard() } }
+
             // 3. Quick-link tiles: user shortcuts (defaults when empty), pinned Nibras, add
             item {
                 val defaults = listOf(

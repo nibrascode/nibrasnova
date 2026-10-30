@@ -95,6 +95,10 @@ fun GeneralSettingsScreen(
 
     val linkPolicyLabels = ExternalLinkPolicy.entries.map { stringResource(externalLinkPolicyLabelRes(it)) }
 
+    val prayerPrefs = androidx.compose.runtime.remember { com.nibras.nova.core.prayer.PrayerPrefs(context) }
+    var prOn by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(prayerPrefs.enabled) }
+    var prMethod by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(prayerPrefs.method) }
+    val prMethods = com.nibras.nova.core.prayer.PrayerEngine.METHODS
     val groups = listOf(
         SettingGroup(
             R.string.grp_general, listOf(
@@ -127,6 +131,12 @@ fun GeneralSettingsScreen(
                 SettingRow.Toggle(R.string.set_home_recent, R.string.set_home_recent_info, settings.showRecentHistoryOnHome) {
                     viewModel.updateHomepageVisibility(settings.showQuickShortcutsOnHome, it)
                 }
+                ,
+                SettingRow.Toggle(R.string.pr_show, R.string.pr_show_info, prOn) { prOn = it; prayerPrefs.enabled = it },
+                SettingRow.Choice(
+                    R.string.pr_method, R.string.pr_method_info,
+                    prMethods.map { com.nibras.nova.ui.home.methodLabel(context, it.name) to (it.name == prMethod) }
+                ) { idx -> prMethod = prMethods[idx].name; prayerPrefs.method = prMethods[idx].name }
             )
         ),
         SettingGroup(
