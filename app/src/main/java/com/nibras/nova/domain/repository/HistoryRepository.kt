@@ -8,6 +8,7 @@ interface HistoryRepository {
     fun observeRecentHistory(limit: Int = 500): Flow<List<HistoryItem>>
     fun searchHistory(query: String): Flow<List<HistoryItem>>
     suspend fun recordVisit(title: String, url: String, faviconPath: String?, isPrivateSession: Boolean)
+    suspend fun importHistory(items: List<com.nibras.nova.domain.model.HistoryItem>): Int = 0
     suspend fun deleteHistoryItem(historyId: Long)
     suspend fun clearHistoryByRange(range: HistoryClearRange)
 }

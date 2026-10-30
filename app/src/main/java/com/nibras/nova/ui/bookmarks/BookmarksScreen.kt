@@ -1,5 +1,7 @@
 package com.nibras.nova.ui.bookmarks
 
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.Restore
 import com.nibras.nova.R
 import com.nibras.nova.core.common.L
 
@@ -80,6 +82,12 @@ fun BookmarksScreen(
     var editingBookmark by remember { mutableStateOf<BookmarkItem?>(null) }
     var showNewBookmarkDialog by remember { mutableStateOf(false) }
 
+    val exportJsonLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
+        if (uri != null) viewModel.exportJsonTo(context, uri)
+    }
+    val importJsonLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) viewModel.importJsonFrom(context, uri)
+    }
     val importHtmlLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument()
     ) { uri ->
@@ -130,6 +138,12 @@ fun BookmarksScreen(
                         }
                         IconButton(onClick = { viewModel.exportAllBookmarksToHtml(context) }) {
                             Icon(Icons.Default.FileUpload, contentDescription = L.s(R.string.t_export_bookmarks_html))
+                        }
+                        IconButton(onClick = { exportJsonLauncher.launch("nibras-nova-backup-" + java.text.SimpleDateFormat("yyyyMMdd", java.util.Locale.US).format(java.util.Date()) + ".json") }) {
+                            Icon(androidx.compose.material.icons.Icons.Filled.Save, contentDescription = L.s(R.string.bk_json_export))
+                        }
+                        IconButton(onClick = { importJsonLauncher.launch(arrayOf("application/json", "text/plain", "*/*")) }) {
+                            Icon(androidx.compose.material.icons.Icons.Filled.Restore, contentDescription = L.s(R.string.bk_json_import))
                         }
                         IconButton(onClick = { showCreateFolderDialog = true }) {
                             Icon(Icons.Default.CreateNewFolder, contentDescription = L.s(R.string.t_new_folder))

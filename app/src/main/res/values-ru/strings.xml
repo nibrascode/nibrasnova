@@ -697,4 +697,9 @@
     <string name="m_NORTH_AMERICA">ISNA (Сев. Америка)</string>
     <string name="m_MOON_SIGHTING_COMMITTEE">Комитет по наблюдению луны</string>
     <string name="m_SINGAPORE">Сингапур</string>
+    <string name="bk_json_export">Экспорт закладок и истории (JSON)</string>
+    <string name="bk_json_import">Импорт закладок и истории (JSON)</string>
+    <string name="bk_json_exported">Экспортировано: закладок %1$d, записей истории %2$d</string>
+    <string name="bk_json_imported">Импортировано: закладок %1$d, записей истории %2$d</string>
+    <string name="bk_json_failed">Не удалось прочитать или записать файл</string>
 </resources>

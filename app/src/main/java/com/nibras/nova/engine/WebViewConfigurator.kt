@@ -18,6 +18,7 @@ class WebViewConfigurator @Inject constructor() {
 
     private var defaultMobileUserAgent: String? = null
     private val desktopScripts = java.util.WeakHashMap<WebView, androidx.webkit.ScriptHandler>()
+    private val youTubeRestrictScripts = java.util.WeakHashMap<WebView, androidx.webkit.ScriptHandler>()
 
     @SuppressLint("SetJavaScriptEnabled")
     fun applySecurityAndUserSettings(
@@ -71,6 +72,15 @@ class WebViewConfigurator @Inject constructor() {
         }
         if (ws.userAgentString != targetUa) ws.userAgentString = targetUa
         applyDesktopOverrides(webView, ws, if (useDesktopViewport && !DesktopMode.isMobileUserAgent(targetUa)) targetUa else null)
+
+        // YouTube Restricted Mode for every profile (normal and private): set the PREF cookie from inside the page.
+        if (youTubeRestrictScripts[webView] == null && WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {
+            runCatching {
+                youTubeRestrictScripts[webView] = androidx.webkit.WebViewCompat.addDocumentStartJavaScript(
+                    webView, YOUTUBE_RESTRICT_JS, setOf("https://youtube.com", "https://*.youtube.com")
+                )
+            }
+        }
 
         // Stage 12.10: Smart Data Saver Mode (restrict heavy network image auto-loading & media autoplay)
         ws.loadsImagesAutomatically = true
@@ -148,5 +158,12 @@ class WebViewConfigurator @Inject constructor() {
                 )
             }
         }
+    }
+
+    companion object {
+        const val YOUTUBE_RESTRICT_JS = "(function(){try{var c=document.cookie||'';var m=c.match(/(?:^|; )PREF=([^;]*)/);var v=m?m[1]:'';" +
+            "if(!/(^|&)f2=8000000(&|$)/.test(v)){var nv=v?(v.replace(/(^|&)f2=[^&]*/,'')+'&f2=8000000').replace(/^&/,''):'f2=8000000';" +
+            "document.cookie='PREF='+nv+'; domain=.youtube.com; path=/; secure; max-age=31536000';" +
+            "if(!sessionStorage.getItem('nova_yt_r')){sessionStorage.setItem('nova_yt_r','1');location.reload();}}}catch(e){}})();"
     }
 }

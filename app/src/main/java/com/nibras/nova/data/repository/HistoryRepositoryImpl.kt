@@ -25,6 +25,17 @@ class HistoryRepositoryImpl @Inject constructor(
     override fun searchHistory(query: String): Flow<List<HistoryItem>> =
         historyDao.searchHistory(query.trim()).map { list -> list.map { it.toDomain() } }
 
+    override suspend fun importHistory(items: List<com.nibras.nova.domain.model.HistoryItem>): Int = withContext(dispatchers.io) {
+        var n = 0
+        items.forEach { h ->
+            val u = h.url.trim()
+            if (u.startsWith("http://") || u.startsWith("https://")) {
+                historyDao.insertHistory(HistoryEntity(title = h.title.ifBlank { u }, url = u, faviconPath = null, visitedAt = h.visitedAt)); n++
+            }
+        }
+        n
+    }
+
     override suspend fun recordVisit(
         title: String,
         url: String,

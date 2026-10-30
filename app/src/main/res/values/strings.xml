@@ -699,4 +699,9 @@
     <string name="m_NORTH_AMERICA">ISNA (North America)</string>
     <string name="m_MOON_SIGHTING_COMMITTEE">Moonsighting Committee</string>
     <string name="m_SINGAPORE">Singapore</string>
+    <string name="bk_json_export">Export bookmarks &amp; history (JSON)</string>
+    <string name="bk_json_import">Import bookmarks &amp; history (JSON)</string>
+    <string name="bk_json_exported">Exported %1$d bookmarks and %2$d history items</string>
+    <string name="bk_json_imported">Imported %1$d bookmarks and %2$d history items</string>
+    <string name="bk_json_failed">Could not read or write the backup file</string>
 </resources>

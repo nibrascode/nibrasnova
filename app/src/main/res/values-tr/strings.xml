@@ -697,4 +697,9 @@
     <string name="m_NORTH_AMERICA">ISNA (Kuzey Amerika)</string>
     <string name="m_MOON_SIGHTING_COMMITTEE">Hilal komitesi</string>
     <string name="m_SINGAPORE">Singapur</string>
+    <string name="bk_json_export">Yer imleri ve geçmişi dışa aktar (JSON)</string>
+    <string name="bk_json_import">Yer imleri ve geçmişi içe aktar (JSON)</string>
+    <string name="bk_json_exported">%1$d yer imi ve %2$d geçmiş kaydı dışa aktarıldı</string>
+    <string name="bk_json_imported">%1$d yer imi ve %2$d geçmiş kaydı içe aktarıldı</string>
+    <string name="bk_json_failed">Yedek dosyası okunamadı veya yazılamadı</string>
 </resources>

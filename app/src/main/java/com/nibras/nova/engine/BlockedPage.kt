@@ -22,7 +22,7 @@ background:radial-gradient(ellipse at 50% 30%,rgba(91,140,255,.18),transparent 6
 .t{font-size:15px;color:#b4bed8;margin:0 0 4px}.b{font-size:13px;color:#7f89a8;max-width:420px;margin:0 0 28px}
 button{background:linear-gradient(90deg,#3d7bff,#8e6bff);color:#fff;border:0;border-radius:24px;padding:13px 34px;font-size:16px}
 </style></head><body><div class="w">
-<div class="ar">اتَّقِ اللَّهَ حَيْثُمَا كُنْتَ</div>
+${if (isRtl) "" else "<div class=\"ar\">اتَّقِ اللَّهَ حَيْثُمَا كُنْتَ</div>"}
 <p class="m">${esc(L.s(R.string.blocked_reminder))}</p>
 <div class="s">${esc(L.s(R.string.blocked_source))}</div>
 <p class="t">${esc(L.s(R.string.blocked_title))}</p>

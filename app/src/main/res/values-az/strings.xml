@@ -697,4 +697,9 @@
     <string name="m_NORTH_AMERICA">ISNA (Şimali Amerika)</string>
     <string name="m_MOON_SIGHTING_COMMITTEE">Hilal komitəsi</string>
     <string name="m_SINGAPORE">Sinqapur</string>
+    <string name="bk_json_export">Əlfəcin və tarixçəni ixrac et (JSON)</string>
+    <string name="bk_json_import">Əlfəcin və tarixçəni idxal et (JSON)</string>
+    <string name="bk_json_exported">%1$d əlfəcin və %2$d tarixçə qeydi ixrac edildi</string>
+    <string name="bk_json_imported">%1$d əlfəcin və %2$d tarixçə qeydi idxal edildi</string>
+    <string name="bk_json_failed">Ehtiyat faylını oxumaq və ya yazmaq olmadı</string>
 </resources>

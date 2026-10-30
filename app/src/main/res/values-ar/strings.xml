@@ -697,4 +697,9 @@
     <string name="m_NORTH_AMERICA">إسنا (أمريكا الشمالية)</string>
     <string name="m_MOON_SIGHTING_COMMITTEE">لجنة رؤية الهلال</string>
     <string name="m_SINGAPORE">سنغافورة</string>
+    <string name="bk_json_export">تصدير الإشارات والسجل (JSON)</string>
+    <string name="bk_json_import">استيراد الإشارات والسجل (JSON)</string>
+    <string name="bk_json_exported">تم تصدير %1$d إشارة و%2$d عنصر سجل</string>
+    <string name="bk_json_imported">تم استيراد %1$d إشارة و%2$d عنصر سجل</string>
+    <string name="bk_json_failed">تعذّرت قراءة ملف النسخة أو كتابته</string>
 </resources>

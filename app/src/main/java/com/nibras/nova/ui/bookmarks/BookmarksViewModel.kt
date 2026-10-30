@@ -37,6 +37,7 @@ data class BookmarksUiState(
 @HiltViewModel
 class BookmarksViewModel @Inject constructor(
     private val bookmarkRepository: BookmarkRepository,
+    private val historyRepository: com.nibras.nova.domain.repository.HistoryRepository,
     private val tabRepository: TabRepository,
     private val importExportHelper: BookmarkImportExportHelper
 ) : ViewModel() {
@@ -125,6 +126,44 @@ class BookmarksViewModel @Inject constructor(
                 return@launch
             }
             importExportHelper.exportAndShareHtmlFile(activityContext, all)
+        }
+    }
+
+    fun exportJsonTo(context: Context, uri: Uri) {
+        viewModelScope.launch {
+            runCatching {
+                val bms = bookmarkRepository.observeAllBookmarks().firstOrNull().orEmpty()
+                val folders = bookmarkRepository.observeAllFolders().firstOrNull().orEmpty().associate { it.id to it.name }
+                val hist = historyRepository.observeRecentHistory(100_000).firstOrNull().orEmpty()
+                val text = com.nibras.nova.core.util.BrowserDataJson.encode(bms, hist, { id -> id?.let { folders[it] } })
+                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                    context.contentResolver.openOutputStream(uri, "wt")?.use { it.write(text.toByteArray()) }
+                }
+                _events.tryEmit(L.s(R.string.bk_json_exported, bms.size, hist.size))
+            }.onFailure { _events.tryEmit(L.s(R.string.bk_json_failed)) }
+        }
+    }
+
+    fun importJsonFrom(context: Context, uri: Uri) {
+        viewModelScope.launch {
+            runCatching {
+                val text = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                    context.contentResolver.openInputStream(uri)?.bufferedReader()?.use { it.readText() }.orEmpty()
+                }
+                val b = com.nibras.nova.core.util.BrowserDataJson.decode(text)
+                val existing = bookmarkRepository.observeAllBookmarks().firstOrNull().orEmpty().map { it.url }.toHashSet()
+                val folderIds = HashMap<String, Long>()
+                bookmarkRepository.observeAllFolders().firstOrNull().orEmpty().forEach { folderIds[it.name] = it.id }
+                var added = 0
+                for (bm in b.bookmarks) {
+                    if (bm.url in existing) continue
+                    val fid = bm.folder?.let { name -> folderIds.getOrPut(name) { bookmarkRepository.createFolder(name) } }
+                    bookmarkRepository.addOrUpdateBookmark(com.nibras.nova.domain.model.BookmarkItem(title = bm.title, url = bm.url, folderId = fid, createdAt = if (bm.createdAt > 0) bm.createdAt else System.currentTimeMillis()))
+                    existing.add(bm.url); added++
+                }
+                val h = historyRepository.importHistory(b.history.map { com.nibras.nova.domain.model.HistoryItem(title = it.title, url = it.url, visitedAt = it.visitedAt) })
+                _events.tryEmit(L.s(R.string.bk_json_imported, added, h))
+            }.onFailure { _events.tryEmit(L.s(R.string.bk_json_failed)) }
         }
     }
 
