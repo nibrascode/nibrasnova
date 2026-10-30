@@ -91,6 +91,7 @@ class WebViewPoolManager(
                 callback = chromeCallback
             )
             setDownloadListener(downloadListener)
+            LinkLongPressMenu.install(this)
         }
 
         val savedBundle = savedStateBundles[tab.id]

@@ -702,4 +702,9 @@
     <string name="bk_json_exported">%1$d yer imi ve %2$d geçmiş kaydı dışa aktarıldı</string>
     <string name="bk_json_imported">%1$d yer imi ve %2$d geçmiş kaydı içe aktarıldı</string>
     <string name="bk_json_failed">Yedek dosyası okunamadı veya yazılamadı</string>
+    <string name="lp_open">Bağlantıyı aç</string>
+    <string name="lp_open_image">Görseli aç</string>
+    <string name="lp_copy">Bağlantıyı kopyala</string>
+    <string name="lp_share">Bağlantıyı paylaş</string>
+    <string name="lp_copied">Bağlantı kopyalandı</string>
 </resources>

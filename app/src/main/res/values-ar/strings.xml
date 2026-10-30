@@ -702,4 +702,9 @@
     <string name="bk_json_exported">تم تصدير %1$d إشارة و%2$d عنصر سجل</string>
     <string name="bk_json_imported">تم استيراد %1$d إشارة و%2$d عنصر سجل</string>
     <string name="bk_json_failed">تعذّرت قراءة ملف النسخة أو كتابته</string>
+    <string name="lp_open">فتح الرابط</string>
+    <string name="lp_open_image">فتح الصورة</string>
+    <string name="lp_copy">نسخ الرابط</string>
+    <string name="lp_share">مشاركة الرابط</string>
+    <string name="lp_copied">تم نسخ الرابط</string>
 </resources>

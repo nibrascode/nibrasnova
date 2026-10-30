@@ -702,4 +702,9 @@
     <string name="bk_json_exported">Экспортировано: закладок %1$d, записей истории %2$d</string>
     <string name="bk_json_imported">Импортировано: закладок %1$d, записей истории %2$d</string>
     <string name="bk_json_failed">Не удалось прочитать или записать файл</string>
+    <string name="lp_open">Открыть ссылку</string>
+    <string name="lp_open_image">Открыть изображение</string>
+    <string name="lp_copy">Копировать ссылку</string>
+    <string name="lp_share">Поделиться ссылкой</string>
+    <string name="lp_copied">Ссылка скопирована</string>
 </resources>

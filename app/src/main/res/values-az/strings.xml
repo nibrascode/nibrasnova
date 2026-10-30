@@ -702,4 +702,9 @@
     <string name="bk_json_exported">%1$d əlfəcin və %2$d tarixçə qeydi ixrac edildi</string>
     <string name="bk_json_imported">%1$d əlfəcin və %2$d tarixçə qeydi idxal edildi</string>
     <string name="bk_json_failed">Ehtiyat faylını oxumaq və ya yazmaq olmadı</string>
+    <string name="lp_open">Linki aç</string>
+    <string name="lp_open_image">Şəkli aç</string>
+    <string name="lp_copy">Linki kopyala</string>
+    <string name="lp_share">Linki paylaş</string>
+    <string name="lp_copied">Link kopyalandı</string>
 </resources>
