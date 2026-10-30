@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Nibras Nova</string>
+    <string name="brand_name">Nibras Code</string>
+    <string name="tagline">Hızlı. Minimalist. Güvenli Web Tarayıcısı.</string>
+    <string name="search_or_type_url">Arama yapın veya adres girin…</string>
+    <string name="private_browsing_active">Gizli Gezinme Aktif</string>
+    <string name="process_text_search_nova">Nibras Nova ile Ara</string>
+    <string name="widget_name">Nibras Nova Arama Çubuğu</string>
+    <string name="quick_tile_private_tab">Nova Gizli Sekme</string>
+    <string name="dock_bookmarks">Yer İmleri</string>
+    <string name="dock_history">Geçmiş</string>
+    <string name="dock_downloads">İndirilenler</string>
+    <string name="dock_privacy">Gizlilik</string>
+    <string name="dock_settings">Ayarlar</string>
+    <string name="quick_access_title">Hızlı Erişim</string>
+    <string name="recently_visited_title">Son Ziyaret Edilenler</string>
+</resources>

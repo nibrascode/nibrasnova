@@ -18,8 +18,7 @@ class ShareHelper @Inject constructor(
     private val dispatchers: DispatcherProvider
 ) {
     fun shareWebPage(activityContext: Context, title: String, url: String) {
-        val shareText = if (title.isNotBlank() && title != url) "$title
-$url" else url
+        val shareText = if (title.isNotBlank() && title != url) "$title\n$url" else url
         val sendIntent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
             putExtra(Intent.EXTRA_SUBJECT, title)

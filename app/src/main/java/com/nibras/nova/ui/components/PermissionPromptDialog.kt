@@ -31,9 +31,7 @@ fun PermissionPromptDialog(
         },
         text = {
             Text(
-                text = "${prompt.origin} is requesting access to: $permissionsList.
-
-Granting access allows this site to use the requested hardware or media capability during your session.",
+                text = "${prompt.origin} is requesting access to: $permissionsList.\n\nGranting access allows this site to use the requested hardware or media capability during your session.",
                 style = MaterialTheme.typography.bodyMedium
             )
         },

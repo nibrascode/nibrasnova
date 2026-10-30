@@ -40,15 +40,15 @@ class UrlValidator @Inject constructor() {
     )
 
     private val domainRegex = Regex(
-        pattern = "^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,63}(:\d{1,5})?(/.*)?$"
+        pattern = "^([a-zA-Z0-9]([a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,63}(:\\d{1,5})?(/.*)?$"
     )
 
     private val ipv4Regex = Regex(
-        pattern = "^((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(:\d{1,5})?(/.*)?$"
+        pattern = "^((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.){3}(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(:\\d{1,5})?(/.*)?$"
     )
 
     private val localhostRegex = Regex(
-        pattern = "^localhost(:\d{1,5})?(/.*)?$",
+        pattern = "^localhost(:\\d{1,5})?(/.*)?$",
         option = RegexOption.IGNORE_CASE
     )
 

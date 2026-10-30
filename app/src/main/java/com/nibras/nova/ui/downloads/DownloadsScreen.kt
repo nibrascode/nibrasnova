@@ -134,14 +134,12 @@ fun DownloadsScreen(
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text("File: $fileName", style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold))
                         Text(
-                            text = "SHA-256:
-${sums.sha256Hex}",
+                            text = "SHA-256:\n${sums.sha256Hex}",
                             style = MaterialTheme.typography.labelSmall.copy(fontFamily = FontFamily.Monospace),
                             color = MaterialTheme.colorScheme.primary
                         )
                         Text(
-                            text = "MD5:
-${sums.md5Hex}",
+                            text = "MD5:\n${sums.md5Hex}",
                             style = MaterialTheme.typography.labelSmall.copy(fontFamily = FontFamily.Monospace)
                         )
                     }

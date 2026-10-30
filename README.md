@@ -1,56 +1,27 @@
-# Nibras Nova
+# Nibras Nova — Advanced Premium Android Web Browser (`v2.0.0-nova-flagship`)
 
-**Advanced Premium Android Web Browser**
-
-Nibras Nova is a modern, feature-rich Android browser built with Kotlin and Jetpack Compose. It focuses on privacy, performance, and advanced browsing tools.
-
+**Brand Ecosystem:** Nibras Code  
 **Package:** `com.nibras.nova`  
-**Version:** 2.0.0-nova-flagship  
-**Min SDK:** 26 | **Target/Compile SDK:** 35
+**Stack:** Kotlin 2.0.21, Jetpack Compose (Material 3), AndroidX WebKit (`1.12.1`), Room (`2.6.1`), DataStore (`1.1.1`), Hilt (`2.52`), CameraX + ZXing, ML Kit Translate, AndroidX Biometric.
 
-## Features
+## Key Engineering Highlights (Stages 1 – 14)
 
-- Multi-tab system with private browsing separation
-- Built-in Ad & Tracker Blocker
-- Reader Mode with offline saving
-- Download Center with pause/resume
-- QR Scanner & Generator
-- Privacy Dashboard & Incognito Vault (biometric lock)
-- Split-screen dual WebView
-- Picture-in-Picture video
-- Full-page screenshot
-- On-device article summarizer
-- RSS/Atom news reader
-- Encrypted backup & restore
-- Custom UserScripts / CSS
-- DevTools console & DOM inspector
-- And much more (see DEVELOPMENT_LOG.md)
-
-## Build
-
-This project uses Gradle Version Catalog and Android Gradle Plugin 8.7.2.
-
-### Local build
-
-```bash
-./gradlew assembleDebug
-# or
-./gradlew assembleRelease
-```
-
-APK will be in `app/build/outputs/apk/`.
-
-### GitHub Actions
-
-Push to `main` triggers automatic debug APK build.  
-Download the artifact from the Actions tab.
-
-## Requirements
-
-- Android Studio Ladybug or newer
-- JDK 17
-- Android SDK 35
-
-## License
-
-Proprietary / Nibras Code
+- **Hardened WebView Engine & Bounded LRU Pool**: Caps live `WebView` instances in RAM at `MAX_LIVE_WEBVIEWS = 4`, serializing cold tabs via `saveState(Bundle)` and capturing WebP previews to eliminate native Chromium OOM crashes.
+- **Zero-Trust Security & Privacy Shield**:
+  - Built-in **Ad & Tracker Blocker** (`AdBlockerEngine.kt` in `shouldInterceptRequest`).
+  - **Marketing & Tracking URL Parameter Stripper** (`utm_*`, `fbclid`, `gclid`, `mc_cid`).
+  - **Canvas, WebGL & AudioContext Anti-Fingerprinting Shield** (`AntiFingerprintInjector.kt`).
+  - **Homograph / IDN Punycode Phishing Detector** (`HomographAttackDetector.kt`).
+  - **Rapid Cross-Domain Redirect Chain Guard** (`NovaWebViewClient.kt`).
+  - **DNS-over-HTTPS (DoH) & Custom Proxy Controller** (`ProxyDoHManager.kt`).
+  - **Biometric Private Tabs & Encrypted Private Media/Bookmark Vault** (`PrivateVaultScreen.kt` + `PasswordGeneratorHelper.kt`).
+  - **AES-256-GCM + PBKDF2-HMAC-SHA256 Encrypted `.novabackup` Export & Restore** (`EncryptedBackupManager.kt`).
+  - **One-Tap Emergency Panic Button** (destroys live WebViews, scrubs clipboard, wipes cookies/cache/history, and exits).
+- **Desktop-Class Power Tools on Android**:
+  - **F12 Web Developer Console, JS REPL, Network Monitor, Live DOM `designMode` Editor & Storage Inspector** (`DevToolsSheet.kt`).
+  - **Custom UserScripts (Tampermonkey JS) & Custom CSS Stylesheet Injector** (`UserScriptsScreen.kt`).
+  - **Eyedropper Color Palette Extractor & CSS Typography Inspector** (`ColorFontInspectorSheet.kt`).
+  - **Native JSON / XML / API Response Formatter** (`JsonXmlFormatterSheet.kt`).
+  - **Dual Split-Screen WebView Mode**, **Floating Picture-in-Picture (PiP) Video**, **Full-Page Scrolling Screenshot Capture**, and **Nova Omni-Command Palette (`Ctrl+K`)**.
+  - **Local Wi-Fi / LAN Peer-to-Peer QR Sync Server** (`LocalLanSyncServer.kt`) for instant serverless tab & bookmark transfer across devices.
+- **Global Localization**: Full UI resource support for **English (`en`)**, **Azerbaijani (`az`)**, **Turkish (`tr`)**, **Russian (`ru`)**, and **Arabic (`ar` RTL)**.

@@ -182,11 +182,9 @@ class ReaderViewModel @Inject constructor(
                     byline = saved.siteName,
                     siteName = saved.siteName,
                     url = saved.url,
-                    wordCount = saved.plainTextContent.split("\s+".toRegex()).size,
+                    wordCount = saved.plainTextContent.split("\\s+".toRegex()).size,
                     estimatedReadMinutes = saved.estimatedReadMinutes,
-                    blocks = saved.plainTextContent.split("
-
-").map { p ->
+                    blocks = saved.plainTextContent.split("\n\n").map { p ->
                         com.nibras.nova.domain.model.ReaderBlock(tag = "p", text = p)
                     },
                     plainText = saved.plainTextContent
@@ -206,9 +204,6 @@ class ReaderViewModel @Inject constructor(
     fun shareArticleText(activityContext: Context) {
         val article = _localState.value.article ?: return
         val body = _localState.value.translatedText ?: article.plainText
-        shareHelper.shareSelectedText(activityContext, "${article.title}
-${article.url}
-
-$body")
+        shareHelper.shareSelectedText(activityContext, "${article.title}\n${article.url}\n\n$body")
     }
 }

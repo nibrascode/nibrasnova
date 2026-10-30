@@ -330,16 +330,15 @@ class BrowserViewModel @Inject constructor(
 
         wv.evaluateJavascript(inspectorJs) { rawJson ->
             runCatching {
-                val unescaped = if (rawJson != null && rawJson.startsWith(""") && rawJson.endsWith(""")) {
+                val unescaped = if (rawJson != null && rawJson.startsWith("\"") && rawJson.endsWith("\"")) {
                     Json.decodeFromString<String>(rawJson)
                 } else rawJson.orEmpty()
                 val obj = Json.parseToJsonElement(unescaped) as kotlinx.serialization.json.JsonObject
                 val colors = (obj["colors"] as? kotlinx.serialization.json.JsonArray)
-                    ?.map { it.toString().removeSurrounding(""") }.orEmpty()
+                    ?.map { it.toString().removeSurrounding("\"") }.orEmpty()
                 val fonts = (obj["fonts"] as? kotlinx.serialization.json.JsonArray)
-                    ?.map { it.toString().removeSurrounding(""") }.orEmpty()
-                val summary = obj["summary"]?.toString()?.removeSurrounding(""")?.replace("\n", "
-").orEmpty()
+                    ?.map { it.toString().removeSurrounding("\"") }.orEmpty()
+                val summary = obj["summary"]?.toString()?.removeSurrounding("\"")?.replace("\\n", "\n").orEmpty()
                 _runtimeState.update {
                     it.copy(
                         colorFontReport = PageStyleInspectionReport(
@@ -468,7 +467,7 @@ class BrowserViewModel @Inject constructor(
         val mediaExtractorJs = """
             (function() {
                 var urls = [];
-                document.querySelectorAll('img[src], video[src], video source[src], audio[src], a[href\$=".pdf"], a[href\$=".mp4"], a[href\$=".zip"]').forEach(function(el) {
+                document.querySelectorAll('img[src], video[src], video source[src], audio[src], a[href$=".pdf"], a[href$=".mp4"], a[href$=".zip"]').forEach(function(el) {
                     var u = el.src || el.href;
                     if (u && (u.indexOf('http://') === 0 || u.indexOf('https://') === 0) && urls.indexOf(u) === -1) {
                         urls.push(u);
@@ -480,7 +479,7 @@ class BrowserViewModel @Inject constructor(
 
         wv.evaluateJavascript(mediaExtractorJs) { rawJson ->
             val list = runCatching {
-                val unescaped = if (rawJson != null && rawJson.startsWith(""") && rawJson.endsWith(""")) {
+                val unescaped = if (rawJson != null && rawJson.startsWith("\"") && rawJson.endsWith("\"")) {
                     Json.decodeFromString<String>(rawJson)
                 } else rawJson.orEmpty()
                 Json.decodeFromString<List<String>>(unescaped)
@@ -535,7 +534,7 @@ class BrowserViewModel @Inject constructor(
         val wv = webViewPoolManager.getLiveWebView(active.id)
         if (wv != null) {
             wv.evaluateJavascript("(window.getSelection() ? window.getSelection().toString() : '')") { sel ->
-                val cleanSel = sel?.removeSurrounding(""")?.trim().orEmpty()
+                val cleanSel = sel?.removeSurrounding("\"")?.trim().orEmpty()
                 _runtimeState.update {
                     it.copy(
                         currentSelectedTextOnPage = cleanSel,
@@ -575,10 +574,9 @@ class BrowserViewModel @Inject constructor(
         val active = uiState.value.activeTab ?: return
         val wv = webViewPoolManager.getLiveWebView(active.id) ?: return
         wv.evaluateJavascript("(document.body ? document.body.innerText.slice(0, 12000) : '')") { raw ->
-            val text = raw?.removeSurrounding(""")
-                ?.replace("\n", "
-")
-                ?.replace("\"", """)
+            val text = raw?.removeSurrounding("\"")
+                ?.replace("\\n", "\n")
+                ?.replace("\\\"", "\"")
                 .orEmpty()
             _runtimeState.update { it.copy(formattedJsonXmlPayload = text) }
         }
@@ -783,8 +781,7 @@ class BrowserViewModel @Inject constructor(
         wv.evaluateJavascript(script) { result ->
             val entry = DevConsoleEntry(
                 level = ConsoleLogLevel.INFO,
-                message = "> $script
-< $result",
+                message = "> $script\n< $result",
                 sourceId = "REPL",
                 lineNumber = 1
             )
@@ -798,25 +795,20 @@ class BrowserViewModel @Inject constructor(
         val active = uiState.value.activeTab ?: return
         val wv = webViewPoolManager.getLiveWebView(active.id) ?: return
         wv.evaluateJavascript("document.documentElement.outerHTML.slice(0, 8000)") { htmlJson ->
-            val cleaned = htmlJson?.removeSurrounding(""")
-                ?.replace("\n", "
-")
-                ?.replace("\"", """)
-                ?.replace("\t", "  ")
+            val cleaned = htmlJson?.removeSurrounding("\"")
+                ?.replace("\\n", "\n")
+                ?.replace("\\\"", "\"")
+                ?.replace("\\t", "  ")
                 .orEmpty()
             _runtimeState.update { it.copy(domSourcePreview = cleaned) }
         }
 
         val cookies = runCatching { CookieManager.getInstance().getCookie(active.url).orEmpty() }.getOrDefault("")
         wv.evaluateJavascript(
-            "(function(){ try { return 'localStorage keys (' + Object.keys(localStorage).length + '): ' + Object.keys(localStorage).join(', ') + '\nsessionStorage keys (' + Object.keys(sessionStorage).length + '): ' + Object.keys(sessionStorage).join(', '); } catch(e){ return e.toString(); } })()"
+            "(function(){ try { return 'localStorage keys (' + Object.keys(localStorage).length + '): ' + Object.keys(localStorage).join(', ') + '\\nsessionStorage keys (' + Object.keys(sessionStorage).length + '): ' + Object.keys(sessionStorage).join(', '); } catch(e){ return e.toString(); } })()"
         ) { storageJson ->
-            val storageText = storageJson?.removeSurrounding(""")?.replace("\n", "
-").orEmpty()
-            val combined = "Cookies for ${active.url}:
-${cookies.ifBlank { "(none)" }}
-
-$storageText"
+            val storageText = storageJson?.removeSurrounding("\"")?.replace("\\n", "\n").orEmpty()
+            val combined = "Cookies for ${active.url}:\n${cookies.ifBlank { "(none)" }}\n\n$storageText"
             _runtimeState.update { it.copy(storageSummary = combined) }
         }
     }

@@ -24,7 +24,7 @@ class ExtractReaderContentUseCase @Inject constructor(
         if (rawEvaluationString.isNullOrBlank() || rawEvaluationString == "null") return null
         return try {
             // evaluateJavascript returns a JSON-escaped string literal
-            val unescaped = if (rawEvaluationString.startsWith(""") && rawEvaluationString.endsWith(""")) {
+            val unescaped = if (rawEvaluationString.startsWith("\"") && rawEvaluationString.endsWith("\"")) {
                 json.decodeFromString<String>(rawEvaluationString)
             } else {
                 rawEvaluationString

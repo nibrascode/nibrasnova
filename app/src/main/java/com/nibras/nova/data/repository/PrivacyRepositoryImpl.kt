@@ -429,10 +429,10 @@ class PrivacyRepositoryImpl @Inject constructor(
             }
             conn.connect()
             val html = conn.inputStream.bufferedReader().use { it.readText() }
-            val textOnly = html.replace("<script[^>]*>[\s\S]*?</script>".toRegex(RegexOption.IGNORE_CASE), " ")
-                .replace("<style[^>]*>[\s\S]*?</style>".toRegex(RegexOption.IGNORE_CASE), " ")
+            val textOnly = html.replace("<script[^>]*>[\\s\\S]*?</script>".toRegex(RegexOption.IGNORE_CASE), " ")
+                .replace("<style[^>]*>[\\s\\S]*?</style>".toRegex(RegexOption.IGNORE_CASE), " ")
                 .replace("<[^>]+>".toRegex(), " ")
-                .replace("\s+".toRegex(), " ")
+                .replace("\\s+".toRegex(), " ")
                 .trim()
             val digest = MessageDigest.getInstance("SHA-256")
                 .digest(textOnly.toByteArray(Charsets.UTF_8))

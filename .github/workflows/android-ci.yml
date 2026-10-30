@@ -1,0 +1,50 @@
+name: Nibras Nova Android CI & Release Builder
+
+on:
+  push:
+    branches: [ "main", "master", "develop" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      - name: Setup Gradle 8.9
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.9"
+
+      - name: Run JVM Unit Tests (Security, URLs, AdBlocker, Crypto, Summarizer)
+        run: gradle testDebugUnitTest --stacktrace
+
+      - name: Assemble Debug APK
+        run: gradle assembleDebug --stacktrace
+
+      - name: Assemble Release APK & Play Store AAB
+        run: gradle assembleRelease bundleRelease --stacktrace
+
+      - name: Upload Debug APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nibras-nova-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+
+      - name: Upload Release Bundle & APK Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nibras-nova-release-outputs
+          path: |
+            app/build/outputs/apk/release/*.apk
+            app/build/outputs/bundle/release/*.aab

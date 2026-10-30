@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Nibras Nova</string>
+    <string name="brand_name">Nibras Code</string>
+    <string name="tagline">Быстрый. Минималистичный. Безопасный Браузер.</string>
+    <string name="search_or_type_url">Поиск или введите адрес…</string>
+    <string name="private_browsing_active">Приватный Режим Активен</string>
+    <string name="process_text_search_nova">Искать в Nibras Nova</string>
+    <string name="widget_name">Поиск Nibras Nova</string>
+    <string name="quick_tile_private_tab">Приватная Вкладка Nova</string>
+    <string name="dock_bookmarks">Закладки</string>
+    <string name="dock_history">История</string>
+    <string name="dock_downloads">Загрузки</string>
+    <string name="dock_privacy">Защита</string>
+    <string name="dock_settings">Настройки</string>
+    <string name="quick_access_title">Быстрый Доступ</string>
+    <string name="recently_visited_title">Недавно Посещенные</string>
+</resources>

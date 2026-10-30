@@ -60,7 +60,7 @@ import com.nibras.nova.data.local.entity.WebAnnotationEntity
         SiteUsageEntity::class
     ],
     version = 4,
-    exportSchema = true
+    exportSchema = false
 )
 @TypeConverters(Converters::class)
 abstract class NovaDatabase : RoomDatabase() {

@@ -428,9 +428,7 @@ fun BrowserScreen(
             onDismissRequest = viewModel::dismissExternalAppPrompt,
             title = { Text("Open in External Application?") },
             text = {
-                Text("This webpage wants to open a link outside Nibras Nova:
-
-${extPrompt.targetUri}")
+                Text("This webpage wants to open a link outside Nibras Nova:\n\n${extPrompt.targetUri}")
             },
             confirmButton = {
                 Button(onClick = { viewModel.confirmExternalAppLaunch(context, extPrompt) }) {

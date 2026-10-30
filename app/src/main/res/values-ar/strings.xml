@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">نبراس نوفا</string>
+    <string name="brand_name">Nibras Code</string>
+    <string name="tagline">تصفح سريع، أنيق، وآمن.</string>
+    <string name="search_or_type_url">ابحث أو أدخل عنوان الموقع…</string>
+    <string name="private_browsing_active">التصفح الخفي نشط</string>
+    <string name="process_text_search_nova">البحث عبر نبراس نوفا</string>
+    <string name="widget_name">شريط بحث نبراس نوفا</string>
+    <string name="quick_tile_private_tab">علامة تبويب خفية</string>
+    <string name="dock_bookmarks">الإشارات</string>
+    <string name="dock_history">السجل</string>
+    <string name="dock_downloads">التنزيلات</string>
+    <string name="dock_privacy">الخصوصية</string>
+    <string name="dock_settings">الإعدادات</string>
+    <string name="quick_access_title">الوصول السريع</string>
+    <string name="recently_visited_title">تمت زيارتها مؤخراً</string>
+</resources>
