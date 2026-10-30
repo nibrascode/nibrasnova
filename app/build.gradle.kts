@@ -24,13 +24,11 @@ android {
         versionName = "2.0.0-nova-flagship"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        // AGP 8.7 has no androidResources.localeFilters; same effect:
+        resourceConfigurations += listOf("en", "az", "tr", "ru", "ar")
         vectorDrawables {
             useSupportLibrary = true
         }
-    }
-
-    androidResources {
-        localeFilters += listOf("en", "az", "tr", "ru", "ar")
     }
 
     signingConfigs {
