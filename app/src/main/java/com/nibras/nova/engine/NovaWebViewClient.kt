@@ -56,6 +56,24 @@ class NovaWebViewClient(
         val reqUrl = request.url?.toString().orEmpty()
         val method = request.method ?: "GET"
 
+        // Always-on adult-content filter (all tabs, incl. private). Runs before any network/DNS/DoH.
+        if (com.nibras.nova.core.security.AdultContentFilter.shouldBlock(reqUrl)) {
+            callback.onNetworkResourceObserved(tabId, method, reqUrl, blocked = true)
+            return if (request.isForMainFrame) BlockedPage.response() else BlockedPage.empty()
+        }
+        if (request.isForMainFrame && method.equals("GET", true)) {
+            com.nibras.nova.core.security.AdultContentFilter.enforceSafeSearch(reqUrl)?.let { safe ->
+                return BlockedPage.redirectResponse(safe)
+            }
+            val host = com.nibras.nova.core.security.AdultContentFilter.hostFromUrl(reqUrl).orEmpty()
+            if (com.nibras.nova.core.security.AdultContentFilter.isYouTube(host)) {
+                runCatching {
+                    android.webkit.CookieManager.getInstance()
+                        .setCookie("https://www.youtube.com", "PREF=f2=8000000; domain=.youtube.com; path=/; secure")
+                }
+            }
+        }
+
         if (!request.isForMainFrame && callback.isAdBlockerEnabled() && adBlockerEngine.shouldBlockRequest(reqUrl)) {
             callback.onAdOrTrackerBlocked(tabId, reqUrl)
             callback.onNetworkResourceObserved(tabId, method, reqUrl, blocked = true)
@@ -90,6 +108,11 @@ class NovaWebViewClient(
     }
 
     private fun handleNavigationRequest(view: WebView, targetUrl: String, isMainFrame: Boolean): Boolean {
+        if (isMainFrame) {
+            com.nibras.nova.core.security.AdultContentFilter.enforceSafeSearch(targetUrl)?.let { safe ->
+                view.loadUrl(safe); return true
+            }
+        }
         when (val disposition = schemePolicy.evaluateNavigation(targetUrl, callback.isHttpsOnlyEnabled())) {
             is NavigationDisposition.AllowInWebView -> return false
             is NavigationDisposition.UpgradedToHttps -> {

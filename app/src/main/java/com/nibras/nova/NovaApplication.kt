@@ -10,6 +10,7 @@ class NovaApplication : Application() {
 
     override fun onCreate() {
         com.nibras.nova.core.common.L.init(this)
+        com.nibras.nova.core.security.AdultContentFilter.init(this)
         super.onCreate()
         configureWebViewProcessDataDirectory()
     }

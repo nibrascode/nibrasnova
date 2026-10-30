@@ -269,3 +269,16 @@ _آخر تحديث: 30 أكتوبر 2026_
 
 Nibras Code — nibrascode@gmail.com — https://nibrascode.com
 
+
+
+## Safe content
+
+- **az**: Uşaq və ailə üçün təhlükəsizlik: yetkin (18+) saytlar həmişə bloklanır, Google, Bing, DuckDuckGo və YouTube-da təhlükəsiz axtarış məcburidir. Yoxlama tamamilə cihazda, daxili siyahı (StevenBlack/hosts, MIT) ilə aparılır; heç bir baxış məlumatı heç yerə göndərilmir. Gizli vərəqlərdə də işləyir.
+
+- **en**: Family safety: adult (18+) sites are always blocked and SafeSearch is enforced on Google, Bing, DuckDuckGo and YouTube. The check runs entirely on your device using a bundled list (StevenBlack/hosts, MIT); no browsing data is sent anywhere. It also applies in private tabs.
+
+- **tr**: Aile güvenliği: yetişkin (18+) siteler her zaman engellenir; Google, Bing, DuckDuckGo ve YouTube’da Güvenli Arama zorunludur. Kontrol tamamen cihazda, uygulamaya gömülü liste (StevenBlack/hosts, MIT) ile yapılır; hiçbir tarama verisi bir yere gönderilmez. Gizli sekmelerde de çalışır.
+
+- **ru**: Безопасность семьи: сайты для взрослых (18+) всегда блокируются, в Google, Bing, DuckDuckGo и YouTube принудительно включён безопасный поиск. Проверка выполняется полностью на устройстве по встроенному списку (StevenBlack/hosts, MIT); данные о просмотре никуда не отправляются. Работает и в приватных вкладках.
+
+- **ar**: أمان العائلة: تُحظر المواقع الإباحية (18+) دائمًا، ويُفرض البحث الآمن في Google وBing وDuckDuckGo وYouTube. يتم الفحص بالكامل على جهازك باستخدام قائمة مدمجة (StevenBlack/hosts، رخصة MIT)؛ ولا تُرسل أي بيانات تصفح إلى أي جهة. ويعمل أيضًا في الألسنة الخاصة.

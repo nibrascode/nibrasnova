@@ -84,6 +84,12 @@ import com.nibras.nova.ui.theme.NovaIncognitoAccent
 import com.nibras.nova.ui.theme.NovaTurquoise
 import android.widget.Toast
 import androidx.compose.ui.platform.LocalContext
+import android.content.Intent
+import android.speech.RecognizerIntent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.ui.res.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -106,404 +112,184 @@ fun HomeScreen(
     var showAddShortcutDialog by remember { mutableStateOf(false) }
     var editingShortcut by remember { mutableStateOf<QuickShortcut?>(null) }
 
-    val backgroundBrush = when (state.settings.wallpaperPresetId) {
-        "nova_turquoise_aurora" -> Brush.verticalGradient(
-            listOf(Color(0xFF061A23), NovaDeepNavy, Color(0xFF0A1424))
-        )
-        "nova_graphite_minimal" -> Brush.verticalGradient(
-            listOf(MaterialTheme.colorScheme.background, MaterialTheme.colorScheme.surface)
-        )
-        else -> Brush.verticalGradient(
-            listOf(NovaDeepNavy, Color(0xFF0E172A), MaterialTheme.colorScheme.background)
-        )
+    val homeContext = LocalContext.current
+    val pinnedToastText = stringResource(R.string.home_pinned_toast)
+    var moreExpanded by remember { mutableStateOf(false) }
+    val lang = homeContext.resources.configuration.locales[0].language
+    fun open(url: String) = viewModel.submitSearchOrUrl(rawQuery = url, openInPrivate = isPrivateInputMode, onNavigateToBrowser = onOpenBrowser)
+    val voiceLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        val spoken = result.data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.firstOrNull()
+        if (!spoken.isNullOrBlank()) open(spoken)
     }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(backgroundBrush)
-            .systemBarsPadding()
+            .background(HomeBg)
     ) {
+        Column(Modifier.fillMaxSize()) {
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(horizontal = 20.dp, vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+            modifier = Modifier.weight(1f).fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(18.dp)
         ) {
-            // 1. Top Header Bar: Privacy Shield Pill, Incognito Switch, Tabs Counter
+            // 1. Hero with privacy + private-mode controls overlaid
             item {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    AssistChip(
-                        onClick = onOpenPrivacyDashboard,
-                        label = {
-                            Text(
-                                text = L.s(R.string.t_protected, state.privacyMetrics.httpsUpgradesCount + state.privacyMetrics.unsafeSchemesBlockedCount),
-                                style = MaterialTheme.typography.labelLarge
-                            )
-                        },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Security,
-                                contentDescription = L.s(R.string.t_privacy_dashboard),
-                                tint = NovaTurquoise,
-                                modifier = Modifier.size(16.dp)
-                            )
-                        }
-                    )
-
+                Box {
+                    HomeHero()
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = 12.dp, vertical = 4.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        AssistChip(
-                            onClick = { isPrivateInputMode = !isPrivateInputMode },
-                            label = {
-                                Text(if (isPrivateInputMode) L.s(R.string.t_private_on) else L.s(R.string.t_private_2))
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Default.VisibilityOff,
-                                    contentDescription = L.s(R.string.t_toggle_private_mode),
-                                    tint = if (isPrivateInputMode) NovaIncognitoAccent else MaterialTheme.colorScheme.onSurfaceVariant,
-                                    modifier = Modifier.size(16.dp)
-                                )
-                            }
-                        )
-
-                        IconButton(onClick = onOpenTabs) {
-                            Box(
-                                modifier = Modifier
-                                    .size(30.dp)
-                                    .border(
-                                        2.dp,
-                                        if (isPrivateInputMode) NovaIncognitoAccent else MaterialTheme.colorScheme.primary,
-                                        RoundedCornerShape(8.dp)
-                                    ),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                val count = if (isPrivateInputMode) state.privateTabCount else state.normalTabCount
-                                Text(
-                                    text = count.toString(),
-                                    style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
-                                    color = if (isPrivateInputMode) NovaIncognitoAccent else MaterialTheme.colorScheme.primary
-                                )
-                            }
+                        IconButton(onClick = onOpenPrivacyDashboard) {
+                            Icon(Icons.Default.Security, L.s(R.string.t_privacy_dashboard), tint = NovaTurquoise)
                         }
-                    }
-                }
-            }
-
-            // 2. Nibras Nova Hero Branding
-            item {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 12.dp, bottom = 4.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    NovaLogo(
-                        iconSize = 54.dp,
-                        showSubtitle = true,
-                        isIncognito = isPrivateInputMode
-                    )
-                }
-            }
-
-            // 3. Intelligent Search / Address Bar with Engine Badge & QR Scanner
-            item {
-                OutlinedTextField(
-                    value = searchInput,
-                    onValueChange = { searchInput = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(28.dp),
-                    singleLine = true,
-                    placeholder = {
-                        Text(
-                            text = if (isPrivateInputMode) {
-                                L.s(R.string.t_search_privately_with, state.settings.searchEngine.displayName)
-                            } else {
-                                L.s(R.string.t_search_or_type_url, state.settings.searchEngine.displayName)
-                            }
-                        )
-                    },
-                    leadingIcon = {
-                        Surface(
-                            modifier = Modifier
-                                .padding(start = 6.dp)
-                                .clip(RoundedCornerShape(20.dp))
-                                .clickable { showEnginePickerSheet = true },
-                            color = MaterialTheme.colorScheme.surfaceVariant
-                        ) {
-                            Row(
-                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Search,
-                                    contentDescription = L.s(R.string.t_select_search_engine),
-                                    tint = if (isPrivateInputMode) NovaIncognitoAccent else MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.size(16.dp)
-                                )
-                                Spacer(modifier = Modifier.width(4.dp))
-                                Text(
-                                    text = state.settings.searchEngine.displayName.take(6),
-                                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
-                                )
-                            }
-                        }
-                    },
-                    trailingIcon = {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            if (searchInput.isNotEmpty()) {
-                                IconButton(onClick = { searchInput = "" }) {
-                                    Icon(Icons.Default.Close, contentDescription = L.s(R.string.t_clear_search))
-                                }
-                            }
-                            IconButton(onClick = onOpenQrScanner) {
-                                Icon(
-                                    imageVector = Icons.Default.QrCodeScanner,
-                                    contentDescription = L.s(R.string.t_scan_qr_code),
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                            }
-                        }
-                    },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Go),
-                    keyboardActions = KeyboardActions(
-                        onGo = {
-                            if (searchInput.isNotBlank()) {
-                                viewModel.submitSearchOrUrl(
-                                    rawQuery = searchInput,
-                                    openInPrivate = isPrivateInputMode,
-                                    onNavigateToBrowser = onOpenBrowser
-                                )
-                                searchInput = ""
-                            }
-                        }
-                    ),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = if (isPrivateInputMode) NovaIncognitoAccent else NovaTurquoise,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-                        focusedContainerColor = MaterialTheme.colorScheme.surface,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surface
-                    )
-                )
-            }
-
-            // 4. Quick-Action Utility Dock (Bookmarks, History, Downloads, Privacy, Settings)
-            item {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    HomeDockActionButton(
-                        icon = Icons.Default.Bookmarks,
-                        label = L.s(R.string.t_bookmarks),
-                        onClick = onOpenBookmarks
-                    )
-                    HomeDockActionButton(
-                        icon = Icons.Default.History,
-                        label = L.s(R.string.t_history),
-                        onClick = onOpenHistory
-                    )
-                    HomeDockActionButton(
-                        icon = Icons.Default.Download,
-                        label = L.s(R.string.t_downloads),
-                        onClick = onOpenDownloads
-                    )
-                    HomeDockActionButton(
-                        icon = Icons.Default.Policy,
-                        label = L.s(R.string.t_privacy),
-                        onClick = onOpenPrivacyDashboard
-                    )
-                    HomeDockActionButton(
-                        icon = Icons.Default.Settings,
-                        label = L.s(R.string.t_settings),
-                        onClick = onOpenSettings
-                    )
-                }
-            }
-
-            // 5. Quick-Access Website Shortcuts (nibrascode.com is always pinned first)
-            run {
-                item {
-                    Column(modifier = Modifier.fillMaxWidth()) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = stringResource(R.string.quick_access_title),
-                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
-                                color = MaterialTheme.colorScheme.onBackground
+                        IconButton(onClick = { isPrivateInputMode = !isPrivateInputMode }) {
+                            Icon(
+                                Icons.Default.VisibilityOff, L.s(R.string.t_toggle_private_mode),
+                                tint = if (isPrivateInputMode) NovaIncognitoAccent else Color(0x99FFFFFF)
                             )
-                            TextButton(onClick = { showAddShortcutDialog = true }) {
-                                Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
-                                Text(" " + stringResource(R.string.home_add_site))
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(6.dp))
-
-                        Text(
-                            text = stringResource(R.string.home_shortcuts_hint),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        val homeContext = LocalContext.current
-                        val pinnedToastText = stringResource(R.string.home_pinned_toast)
-                        val pinnedShortcut = QuickShortcut(id = PINNED_NIBRASCODE_ID, title = "nibrascode.com", url = "https://nibrascode.com")
-                        val userShortcuts = if (state.settings.showQuickShortcutsOnHome) {
-                            state.shortcuts.filterNot { it.url.contains("nibrascode.com", ignoreCase = true) }
-                        } else emptyList()
-                        val rows = (listOf(pinnedShortcut) + userShortcuts).chunked(4)
-                        rows.forEach { rowItems ->
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 6.dp),
-                                horizontalArrangement = Arrangement.spacedBy(12.dp)
-                            ) {
-                                rowItems.forEach { shortcut ->
-                                    Column(
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .clip(RoundedCornerShape(16.dp))
-                                            .combinedClickable(
-                                                onClick = {
-                                                    viewModel.submitSearchOrUrl(
-                                                        rawQuery = shortcut.url,
-                                                        openInPrivate = isPrivateInputMode,
-                                                        onNavigateToBrowser = onOpenBrowser
-                                                    )
-                                                },
-                                                onLongClick = {
-                                                    if (shortcut.id == PINNED_NIBRASCODE_ID) {
-                                                        Toast.makeText(homeContext, pinnedToastText, Toast.LENGTH_SHORT).show()
-                                                    } else {
-                                                        editingShortcut = shortcut
-                                                    }
-                                                }
-                                            )
-                                            .padding(vertical = 10.dp, horizontal = 4.dp),
-                                        horizontalAlignment = Alignment.CenterHorizontally
-                                    ) {
-                                        Box(
-                                            modifier = Modifier
-                                                .size(48.dp)
-                                                .clip(RoundedCornerShape(14.dp))
-                                                .background(NovaElevatedNavy)
-                                                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(14.dp)),
-                                            contentAlignment = Alignment.Center
-                                        ) {
-                                            Text(
-                                                text = shortcut.title.take(1).uppercase(),
-                                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                                                color = MaterialTheme.colorScheme.primary
-                                            )
-                                        }
-                                        Spacer(modifier = Modifier.height(6.dp))
-                                        Text(
-                                            text = shortcut.title,
-                                            style = MaterialTheme.typography.labelSmall,
-                                            maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis,
-                                            textAlign = TextAlign.Center
-                                        )
-                                    }
-                                }
-                                repeat(4 - rowItems.size) {
-                                    Spacer(modifier = Modifier.weight(1f))
-                                }
-                            }
                         }
                     }
                 }
             }
 
-            // 6. Recently Visited Websites Strip (Only shown in Normal Mode when non-empty)
+            // 2. Glass search bar
+            item {
+                Box(Modifier.padding(horizontal = 20.dp)) {
+                    HomeSearchBar(
+                        value = searchInput,
+                        onValueChange = { searchInput = it },
+                        onGo = {
+                            if (searchInput.isNotBlank()) { open(searchInput); searchInput = "" }
+                        },
+                        engineName = state.settings.searchEngine.displayName,
+                        isPrivate = isPrivateInputMode,
+                        onEngineClick = { showEnginePickerSheet = true },
+                        onMic = {
+                            runCatching {
+                                voiceLauncher.launch(
+                                    Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+                                        .putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+                                )
+                            }
+                        },
+                        onQr = onOpenQrScanner,
+                        placeholder = if (isPrivateInputMode) L.s(R.string.t_search_privately_with, state.settings.searchEngine.displayName)
+                        else stringResource(R.string.home_search_hint)
+                    )
+                }
+            }
+
+            // 3. Quick-link tiles: user shortcuts (defaults when empty), pinned Nibras, add
+            item {
+                val defaults = listOf(
+                    QuickShortcut(id = -1L, title = "Google", url = "https://www.google.com"),
+                    QuickShortcut(id = -2L, title = "YouTube", url = "https://www.youtube.com"),
+                    QuickShortcut(id = -3L, title = "GitHub", url = "https://github.com")
+                )
+                val user = if (state.settings.showQuickShortcutsOnHome) {
+                    state.shortcuts.filterNot { it.url.contains("nibrascode.com", ignoreCase = true) }
+                } else emptyList()
+                val tiles = (if (user.isEmpty() && state.settings.showQuickShortcutsOnHome) defaults else user) +
+                    QuickShortcut(id = PINNED_NIBRASCODE_ID, title = "Nibras", url = "https://nibrascode.com")
+                val cells: List<QuickShortcut?> = tiles + listOf(null)
+                Column(Modifier.padding(horizontal = 14.dp)) {
+                    cells.chunked(5).forEach { row ->
+                        Row(Modifier.fillMaxWidth()) {
+                            row.forEach { sc ->
+                                if (sc == null) {
+                                    QuickTile(stringResource(R.string.home_add), onClick = { showAddShortcutDialog = true }, modifier = Modifier.weight(1f)) {
+                                        Icon(Icons.Default.Add, null, tint = Color.White, modifier = Modifier.size(26.dp))
+                                    }
+                                } else {
+                                    QuickTile(
+                                        sc.title,
+                                        onClick = { open(sc.url) },
+                                        onLongClick = {
+                                            when {
+                                                sc.id == PINNED_NIBRASCODE_ID -> Toast.makeText(homeContext, pinnedToastText, Toast.LENGTH_SHORT).show()
+                                                sc.id > 0 -> editingShortcut = sc
+                                            }
+                                        },
+                                        modifier = Modifier.weight(1f)
+                                    ) { TileIcon(sc.url, sc.title) }
+                                }
+                            }
+                            repeat(5 - row.size) { Spacer(Modifier.weight(1f)) }
+                        }
+                    }
+                }
+            }
+
+            // 4. Discover: real nibrascode.com pages, bundled for offline
+            item {
+                Column {
+                    Box(Modifier.padding(horizontal = 20.dp)) {
+                        DiscoverHeader(onSeeAll = { open(if (lang in setOf("en", "tr", "ru", "ar")) "https://nibrascode.com/$lang" else "https://nibrascode.com") })
+                    }
+                    DiscoverRow(DISCOVER_ITEMS) { open(it.url(lang)) }
+                }
+            }
+
+            // 5. Recently visited (normal mode only)
             if (state.settings.showRecentHistoryOnHome && !isPrivateInputMode && state.recentHistory.isNotEmpty()) {
                 item {
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = stringResource(R.string.recently_visited_title),
-                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold)
-                        )
-                        TextButton(onClick = onOpenHistory) {
-                            Text(stringResource(R.string.home_view_all))
-                        }
+                        Text(stringResource(R.string.recently_visited_title), color = Color.White, style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold))
+                        TextButton(onClick = onOpenHistory) { Text(stringResource(R.string.home_view_all)) }
                     }
                 }
-
                 items(state.recentHistory, key = { it.id }) { historyItem ->
-                    Card(
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable {
-                                viewModel.submitSearchOrUrl(
-                                    rawQuery = historyItem.url,
-                                    openInPrivate = false,
-                                    onNavigateToBrowser = onOpenBrowser
-                                )
-                            },
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                        shape = RoundedCornerShape(14.dp)
+                            .padding(horizontal = 20.dp)
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(Color(0xFF111A3A))
+                            .clickable { viewModel.submitSearchOrUrl(rawQuery = historyItem.url, openInPrivate = false, onNavigateToBrowser = onOpenBrowser) }
+                            .padding(horizontal = 14.dp, vertical = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 14.dp, vertical = 10.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(34.dp)
-                                    .clip(CircleShape)
-                                    .background(MaterialTheme.colorScheme.surfaceVariant),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = historyItem.title.take(1).uppercase(),
-                                    style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = historyItem.title,
-                                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                                Text(
-                                    text = historyItem.url,
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                            }
-                            IconButton(onClick = { viewModel.deleteRecentHistoryItem(historyItem.id) }) {
-                                Icon(
-                                    imageVector = Icons.Default.Close,
-                                    contentDescription = L.s(R.string.t_remove_from_recent),
-                                    modifier = Modifier.size(16.dp)
-                                )
-                            }
+                        Box(Modifier.size(34.dp).clip(CircleShape).background(NovaElevatedNavy), contentAlignment = Alignment.Center) {
+                            Text(historyItem.title.take(1).uppercase(), color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+                        }
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(historyItem.title, color = Color.White, style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                            Text(historyItem.url, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        }
+                        IconButton(onClick = { viewModel.deleteRecentHistoryItem(historyItem.id) }) {
+                            Icon(Icons.Default.Close, L.s(R.string.t_remove_from_recent), modifier = Modifier.size(16.dp))
                         }
                     }
                 }
             }
+            item { Spacer(Modifier.height(8.dp)) }
+        }
+        HomeBottomBar(
+            tabCount = if (isPrivateInputMode) state.privateTabCount else state.normalTabCount,
+            onBookmarks = onOpenBookmarks,
+            onHistory = onOpenHistory,
+            onTabs = onOpenTabs,
+            moreExpanded = moreExpanded,
+            onMore = { moreExpanded = true },
+            onDismissMore = { moreExpanded = false },
+            moreMenu = { dismiss ->
+                DropdownMenuItem(text = { Text(L.s(R.string.t_downloads)) }, leadingIcon = { Icon(Icons.Default.Download, null) }, onClick = { dismiss(); onOpenDownloads() })
+                DropdownMenuItem(text = { Text(L.s(R.string.t_privacy)) }, leadingIcon = { Icon(Icons.Default.Policy, null) }, onClick = { dismiss(); onOpenPrivacyDashboard() })
+                DropdownMenuItem(text = { Text(stringResource(R.string.t_scan_qr_code)) }, leadingIcon = { Icon(Icons.Default.QrCodeScanner, null) }, onClick = { dismiss(); onOpenQrScanner() })
+                DropdownMenuItem(
+                    text = { Text(if (isPrivateInputMode) L.s(R.string.t_private_on) else L.s(R.string.t_private_2)) },
+                    leadingIcon = { Icon(Icons.Default.VisibilityOff, null) },
+                    onClick = { dismiss(); isPrivateInputMode = !isPrivateInputMode }
+                )
+                DropdownMenuItem(text = { Text(L.s(R.string.t_settings)) }, leadingIcon = { Icon(Icons.Default.Settings, null) }, onClick = { dismiss(); onOpenSettings() })
+            }
+        )
         }
 
         // Search Engine Quick Selector Bottom Sheet

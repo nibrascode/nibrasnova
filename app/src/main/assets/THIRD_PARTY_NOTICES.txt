@@ -1,0 +1,4 @@
+adult_domains.txt.gz
+  Derived from StevenBlack/hosts "porn" extension (https://github.com/StevenBlack/hosts),
+  MIT License, Copyright (c) Steven Black. Upstream sources: hostsVN Adult VN (MIT),
+  Clefspeare13/pornhosts (MIT), Snuff hosts. Used only for on-device blocking.
