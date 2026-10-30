@@ -117,6 +117,9 @@ fun GeneralSettingsScreen(
         return
     }
     if (showParental) com.nibras.nova.ui.parental.ParentalControlsDialog(onDismiss = { showParental = false })
+    var showPrayerNotif by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+    if (showPrayerNotif) com.nibras.nova.ui.home.PrayerNotificationsDialog(onDismiss = { showPrayerNotif = false })
+    var halalOn by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(com.nibras.nova.core.halal.HalalImageFilter.enabled) }
     val rawGroups = listOf(
         SettingGroup(
             R.string.grp_general, listOf(
@@ -150,11 +153,12 @@ fun GeneralSettingsScreen(
                     viewModel.updateHomepageVisibility(settings.showQuickShortcutsOnHome, it)
                 }
                 ,
-                SettingRow.Toggle(R.string.pr_show, R.string.pr_show_info, prOn) { prOn = it; prayerPrefs.enabled = it },
+                SettingRow.Toggle(R.string.pr_show, R.string.pr_show_info, prOn) { prOn = it; prayerPrefs.enabled = it; com.nibras.nova.core.prayer.PrayerAlarms.rescheduleAsync(context) },
+                SettingRow.Nav(R.string.pn_title, R.string.pn_row_info) { showPrayerNotif = true },
                 SettingRow.Choice(
                     R.string.pr_method, R.string.pr_method_info,
                     prMethods.map { com.nibras.nova.ui.home.methodLabel(context, it.name) to (it.name == prMethod) }
-                ) { idx -> prMethod = prMethods[idx].name; prayerPrefs.method = prMethods[idx].name }
+                ) { idx -> prMethod = prMethods[idx].name; prayerPrefs.method = prMethods[idx].name; com.nibras.nova.core.prayer.PrayerAlarms.rescheduleAsync(context) }
             )
         ),
         SettingGroup(
@@ -199,6 +203,7 @@ fun GeneralSettingsScreen(
     )
     val groups = (rawGroups + SettingGroup(
         R.string.grp_parental, listOf(
+            SettingRow.Toggle(R.string.hs_title, R.string.hs_info, halalOn) { halalOn = it; com.nibras.nova.core.halal.HalalImageFilter.enabled = it },
             SettingRow.Nav(R.string.pc_title, R.string.pc_row_info,
                 value = stringResource(if (parental.pin.hasPin) R.string.pc_status_on else R.string.pc_status_off)) { showParental = true }
         )

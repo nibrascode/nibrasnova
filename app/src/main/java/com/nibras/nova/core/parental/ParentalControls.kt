@@ -19,6 +19,14 @@ class ParentalControls private constructor(context: Context) {
     var customBlocklist: List<String>
         get() = sp.getString("blocklist", "").orEmpty().split('\n').map { it.trim() }.filter { it.isNotEmpty() }
         set(v) { sp.edit().putString("blocklist", v.joinToString("\n")).apply(); applyBlocklist() }
+    /** Sites a Child profile may open (allowlist-only). */
+    var childAllowlist: List<String>
+        get() = sp.getString("child_allow", null)?.split('\n')?.map { it.trim() }?.filter { it.isNotEmpty() } ?: FamilyProfile.DEFAULT_CHILD_ALLOW
+        set(v) { sp.edit().putString("child_allow", v.mapNotNull { normalizeDomain(it) }.distinct().joinToString("\n")).apply(); allowCache = null }
+    @Volatile private var allowCache: List<String>? = null
+    fun isAllowedForChild(host: String?): Boolean =
+        FamilyProfile.isAllowed(host, allowCache ?: childAllowlist.also { allowCache = it })
+
     /** 0 = off. */
     var dailyLimitMinutes: Int get() = sp.getInt("limit_min", 0); set(v) = sp.edit().putInt("limit_min", v).apply()
 

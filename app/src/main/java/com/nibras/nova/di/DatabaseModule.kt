@@ -57,7 +57,7 @@ object DatabaseProvideModule {
         return Room.databaseBuilder(
             context,
             NovaDatabase::class.java,
-            NovaConstants.DATABASE_NAME
+            com.nibras.nova.core.parental.FamilyProfile.dbName(NovaConstants.DATABASE_NAME)
         ).fallbackToDestructiveMigration().build()
     }
 

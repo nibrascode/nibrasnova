@@ -47,6 +47,7 @@ class NovaWebViewClient(
     private var lastMainFrameNavTimestamp = 0L
     private var lastMainFrameHost = ""
     private var rapidCrossDomainRedirectHops = 0
+    @Volatile private var currentPageUrl: String? = null
 
     override fun shouldInterceptRequest(
         view: WebView?,
@@ -61,6 +62,15 @@ class NovaWebViewClient(
             callback.onNetworkResourceObserved(tabId, method, reqUrl, blocked = true)
             return if (request.isForMainFrame) BlockedPage.response() else BlockedPage.empty()
         }
+        if (request.isForMainFrame && com.nibras.nova.core.parental.FamilyProfile.isChild && reqUrl.startsWith("http")) {
+            val host = request.url?.host
+            val pc = view?.context?.let { com.nibras.nova.core.parental.ParentalControls.get(it) }
+            if (pc != null && !pc.isAllowedForChild(host)) {
+                callback.onNetworkResourceObserved(tabId, method, reqUrl, blocked = true)
+                return BlockedPage.childResponse(host.orEmpty())
+            }
+        }
+        if (request.isForMainFrame) currentPageUrl = reqUrl
         if (request.isForMainFrame && method.equals("GET", true)) {
             com.nibras.nova.core.security.AdultContentFilter.enforceSafeSearch(reqUrl)?.let { safe ->
                 return BlockedPage.redirectResponse(safe)
@@ -81,6 +91,9 @@ class NovaWebViewClient(
         }
 
         callback.onNetworkResourceObserved(tabId, method, reqUrl, blocked = false)
+        if (!request.isForMainFrame) {
+            runCatching { com.nibras.nova.core.halal.HalalImageFilter.intercept(request, currentPageUrl) }.getOrNull()?.let { return it }
+        }
         return super.shouldInterceptRequest(view, request)
     }
 
@@ -137,6 +150,7 @@ class NovaWebViewClient(
 
     override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
+        if (!url.isNullOrBlank()) currentPageUrl = url
         if (!url.isNullOrBlank()) {
             callback.onPageLoadStarted(tabId, url)
         }

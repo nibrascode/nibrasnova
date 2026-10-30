@@ -30,6 +30,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Explore
+import androidx.compose.material.icons.filled.Code
+import androidx.compose.material.icons.filled.FamilyRestroom
 import androidx.compose.material.icons.filled.Bookmarks
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Download
@@ -117,6 +119,9 @@ fun HomeScreen(
     val pinnedToastText = stringResource(R.string.home_pinned_toast)
     var moreExpanded by remember { mutableStateOf(false) }
     var showQibla by remember { mutableStateOf(false) }
+    var showPlayground by remember { mutableStateOf(false) }
+    var showProfile by remember { mutableStateOf(false) }
+    var showParentalFromProfile by remember { mutableStateOf(false) }
     val lang = homeContext.resources.configuration.locales[0].language
     fun open(url: String) = viewModel.submitSearchOrUrl(rawQuery = url, openInPrivate = isPrivateInputMode, onNavigateToBrowser = onOpenBrowser)
     val voiceLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -292,12 +297,19 @@ fun HomeScreen(
                     onClick = { dismiss(); isPrivateInputMode = !isPrivateInputMode }
                 )
                 DropdownMenuItem(text = { Text(stringResource(R.string.qb_title)) }, leadingIcon = { Icon(Icons.Default.Explore, null) }, onClick = { dismiss(); showQibla = true })
+                DropdownMenuItem(text = { Text(stringResource(R.string.pg_title)) }, leadingIcon = { Icon(Icons.Default.Code, null) }, onClick = { dismiss(); showPlayground = true })
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.fp_current, stringResource(if (com.nibras.nova.core.parental.FamilyProfile.isChild) R.string.fp_child else R.string.fp_adult))) },
+                    leadingIcon = { Icon(Icons.Default.FamilyRestroom, null) }, onClick = { dismiss(); showProfile = true })
                 DropdownMenuItem(text = { Text(L.s(R.string.t_settings)) }, leadingIcon = { Icon(Icons.Default.Settings, null) }, onClick = { dismiss(); onOpenSettings() })
             }
         )
         }
 
         if (showQibla) QiblaDialog(onDismiss = { showQibla = false })
+        if (showPlayground) com.nibras.nova.ui.playground.HtmlPlaygroundDialog(onDismiss = { showPlayground = false })
+        if (showProfile) com.nibras.nova.ui.parental.ProfileSwitchDialog(onDismiss = { showProfile = false }, onSetPin = { showParentalFromProfile = true })
+        if (showParentalFromProfile) com.nibras.nova.ui.parental.ParentalControlsDialog(onDismiss = { showParentalFromProfile = false })
 
         // Search Engine Quick Selector Bottom Sheet
         if (showEnginePickerSheet) {

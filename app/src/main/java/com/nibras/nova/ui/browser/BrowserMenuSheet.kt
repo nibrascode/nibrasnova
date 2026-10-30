@@ -97,6 +97,7 @@ fun BrowserMenuSheet(
     onOpenJsonXmlFormatter: () -> Unit,
     onSaveFullMhtmlWebArchive: () -> Unit,
     onOpenDevToolsConsole: () -> Unit,
+    onOpenHtmlPlayground: () -> Unit = {},
     onOpenUserScriptsManager: () -> Unit,
     onToggleDesktopMode: (Boolean) -> Unit,
     onFindInPage: () -> Unit,
@@ -253,6 +254,10 @@ fun BrowserMenuSheet(
             MenuRowItem(Icons.Default.BugReport, L.s(R.string.t_web_developer_console_inspector_f12)) {
                 onDismiss()
                 onOpenDevToolsConsole()
+            }
+            MenuRowItem(Icons.Default.Code, androidx.compose.ui.res.stringResource(R.string.pg_title)) {
+                onDismiss()
+                onOpenHtmlPlayground()
             }
             MenuRowItem(Icons.Default.Colorize, L.s(R.string.t_eyedropper_color_picker_font_inspector)) {
                 onDismiss()

@@ -17,6 +17,7 @@ class BlockedPageDumpTest {
         val dir = System.getenv("SNAPSHOT_DIR"); assumeTrue(dir != null)
         L.init(ApplicationProvider.getApplicationContext())
         File(dir, "$name.html").writeText(BlockedPage.html())
+        File(dir, "child_$name.html").writeText(BlockedPage.childHtml("youtube.com"))
     }
     @Test @Config(qualifiers = "az") fun az() = dump("blocked_az")
     @Test @Config(qualifiers = "ar") fun ar() = dump("blocked_ar")

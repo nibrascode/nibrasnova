@@ -21,3 +21,7 @@
 -keep class androidx.webkit.** { *; }
 -dontwarn com.google.mlkit.**
 -dontwarn com.google.zxing.**
+
+# TensorFlow Lite (Halal image filter)
+-keep class org.tensorflow.lite.** { *; }
+-dontwarn org.tensorflow.lite.**

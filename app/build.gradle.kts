@@ -31,6 +31,10 @@ android {
         }
     }
 
+    androidResources {
+        noCompress += "tflite"
+    }
+
     signingConfigs {
         create("release") {
             val keystorePath = System.getenv("NOVA_KEYSTORE_PATH")
@@ -119,6 +123,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.webkit)
     implementation("com.batoulapps.adhan:adhan2:0.0.5")
+    // On-device image classifier runtime (Apache-2.0) for Halal search mode.
+    implementation("org.tensorflow:tensorflow-lite:2.16.1")
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)

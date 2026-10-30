@@ -19,6 +19,7 @@ class WebViewConfigurator @Inject constructor() {
     private var defaultMobileUserAgent: String? = null
     private val desktopScripts = java.util.WeakHashMap<WebView, androidx.webkit.ScriptHandler>()
     private val youTubeRestrictScripts = java.util.WeakHashMap<WebView, androidx.webkit.ScriptHandler>()
+    private val halalInstalled = java.util.WeakHashMap<WebView, Boolean>()
 
     @SuppressLint("SetJavaScriptEnabled")
     fun applySecurityAndUserSettings(
@@ -79,6 +80,15 @@ class WebViewConfigurator @Inject constructor() {
                 youTubeRestrictScripts[webView] = androidx.webkit.WebViewCompat.addDocumentStartJavaScript(
                     webView, YOUTUBE_RESTRICT_JS, setOf("https://youtube.com", "https://*.youtube.com")
                 )
+            }
+        }
+
+        // Halal search mode: tap-to-reveal bridge for images the on-device classifier blurred.
+        if (halalInstalled[webView] != true && WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {
+            runCatching {
+                webView.addJavascriptInterface(com.nibras.nova.core.halal.HalalImageFilter.Bridge(webView), "NovaHalal")
+                androidx.webkit.WebViewCompat.addDocumentStartJavaScript(webView, com.nibras.nova.core.halal.HalalImageFilter.TAP_JS, setOf("*"))
+                halalInstalled[webView] = true
             }
         }
 

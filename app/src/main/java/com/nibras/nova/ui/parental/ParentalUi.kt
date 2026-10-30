@@ -166,7 +166,9 @@ fun ParentalControlsContent(onBack: () -> Unit) {
                 }
             }
             HorizontalDivider()
-            OutlinedButton(onClick = { guard { pc.pin.clearPin(); pc.lockSettingsScreen = false; pc.dailyLimitMinutes = 0; hasPin = false; lockSettings = false; limit = 0 } }) {
+            FamilySection(guard, savedText) { msg = it }
+            HorizontalDivider()
+            OutlinedButton(enabled = !com.nibras.nova.core.parental.FamilyProfile.isChild, onClick = { guard { pc.pin.clearPin(); pc.lockSettingsScreen = false; pc.dailyLimitMinutes = 0; hasPin = false; lockSettings = false; limit = 0 } }) {
                 Text(stringResource(R.string.pc_remove_pin))
             }
         }

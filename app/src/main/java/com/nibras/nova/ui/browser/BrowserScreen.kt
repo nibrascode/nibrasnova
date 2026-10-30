@@ -99,6 +99,7 @@ fun BrowserScreen(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val fullScreenVideo by viewModel.fullScreenCustomView.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    var showHtmlPlayground by remember { mutableStateOf(false) }
     val configuration = LocalConfiguration.current
     val isWideScreen = configuration.screenWidthDp >= 600
     val snackbarHostState = remember { SnackbarHostState() }
@@ -502,6 +503,27 @@ fun BrowserScreen(
         )
     }
 
+    if (showHtmlPlayground) com.nibras.nova.ui.playground.HtmlPlaygroundDialog(onDismiss = { showHtmlPlayground = false })
+
+    // Halal search mode: tap-to-reveal for blurred images (PIN when parental controls are on).
+    var revealReq by remember { mutableStateOf<com.nibras.nova.core.halal.HalalImageFilter.RevealRequest?>(null) }
+    LaunchedEffect(Unit) { com.nibras.nova.core.halal.HalalImageFilter.revealRequests.collect { revealReq = it } }
+    revealReq?.let { rq ->
+        val doReveal = { rq.webView.get()?.evaluateJavascript(com.nibras.nova.core.halal.HalalImageFilter.revealJs(rq.url), null); revealReq = null }
+        val pcForReveal = remember { com.nibras.nova.core.parental.ParentalControls.get(context) }
+        if (pcForReveal.pin.hasPin) {
+            com.nibras.nova.ui.parental.PinPromptDialog(androidx.compose.ui.res.stringResource(R.string.hs_reveal), onSuccess = { doReveal() }, onDismiss = { revealReq = null })
+        } else {
+            androidx.compose.material3.AlertDialog(
+                onDismissRequest = { revealReq = null },
+                title = { androidx.compose.material3.Text(androidx.compose.ui.res.stringResource(R.string.hs_reveal)) },
+                text = { androidx.compose.material3.Text(androidx.compose.ui.res.stringResource(R.string.hs_reveal_info)) },
+                confirmButton = { androidx.compose.material3.TextButton(onClick = { doReveal() }) { androidx.compose.material3.Text(androidx.compose.ui.res.stringResource(R.string.hs_show)) } },
+                dismissButton = { androidx.compose.material3.TextButton(onClick = { revealReq = null }) { androidx.compose.material3.Text(androidx.compose.ui.res.stringResource(R.string.pr_close)) } }
+            )
+        }
+    }
+
     if (state.isDevToolsSheetOpen) {
         DevToolsSheet(
             consoleLogs = state.consoleLogs,
@@ -559,6 +581,7 @@ fun BrowserScreen(
                 NovaQuickCommand("cmd_split", L.s(R.string.t_toggle_dual_split_screen_webview), L.s(R.string.t_multitasking), viewModel::toggleSplitScreenMode),
                 NovaQuickCommand("cmd_autoscroll", L.s(R.string.t_toggle_hands_free_auto_scroll_teleprompt), L.s(R.string.t_reading), viewModel::toggleHandsFreeAutoScroll),
                 NovaQuickCommand("cmd_color", L.s(R.string.t_eyedropper_color_picker_font_inspector), L.s(R.string.t_developer), viewModel::inspectPageColorsAndFonts),
+                NovaQuickCommand("cmd_playground", L.s(R.string.pg_title), L.s(R.string.t_tools)) { showHtmlPlayground = true },
                 NovaQuickCommand("cmd_devtools", L.s(R.string.t_open_f12_web_developer_console_dom_inspe), L.s(R.string.t_developer), viewModel::openDevToolsConsole),
                 NovaQuickCommand("cmd_userscripts", L.s(R.string.t_open_userscripts_js_custom_css_manager), L.s(R.string.t_developer), onNavigateToUserScripts),
                 NovaQuickCommand("cmd_json", L.s(R.string.t_format_page_as_json_xml_tree), L.s(R.string.t_developer), viewModel::openJsonXmlFormatterForActivePage),
@@ -615,6 +638,7 @@ fun BrowserScreen(
             onOpenJsonXmlFormatter = viewModel::openJsonXmlFormatterForActivePage,
             onSaveFullMhtmlWebArchive = viewModel::saveFullWebArchiveMhtml,
             onOpenDevToolsConsole = viewModel::openDevToolsConsole,
+            onOpenHtmlPlayground = { showHtmlPlayground = true },
             onOpenUserScriptsManager = onNavigateToUserScripts,
             onToggleDesktopMode = viewModel::toggleDesktopSiteMode,
             onFindInPage = viewModel::openFindInPage,

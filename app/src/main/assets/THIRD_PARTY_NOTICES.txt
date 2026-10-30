@@ -8,3 +8,10 @@ cities15000.tsv.gz
   cities15000 dataset, licensed under CC BY 4.0. Reduced and compressed for offline use.
 
 adhan2 (com.batoulapps.adhan) — MIT License — prayer time calculation.
+
+nsfw_open.tflite (Halal search mode image classifier)
+  Yahoo open_nsfw model (https://github.com/yahoo/open_nsfw), BSD 2-Clause License,
+  Copyright 2016, Yahoo Inc. TensorFlow Lite conversion from devzwy/open_nsfw_android
+  (https://github.com/devzwy/open_nsfw_android). Runs entirely on the device; images are never uploaded.
+
+TensorFlow Lite (org.tensorflow:tensorflow-lite) — Apache License 2.0.

@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material.icons.filled.Explore
+import androidx.compose.material.icons.filled.NotificationsActive
 import androidx.compose.material.icons.filled.NightsStay
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -76,6 +77,9 @@ fun PrayerCard(modifier: Modifier = Modifier, onQibla: () -> Unit = {}) {
     val prefs = remember { PrayerPrefs(context) }
     var version by remember { mutableIntStateOf(0) }
     var showSetup by remember { mutableStateOf(false) }
+    var showNotif by remember { mutableStateOf(false) }
+    val askNotif = rememberNotificationPermissionAsker()
+    LaunchedEffect(version) { com.nibras.nova.core.prayer.PrayerAlarms.rescheduleAsync(context) }
     var now by remember { mutableLongStateOf(System.currentTimeMillis()) }
     LaunchedEffect(Unit) { while (true) { delay(1000); now = System.currentTimeMillis() } }
     if (!prefs.enabled) return
@@ -124,9 +128,11 @@ fun PrayerCard(modifier: Modifier = Modifier, onQibla: () -> Unit = {}) {
                 Text(stringResource(R.string.pr_in, PrayerEngine.formatCountdown(next.atEpochMs - now)), color = Color(0xFFFFD27A), fontSize = 13.sp)
             }
         }
+        IconButton(onClick = { showNotif = true }) { Icon(Icons.Default.NotificationsActive, stringResource(R.string.pn_title), tint = Color(0xFFFFD27A)) }
         IconButton(onClick = onQibla) { Icon(Icons.Default.Explore, stringResource(R.string.qb_title), tint = Color(0xFFFFD27A)) }
     }
 
+    if (showNotif) PrayerNotificationsDialog(onDismiss = { showNotif = false })
     if (showSetup) {
         CityPickerDialog(
             onDismiss = { showSetup = false },
@@ -135,6 +141,7 @@ fun PrayerCard(modifier: Modifier = Modifier, onQibla: () -> Unit = {}) {
                 prefs.useLocation = false; prefs.cityName = c.displayName(context.resources.configuration.locales[0].language); prefs.lat = c.lat; prefs.lng = c.lng
                 prefs.tz = c.tz; prefs.country = c.country
                 version++; showSetup = false
+                if (!prefs.askedNotifPermission && prefs.notifyEnabled) askNotif()
             },
             selectedCity = prefs.cityName,
             initialCountry = prefs.country

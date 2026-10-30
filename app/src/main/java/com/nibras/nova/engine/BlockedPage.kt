@@ -31,6 +31,30 @@ ${if (isRtl) "" else "<div class=\"ar\">اتَّقِ اللَّهَ حَيْثُ
 </div></body></html>"""
     }
 
+    /** Friendly page for the Child profile when a site is not on the parent-approved list. */
+    fun childHtml(host: String, isRtl: Boolean = L.s(R.string.blocked_back).any { it in '\u0600'..'\u06FF' }): String {
+        val dir = if (isRtl) "rtl" else "ltr"
+        return """<!doctype html><html dir="$dir"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(L.s(R.string.cb_title))}</title>
+<style>
+html,body{margin:0;height:100%;background:#0b1a3a;color:#eef3ff;font-family:system-ui,-apple-system,Roboto,sans-serif}
+.w{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px;box-sizing:border-box;
+background:radial-gradient(ellipse at 50% 25%,rgba(255,210,122,.20),transparent 60%)}
+.e{font-size:64px;margin-bottom:8px}.m{font-size:28px;font-weight:700;margin:0 0 10px}
+.b{font-size:15px;color:#b9c6e6;max-width:440px;margin:0 0 8px;line-height:1.5}.h{font-size:13px;color:#8796bd;margin:0 0 28px}
+button{background:linear-gradient(90deg,#ffb84d,#ff7eb3);color:#1a1033;font-weight:600;border:0;border-radius:24px;padding:13px 34px;font-size:16px}
+</style></head><body><div class="w">
+<div class="e">🧸</div>
+<p class="m">${esc(L.s(R.string.cb_title))}</p>
+<p class="b">${esc(L.s(R.string.cb_body))}</p>
+<p class="h">${esc(host)}</p>
+<button onclick="if(history.length>1){history.back()}else{location.replace('https://nibrascode.com')}">${esc(L.s(R.string.blocked_back))}</button>
+</div></body></html>"""
+    }
+
+    fun childResponse(host: String): WebResourceResponse =
+        WebResourceResponse("text/html", "utf-8", ByteArrayInputStream(childHtml(host).toByteArray(Charsets.UTF_8)))
+
     fun response(): WebResourceResponse =
         WebResourceResponse("text/html", "utf-8", ByteArrayInputStream(html().toByteArray(Charsets.UTF_8)))
 
