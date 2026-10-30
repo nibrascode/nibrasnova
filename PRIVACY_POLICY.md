@@ -282,3 +282,27 @@ Nibras Code — nibrascode@gmail.com — https://nibrascode.com
 - **ru**: Безопасность семьи: сайты для взрослых (18+) всегда блокируются, в Google, Bing, DuckDuckGo и YouTube принудительно включён безопасный поиск. Проверка выполняется полностью на устройстве по встроенному списку (StevenBlack/hosts, MIT); данные о просмотре никуда не отправляются. Работает и в приватных вкладках.
 
 - **ar**: أمان العائلة: تُحظر المواقع الإباحية (18+) دائمًا، ويُفرض البحث الآمن في Google وBing وDuckDuckGo وYouTube. يتم الفحص بالكامل على جهازك باستخدام قائمة مدمجة (StevenBlack/hosts، رخصة MIT)؛ ولا تُرسل أي بيانات تصفح إلى أي جهة. ويعمل أيضًا في الألسنة الخاصة.
+
+## Prayer times and location
+
+- **az**: Namaz vaxtları: ana səhifədəki namaz vaxtları cihazda hesablanır (adhan kitabxanası, internet tələb olunmur). İcazə versəniz, yalnız təxmini (coarse) yer istifadə olunur; koordinatlar ~1 km dəqiqliyinə yuvarlaqlaşdırılıb yalnız cihazda saxlanır və heç yerə göndərilmir. İstəsəniz yer əvəzinə şəhər seçə bilərsiniz.
+
+- **en**: Prayer times: prayer times on the home page are calculated on your device (adhan library, no internet needed). If you grant permission, only approximate (coarse) location is used; coordinates are rounded to about 1 km, stored only on the device and never sent anywhere. You can choose a city instead of sharing location.
+
+- **tr**: Namaz vakitleri: ana sayfadaki namaz vakitleri cihazınızda hesaplanır (adhan kütüphanesi, internet gerekmez). İzin verirseniz yalnızca yaklaşık (coarse) konum kullanılır; koordinatlar yaklaşık 1 km’ye yuvarlanır, yalnızca cihazda saklanır ve hiçbir yere gönderilmez. Konum yerine şehir de seçebilirsiniz.
+
+- **ru**: Время намаза: время намаза на главной рассчитывается на устройстве (библиотека adhan, интернет не нужен). Если вы дадите разрешение, используется только примерное местоположение; координаты округляются примерно до 1 км, хранятся только на устройстве и никуда не отправляются. Вместо местоположения можно выбрать город.
+
+- **ar**: مواقيت الصلاة: تُحسب مواقيت الصلاة في الصفحة الرئيسية على جهازك (مكتبة adhan، دون حاجة إلى الإنترنت). إذا منحت الإذن، يُستخدم الموقع التقريبي فقط؛ تُقرَّب الإحداثيات إلى نحو 1 كم، وتُحفظ على الجهاز فقط ولا تُرسل إلى أي جهة. يمكنك اختيار مدينة بدلًا من مشاركة الموقع.
+
+## Backups
+
+- **az**: Ehtiyat nüsxə: əlfəcin və tarixçəni JSON faylına ixrac/idxal etmək yalnız sizin seçdiyiniz fayla yazılır; tətbiq heç nə yükləmir.
+
+- **en**: Backups: exporting/importing bookmarks and history as JSON only writes to or reads from the file you pick; nothing is uploaded.
+
+- **tr**: Yedekler: yer imlerini ve geçmişi JSON olarak dışa/içe aktarma yalnızca seçtiğiniz dosyaya yazar veya ondan okur; hiçbir şey yüklenmez.
+
+- **ru**: Резервные копии: экспорт/импорт закладок и истории в JSON записывает и читает только выбранный вами файл; ничего не загружается в сеть.
+
+- **ar**: النسخ الاحتياطي: تصدير/استيراد الإشارات والسجل بصيغة JSON يكتب أو يقرأ الملف الذي تختاره فقط؛ ولا يُرفع أي شيء.
