@@ -99,7 +99,9 @@ fun HomeHero(modifier: Modifier = Modifier) {
             modifier = Modifier.align(Alignment.TopCenter).padding(top = 48.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(painterResource(R.drawable.ic_nova_n), contentDescription = null, modifier = Modifier.size(64.dp))
+            Box(Modifier.size(64.dp), contentAlignment = Alignment.Center) {
+                Image(painterResource(R.drawable.ic_nova_n_3d), contentDescription = null, modifier = Modifier.requiredSize(92.dp))
+            }
             Spacer(Modifier.width(12.dp))
             Column {
                 Text(
@@ -200,14 +202,17 @@ fun brandIconFor(url: String): Int? = when {
     url.contains("google.", true) -> R.drawable.ic_brand_google
     url.contains("youtube.", true) || url.contains("youtu.be", true) -> R.drawable.ic_brand_youtube
     url.contains("github.", true) -> R.drawable.ic_brand_github
-    url.contains("nibrascode.com", true) -> R.drawable.ic_nova_n
+    url.contains("nibrascode.com", true) -> R.drawable.ic_nova_n_3d
     else -> null
 }
 
 @Composable
 fun TileIcon(url: String, title: String) {
     val res = brandIconFor(url)
-    if (res != null) Image(painterResource(res), contentDescription = null, modifier = Modifier.size(28.dp))
+    if (res == R.drawable.ic_nova_n_3d) Box(Modifier.size(28.dp), contentAlignment = Alignment.Center) {
+        Image(painterResource(res), contentDescription = null, modifier = Modifier.requiredSize(42.dp))
+    }
+    else if (res != null) Image(painterResource(res), contentDescription = null, modifier = Modifier.size(28.dp))
     else Text(title.take(1).uppercase(), color = Accent, fontWeight = FontWeight.Bold, fontSize = 20.sp)
 }
 
