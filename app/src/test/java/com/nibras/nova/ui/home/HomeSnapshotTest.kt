@@ -75,6 +75,10 @@ class HomeSnapshotTest {
         File(dir, "$name.png").outputStream().use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
     }
 
+    @Test @Config(qualifiers = "en-w412dp-h915dp-xxhdpi") fun latestEn() = shot("home_latest_en", false, prayer = true)
+    @Test @Config(qualifiers = "tr-w412dp-h915dp-xxhdpi") fun latestTr() = shot("home_latest_tr", false, prayer = true)
+    @Test @Config(qualifiers = "ru-w412dp-h915dp-xxhdpi") fun latestRu() = shot("home_latest_ru", false, prayer = true)
+    @Test @Config(qualifiers = "ar-ldrtl-w412dp-h915dp-xxhdpi") fun latestAr() = shot("home_latest_ar", true, prayer = true)
     @Test @Config(qualifiers = "az-w412dp-h915dp-xxhdpi") fun latestAz() = shot("home_latest_az", false, prayer = true)
     @Test @Config(qualifiers = "az-w411dp-h891dp-xxhdpi") fun az() = shot("home_az", false)
     @Test @Config(qualifiers = "ar-w411dp-h891dp-xxhdpi") fun ar() = shot("home_ar", true)

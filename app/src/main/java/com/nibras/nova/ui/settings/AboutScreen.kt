@@ -77,7 +77,7 @@ fun AboutScreen(
             Spacer(modifier = Modifier.height(8.dp))
             NovaLogo(iconSize = 64.dp, showSubtitle = true)
             Text(
-                text = stringResource(R.string.about_version, versionName),
+                text = stringResource(R.string.about_version, "v" + versionName),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

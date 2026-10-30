@@ -22,6 +22,7 @@ class NovaQuickTileService : TileService() {
         }
     }
 
+    @android.annotation.SuppressLint("StartActivityAndCollapseDeprecated")
     override fun onClick() {
         super.onClick()
         val launchIntent = Intent(this, MainActivity::class.java).apply {

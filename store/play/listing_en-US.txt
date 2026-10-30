@@ -1,0 +1,50 @@
+Language: en-US
+
+== App name (26/30) ==
+Nibras Nova: Halal Browser
+
+== Short description (72/80) ==
+Family-safe browser: adult sites blocked, halal image blur, prayer times
+
+== Full description (2023/4000) ==
+Nibras Nova is a fast, privacy-minded Android browser built for Muslim families. Safety features run on your device, and your browsing is not sent to us.
+
+FAMILY-SAFE BY DEFAULT
+• Adult (18+) sites are always blocked, in normal and private tabs, using an on-device list.
+• SafeSearch is enforced on Google, Bing and DuckDuckGo, and YouTube Restricted Mode is applied.
+• Halal search mode: images on search results and web pages are checked by an on-device model, and images not judged safe are shown blurred. Images are never uploaded. Tap a blurred image to show it (PIN-protected when parental controls are on). Automatic detection can make mistakes.
+
+PRAYER TIMES & QIBLA
+• Prayer times on the home screen with a live countdown and the Hijri date.
+• Umm al-Qura (Makkah) method by default; other methods can be chosen.
+• Choose your country, then your city (works offline), or use your location.
+• Notifications 10 minutes before each prayer and when the time begins, configurable per prayer.
+• Qibla compass with direction in degrees and distance to the Kaaba.
+
+PARENTAL CONTROLS
+• A parent PIN (4–6 digits, stored only on the device) protects settings, history clearing and safety options.
+• Add extra blocked sites and set a daily time limit.
+• Family profiles: separate Adult and Child profiles with their own history, bookmarks and tabs. The Child profile opens only parent-approved sites (nibrascode.com and Quran sites by default). Returning to Adult needs the PIN.
+
+FOR LEARNERS & DEVELOPERS
+• HTML playground: write HTML, CSS and JavaScript, run it in a live preview and see console output. Templates, saved snippets and .html export.
+• Developer console, desktop mode and reader mode.
+• "Explore" section with articles from nibrascode.com.
+
+MORE
+• 5 languages: Azerbaijani, English, Turkish, Russian and Arabic (with right-to-left layout).
+• Private tabs, ad and tracker blocking, bookmarks and history with JSON backup.
+
+Privacy policy: https://nibrascode.com/privacy/nibras-nova
+Contact: nibrascode@gmail.com
+
+== Release notes ==
+• Nibras Nova v1.0.0: first release
+• Adult sites blocked and Halal search mode image blur, on the device
+• Prayer times (Umm al-Qura), notifications and Qibla compass
+• Family profiles and parental PIN
+• HTML playground with live preview
+
+== Contact ==
+Email: nibrascode@gmail.com
+Privacy policy: https://nibrascode.com/privacy/nibras-nova

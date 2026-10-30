@@ -1,0 +1,50 @@
+Language: tr-TR
+
+== App name (27/30) ==
+Nibras Nova: Helal Tarayıcı
+
+== Short description (78/80) ==
+Aile dostu tarayıcı: +18 engeli, helal görsel bulanıklaştırma, namaz vakitleri
+
+== Full description (2068/4000) ==
+Nibras Nova, Müslüman aileler için hazırlanmış hızlı ve gizliliğe saygılı bir Android tarayıcısıdır. Güvenlik özellikleri cihazınızda çalışır; tarama verileriniz bize gönderilmez.
+
+VARSAYILAN OLARAK AİLE DOSTU
+• Yetişkin (+18) siteler normal ve gizli sekmelerde her zaman engellenir (cihazdaki liste ile).
+• Google, Bing ve DuckDuckGo’da Güvenli Arama zorunludur; YouTube’da Kısıtlı Mod uygulanır.
+• Helal arama modu: arama sonuçlarındaki ve sayfalardaki görseller cihazdaki bir modelle kontrol edilir, güvenli sayılmayanlar bulanık gösterilir. Görseller hiçbir yere yüklenmez. Göstermek için bulanık görsele dokunun (ebeveyn denetimi açıksa PIN ile). Otomatik algılama hata yapabilir.
+
+NAMAZ VAKİTLERİ VE KIBLE
+• Ana ekranda geri sayımlı namaz vakitleri ve hicri tarih.
+• Varsayılan olarak Ümmü’l-Kurâ (Mekke) yöntemi; başka yöntemler de seçilebilir.
+• Önce ülke, sonra şehir seçin (çevrimdışı çalışır) veya konumunuzu kullanın.
+• Her namazdan 10 dakika önce ve vakit girdiğinde bildirim, namaz başına ayarlanabilir.
+• Kıble pusulası: derece cinsinden yön ve Kâbe’ye uzaklık.
+
+EBEVEYN DENETİMİ
+• Ebeveyn PIN’i (4–6 hane, yalnızca cihazda saklanır) ayarları, geçmiş silmeyi ve güvenlik seçeneklerini korur.
+• Ek siteleri engelleyin ve günlük süre sınırı belirleyin.
+• Aile profilleri: ayrı geçmişi, yer imleri ve sekmeleri olan “Yetişkin” ve “Çocuk” profilleri. Çocuk profili yalnızca ebeveynin onayladığı siteleri açar (varsayılan: nibrascode.com ve Kur’an siteleri). Yetişkine dönmek PIN ister.
+
+ÖĞRENENLER VE GELİŞTİRİCİLER İÇİN
+• HTML deneme alanı: HTML, CSS ve JavaScript yazın, canlı önizlemede çalıştırın ve konsol çıktısını görün. Şablonlar, kayıtlı kodlar ve .html dışa aktarma.
+• Geliştirici konsolu, masaüstü modu ve okuma modu.
+• nibrascode.com makaleleriyle “Keşfet” bölümü.
+
+DAHA FAZLASI
+• 5 dil: Azerbaycan Türkçesi, İngilizce, Türkçe, Rusça ve Arapça (sağdan sola düzen).
+• Gizli sekmeler, reklam ve izleyici engelleme, JSON yedeğiyle yer imleri ve geçmiş.
+
+Gizlilik politikası: https://nibrascode.com/privacy/nibras-nova
+İletişim: nibrascode@gmail.com
+
+== Release notes ==
+• Nibras Nova v1.0.0: ilk sürüm
+• +18 site engeli ve Helal arama modu, cihazda
+• Namaz vakitleri (Ümmü’l-Kurâ), bildirimler ve Kıble pusulası
+• Aile profilleri ve ebeveyn PIN’i
+• Canlı önizlemeli HTML deneme alanı
+
+== Contact ==
+Email: nibrascode@gmail.com
+Privacy policy: https://nibrascode.com/privacy/nibras-nova

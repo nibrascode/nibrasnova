@@ -20,5 +20,8 @@ class BlockedPageDumpTest {
         File(dir, "child_$name.html").writeText(BlockedPage.childHtml("youtube.com"))
     }
     @Test @Config(qualifiers = "az") fun az() = dump("blocked_az")
+    @Test @Config(qualifiers = "en") fun en() = dump("blocked_en")
+    @Test @Config(qualifiers = "tr") fun tr() = dump("blocked_tr")
+    @Test @Config(qualifiers = "ru") fun ru() = dump("blocked_ru")
     @Test @Config(qualifiers = "ar") fun ar() = dump("blocked_ar")
 }

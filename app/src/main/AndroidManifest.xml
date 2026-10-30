@@ -13,7 +13,7 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!-- Exact prayer reminders; if the user does not allow it, inexact alarms are used. -->
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -44,7 +44,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NibrasNova.Starting"
         android:usesCleartextTraffic="true"
-        tools:targetApi="35">
+        tools:targetApi="36">
 
         <meta-data
             android:name="android.webkit.WebView.EnableSafeBrowsing"

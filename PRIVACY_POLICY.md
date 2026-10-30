@@ -1,5 +1,7 @@
 # Nibras Nova — Privacy Policy
 
+App version: v1.0.0
+
 Web: https://nibrascode.com/privacy/nibras-nova (mirror: https://nibrascode.github.io/nibrasnova/privacy-policy.html)
 
 Contact: nibrascode@gmail.com

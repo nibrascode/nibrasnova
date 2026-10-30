@@ -14,14 +14,14 @@ ksp {
 
 android {
     namespace = "com.nibras.nova"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.nibras.nova"
-        minSdk = 26
-        targetSdk = 35
-        versionCode = 200
-        versionName = "2.0.0-nova-flagship"
+        minSdk = 24
+        targetSdk = 36
+        versionCode = 201
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // AGP 8.7 has no androidResources.localeFilters; same effect:
@@ -72,6 +72,8 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        // java.time etc. on Android 7.x (API 24/25)
+        isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
@@ -104,6 +106,7 @@ android {
 }
 
 dependencies {
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.3")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.lifecycle.runtime.ktx)

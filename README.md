@@ -1,4 +1,4 @@
-# Nibras Nova — Advanced Premium Android Web Browser (`v2.0.0-nova-flagship`)
+# Nibras Nova — Advanced Premium Android Web Browser (`v1.0.0`)
 
 **Brand Ecosystem:** Nibras Code  
 **Package:** `com.nibras.nova`  

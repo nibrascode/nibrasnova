@@ -1,0 +1,50 @@
+Language: az-AZ
+
+== App name (26/30) ==
+Nibras Nova: Halal Brauzer
+
+== Short description (74/80) ==
+Ailə üçün təhlükəsiz brauzer: 18+ blok, halal şəkil filtri, namaz vaxtları
+
+== Full description (2054/4000) ==
+Nibras Nova müsəlman ailələri üçün hazırlanmış sürətli və məxfiliyə hörmət edən Android brauzeridir. Təhlükəsizlik funksiyaları cihazınızda işləyir, baxış məlumatlarınız bizə göndərilmir.
+
+ƏVVƏLDƏN AİLƏ ÜÇÜN TƏHLÜKƏSİZ
+• Yetkin (18+) saytlar adi və gizli vərəqlərdə həmişə bloklanır (cihazdakı siyahı ilə).
+• Google, Bing və DuckDuckGo-da Təhlükəsiz Axtarış məcburidir, YouTube-da Məhdud rejim tətbiq olunur.
+• Halal axtarış rejimi: axtarış nəticələrində və səhifələrdə şəkillər cihazdakı model ilə yoxlanılır, təhlükəsiz sayılmayanlar bulanıq göstərilir. Şəkillər heç yerə yüklənmir. Göstərmək üçün bulanıq şəklə toxunun (valideyn nəzarəti aktivdirsə PIN ilə). Avtomatik yoxlama səhv edə bilər.
+
+NAMAZ VAXTLARI VƏ QİBLƏ
+• Ana səhifədə geri sayımlı namaz vaxtları və hicri tarix.
+• Standart olaraq Ümmül-Qura (Məkkə) metodu; başqa metodlar da seçilə bilər.
+• Əvvəl ölkə, sonra şəhər seçin (oflayn işləyir) və ya yerinizdən istifadə edin.
+• Hər namazdan 10 dəqiqə əvvəl və vaxt girəndə bildiriş, hər namaz üçün ayrıca.
+• Qiblə kompası: dərəcə ilə istiqamət və Kəbəyə məsafə.
+
+VALİDEYN NƏZARƏTİ
+• Valideyn PIN-i (4–6 rəqəm, yalnız cihazda saxlanır) ayarları, tarixçənin silinməsini və təhlükəsizlik seçimlərini qoruyur.
+• Əlavə saytları bloklayın və gündəlik vaxt limiti qoyun.
+• Ailə profilləri: ayrıca tarixçə, əlfəcin və vərəqləri olan “Böyük” və “Uşaq” profilləri. Uşaq profili yalnız valideynin icazə verdiyi saytları açır (standart: nibrascode.com və Quran saytları). Böyük profilə qayıtmaq PIN tələb edir.
+
+ÖYRƏNƏNLƏR VƏ PROQRAMÇILAR ÜÇÜN
+• HTML test yeri: HTML, CSS və JavaScript yazın, canlı önizləmədə işə salın və konsol nəticəsini görün. Şablonlar, yadda saxlama və .html ixracı.
+• Proqramçı konsolu, masaüstü rejimi və oxu rejimi.
+• nibrascode.com məqalələri ilə “Kəşf et” bölməsi.
+
+DAHA ÇOX
+• 5 dil: Azərbaycan, ingilis, türk, rus və ərəb (sağdan sola düzülüşlə).
+• Gizli vərəqlər, reklam və izləyici bloklama, JSON ehtiyatı ilə əlfəcinlər və tarixçə.
+
+Məxfilik siyasəti: https://nibrascode.com/privacy/nibras-nova
+Əlaqə: nibrascode@gmail.com
+
+== Release notes ==
+• Nibras Nova v1.0.0: ilk buraxılış
+• 18+ saytların bloku və Halal axtarış rejimi, cihazda
+• Namaz vaxtları (Ümmül-Qura), bildirişlər və Qiblə kompası
+• Ailə profilləri və valideyn PIN-i
+• Canlı önizləməli HTML test yeri
+
+== Contact ==
+Email: nibrascode@gmail.com
+Privacy policy: https://nibrascode.com/privacy/nibras-nova

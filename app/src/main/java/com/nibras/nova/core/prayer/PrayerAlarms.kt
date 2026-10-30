@@ -101,6 +101,7 @@ object PrayerAlarms {
         }
     }
 
+    @android.annotation.SuppressLint("MissingPermission") // checked by hasNotificationPermission() first
     fun post(context: Context, prayer: PrayerName, kind: PrayerEvent.Kind, prayerAtMs: Long) {
         if (!hasNotificationPermission(context)) return
         ensureChannel(context)
