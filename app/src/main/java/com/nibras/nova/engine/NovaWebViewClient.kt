@@ -8,7 +8,7 @@ import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
-import androidx.webkit.WebViewClientCompat
+import android.webkit.WebViewClient
 import com.nibras.nova.core.security.AdBlockerEngine
 import com.nibras.nova.core.security.NavigationDisposition
 import com.nibras.nova.core.security.SchemePolicy
@@ -38,7 +38,7 @@ class NovaWebViewClient(
     private val sslPolicy: SslErrorHandlerPolicy,
     private val adBlockerEngine: AdBlockerEngine,
     private val callback: WebViewSessionCallback
-) : WebViewClientCompat() {
+) : WebViewClient() {
 
     // Stage 12.6: Rapid Cross-Domain Redirect Chain Detector
     private var lastMainFrameNavTimestamp = 0L
@@ -49,7 +49,7 @@ class NovaWebViewClient(
         view: WebView?,
         request: WebResourceRequest?
     ): WebResourceResponse? {
-        if (request == null) return super.shouldInterceptRequest(view, request)
+        if (request == null) return null
         val reqUrl = request.url?.toString().orEmpty()
         val method = request.method ?: "GET"
 
