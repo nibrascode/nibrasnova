@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.tools
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -58,7 +61,7 @@ fun OmniCommandDialog(
         title = {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Default.Bolt, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
-                Text("  Nova Omni-Command Palette (Ctrl+K)")
+                Text("  " + L.s(R.string.t_nova_omni_command_palette_ctrl_k))
             }
         },
         text = {
@@ -66,7 +69,7 @@ fun OmniCommandDialog(
                 OutlinedTextField(
                     value = query,
                     onValueChange = { query = it },
-                    placeholder = { Text("Type command (e.g. split, devtools, rss, panic, pdf)…") },
+                    placeholder = { Text(L.s(R.string.t_type_command_e_g_split_devtools_rss_pani)) },
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                     singleLine = true,
                     shape = RoundedCornerShape(16.dp),
@@ -107,7 +110,7 @@ fun OmniCommandDialog(
         },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text("Close")
+                Text(L.s(R.string.t_close))
             }
         }
     )

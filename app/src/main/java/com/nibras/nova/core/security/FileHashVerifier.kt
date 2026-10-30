@@ -1,5 +1,8 @@
 package com.nibras.nova.core.security
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import com.nibras.nova.core.common.DispatcherProvider
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -21,7 +24,7 @@ class FileHashVerifier @Inject constructor(
         try {
             val file = File(filePath)
             if (!file.exists() || !file.isFile) {
-                return@withContext Result.failure(IllegalArgumentException("File does not exist on disk."))
+                return@withContext Result.failure(IllegalArgumentException(L.s(R.string.t_file_does_not_exist_on_disk)))
             }
             val sha256 = MessageDigest.getInstance("SHA-256")
             val md5 = MessageDigest.getInstance("MD5")

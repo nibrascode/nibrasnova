@@ -1,5 +1,8 @@
 package com.nibras.nova.core.security
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import java.net.IDN
 import java.net.URI
 import java.util.Locale
@@ -34,13 +37,13 @@ class HomographAttackDetector @Inject constructor() {
                 isSuspicious = true,
                 domain = asciiHost,
                 unicodeDisplayDomain = unicodeHost,
-                warningReason = "Mixed-Script Homograph Alert: This domain combines Latin and Cyrillic/Greek lookalike characters ($unicodeHost / $asciiHost) often used in phishing."
+                warningReason = L.s(R.string.t_mixed_script_homograph_alert_this_domain, unicodeHost, asciiHost)
             )
             hasPunycode && asciiHost != unicodeHost -> HomographAssessment(
                 isSuspicious = true,
                 domain = asciiHost,
                 unicodeDisplayDomain = unicodeHost,
-                warningReason = "Internationalized Punycode Domain ($asciiHost): Verify the exact spelling of '$unicodeHost' to avoid lookalike phishing sites."
+                warningReason = L.s(R.string.t_internationalized_punycode_domain_verify, asciiHost, unicodeHost)
             )
             else -> HomographAssessment(
                 isSuspicious = false,

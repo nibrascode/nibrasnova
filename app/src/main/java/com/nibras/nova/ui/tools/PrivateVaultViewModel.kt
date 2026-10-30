@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.tools
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nibras.nova.core.security.BiometricLockHelper
@@ -54,7 +57,7 @@ class PrivateVaultViewModel @Inject constructor(
         _generatedPassword.value = GeneratedPasswordResult(
             password = phrase,
             entropyBits = 64.0,
-            strengthLabel = "Memorable Diceware Passphrase"
+            strengthLabel = L.s(R.string.t_memorable_diceware_passphrase)
         )
     }
 
@@ -63,7 +66,7 @@ class PrivateVaultViewModel @Inject constructor(
         clipboardPrivacyGuard.copyCleanUrlToClipboard(current, autoClearAfterSeconds = 60L)
         viewModelScope.launch {
             privacyRepository.addPrivateVaultItem(
-                title = label.ifBlank { "Generated Credential" },
+                title = label.ifBlank { L.s(R.string.t_generated_credential) },
                 urlOrNote = current,
                 category = "CREDENTIAL"
             )

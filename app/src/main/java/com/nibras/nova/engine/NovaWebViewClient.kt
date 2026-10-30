@@ -1,5 +1,8 @@
 package com.nibras.nova.engine
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import android.graphics.Bitmap
 import android.net.Uri
 import android.net.http.SslError
@@ -139,8 +142,8 @@ class NovaWebViewClient(
             primaryErrorCode = error.primaryError,
             errorTitle = title,
             technicalDescription = description,
-            issuedTo = error.certificate?.issuedTo?.dName ?: "Unknown Subject",
-            issuedBy = error.certificate?.issuedBy?.dName ?: "Unknown Issuer",
+            issuedTo = error.certificate?.issuedTo?.dName ?: L.s(R.string.t_unknown_subject),
+            issuedBy = error.certificate?.issuedBy?.dName ?: L.s(R.string.t_unknown_issuer),
             onCancelNavigation = { handler.cancel() },
             onProceedWithExplicitRisk = { handler.proceed() }
         )
@@ -158,7 +161,7 @@ class NovaWebViewClient(
                 tabId = tabId,
                 failingUrl = request.url?.toString().orEmpty(),
                 errorCode = error.errorCode,
-                description = error.description?.toString() ?: "Unable to connect to server."
+                description = error.description?.toString() ?: L.s(R.string.t_unable_to_connect_to_server)
             )
         }
     }

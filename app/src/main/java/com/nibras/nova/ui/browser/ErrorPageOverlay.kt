@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.browser
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -41,13 +44,13 @@ fun ErrorPageOverlay(
     ) {
         Icon(
             imageVector = Icons.Default.CloudOff,
-            contentDescription = "Connection Error",
+            contentDescription = L.s(R.string.t_connection_error),
             tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(64.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Unable to Reach Website",
+            text = L.s(R.string.t_unable_to_reach_website),
             style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
             textAlign = TextAlign.Center
         )
@@ -60,18 +63,18 @@ fun ErrorPageOverlay(
         )
         Spacer(modifier = Modifier.height(6.dp))
         Text(
-            text = "$failingUrl (Error $errorCode)",
+            text = L.s(R.string.t_error, failingUrl, errorCode),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(24.dp))
         Button(onClick = onRetryClick) {
-            Text("Try Again")
+            Text(L.s(R.string.t_try_again))
         }
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedButton(onClick = onReturnHomeClick) {
-            Text("Back to Homepage")
+            Text(L.s(R.string.t_back_to_homepage))
         }
     }
 }

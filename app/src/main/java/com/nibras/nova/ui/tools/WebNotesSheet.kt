@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.tools
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -59,7 +62,7 @@ fun WebNotesSheet(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Default.EditNote, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                 Text(
-                    text = "  Web Annotator & Sticky Highlights",
+                    text = "  " + L.s(R.string.t_web_annotator_sticky_highlights),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                 )
             }
@@ -74,7 +77,7 @@ fun WebNotesSheet(
             OutlinedTextField(
                 value = quoteText,
                 onValueChange = { quoteText = it },
-                label = { Text("Highlighted Sentence / Phrase on Page") },
+                label = { Text(L.s(R.string.t_highlighted_sentence_phrase_on_page)) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -82,7 +85,7 @@ fun WebNotesSheet(
             OutlinedTextField(
                 value = noteText,
                 onValueChange = { noteText = it },
-                label = { Text("Your Personal Note / Research Annotation") },
+                label = { Text(L.s(R.string.t_your_personal_note_research_annotation)) },
                 minLines = 2,
                 maxLines = 4,
                 modifier = Modifier.fillMaxWidth()
@@ -98,7 +101,7 @@ fun WebNotesSheet(
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Save Persistent Highlight & Note")
+                Text(L.s(R.string.t_save_persistent_highlight_note))
             }
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -134,7 +137,7 @@ fun WebNotesSheet(
                                 }
                             }
                             IconButton(onClick = { onDeleteAnnotation(item.id) }) {
-                                Icon(Icons.Default.Delete, contentDescription = "Delete Note")
+                                Icon(Icons.Default.Delete, contentDescription = L.s(R.string.t_delete_note))
                             }
                         }
                     }

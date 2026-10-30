@@ -1,8 +1,11 @@
 package com.nibras.nova.domain.model
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 enum class ScriptInjectionType(val label: String) {
-    JAVASCRIPT("UserScript (JavaScript)"),
-    CSS("UserStyle (Custom CSS)")
+    JAVASCRIPT(L.s(R.string.t_userscript_javascript)),
+    CSS(L.s(R.string.t_userstyle_custom_css))
 }
 
 data class UserScriptItem(

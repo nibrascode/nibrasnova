@@ -1,5 +1,8 @@
 package com.nibras.nova.domain.model
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import kotlinx.serialization.Serializable
 
 enum class ReaderTheme(
@@ -8,9 +11,9 @@ enum class ReaderTheme(
     val textHex: Long,
     val accentHex: Long
 ) {
-    DARK("Nova Dark", 0xFF0A0F1D, 0xFFE2E8F0, 0xFF00E5FF),
-    SEPIA("Warm Sepia", 0xFFF4ECD8, 0xFF3C2F2F, 0xFF8B5A2B),
-    LIGHT("Paper Light", 0xFFFFFFFF, 0xFF0F172A, 0xFF0088A3)
+    DARK(L.s(R.string.t_nova_dark), 0xFF0A0F1D, 0xFFE2E8F0, 0xFF00E5FF),
+    SEPIA(L.s(R.string.t_warm_sepia), 0xFFF4ECD8, 0xFF3C2F2F, 0xFF8B5A2B),
+    LIGHT(L.s(R.string.t_paper_light), 0xFFFFFFFF, 0xFF0F172A, 0xFF0088A3)
 }
 
 @Serializable

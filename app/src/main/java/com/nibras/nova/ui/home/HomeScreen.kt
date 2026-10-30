@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.home
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -82,7 +85,6 @@ import com.nibras.nova.ui.theme.NovaTurquoise
 import android.widget.Toast
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import com.nibras.nova.R
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -138,14 +140,14 @@ fun HomeScreen(
                         onClick = onOpenPrivacyDashboard,
                         label = {
                             Text(
-                                text = "${state.privacyMetrics.httpsUpgradesCount + state.privacyMetrics.unsafeSchemesBlockedCount} Protected",
+                                text = L.s(R.string.t_protected, state.privacyMetrics.httpsUpgradesCount + state.privacyMetrics.unsafeSchemesBlockedCount),
                                 style = MaterialTheme.typography.labelLarge
                             )
                         },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Security,
-                                contentDescription = "Privacy Dashboard",
+                                contentDescription = L.s(R.string.t_privacy_dashboard),
                                 tint = NovaTurquoise,
                                 modifier = Modifier.size(16.dp)
                             )
@@ -159,12 +161,12 @@ fun HomeScreen(
                         AssistChip(
                             onClick = { isPrivateInputMode = !isPrivateInputMode },
                             label = {
-                                Text(if (isPrivateInputMode) "Private On" else "Private")
+                                Text(if (isPrivateInputMode) L.s(R.string.t_private_on) else L.s(R.string.t_private_2))
                             },
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Default.VisibilityOff,
-                                    contentDescription = "Toggle Private Mode",
+                                    contentDescription = L.s(R.string.t_toggle_private_mode),
                                     tint = if (isPrivateInputMode) NovaIncognitoAccent else MaterialTheme.colorScheme.onSurfaceVariant,
                                     modifier = Modifier.size(16.dp)
                                 )
@@ -221,9 +223,9 @@ fun HomeScreen(
                     placeholder = {
                         Text(
                             text = if (isPrivateInputMode) {
-                                "Search privately with ${state.settings.searchEngine.displayName}…"
+                                L.s(R.string.t_search_privately_with, state.settings.searchEngine.displayName)
                             } else {
-                                "Search ${state.settings.searchEngine.displayName} or type URL…"
+                                L.s(R.string.t_search_or_type_url, state.settings.searchEngine.displayName)
                             }
                         )
                     },
@@ -241,7 +243,7 @@ fun HomeScreen(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Search,
-                                    contentDescription = "Select Search Engine",
+                                    contentDescription = L.s(R.string.t_select_search_engine),
                                     tint = if (isPrivateInputMode) NovaIncognitoAccent else MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.size(16.dp)
                                 )
@@ -257,13 +259,13 @@ fun HomeScreen(
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             if (searchInput.isNotEmpty()) {
                                 IconButton(onClick = { searchInput = "" }) {
-                                    Icon(Icons.Default.Close, contentDescription = "Clear search")
+                                    Icon(Icons.Default.Close, contentDescription = L.s(R.string.t_clear_search))
                                 }
                             }
                             IconButton(onClick = onOpenQrScanner) {
                                 Icon(
                                     imageVector = Icons.Default.QrCodeScanner,
-                                    contentDescription = "Scan QR Code",
+                                    contentDescription = L.s(R.string.t_scan_qr_code),
                                     tint = MaterialTheme.colorScheme.primary
                                 )
                             }
@@ -299,27 +301,27 @@ fun HomeScreen(
                 ) {
                     HomeDockActionButton(
                         icon = Icons.Default.Bookmarks,
-                        label = "Bookmarks",
+                        label = L.s(R.string.t_bookmarks),
                         onClick = onOpenBookmarks
                     )
                     HomeDockActionButton(
                         icon = Icons.Default.History,
-                        label = "History",
+                        label = L.s(R.string.t_history),
                         onClick = onOpenHistory
                     )
                     HomeDockActionButton(
                         icon = Icons.Default.Download,
-                        label = "Downloads",
+                        label = L.s(R.string.t_downloads),
                         onClick = onOpenDownloads
                     )
                     HomeDockActionButton(
                         icon = Icons.Default.Policy,
-                        label = "Privacy",
+                        label = L.s(R.string.t_privacy),
                         onClick = onOpenPrivacyDashboard
                     )
                     HomeDockActionButton(
                         icon = Icons.Default.Settings,
-                        label = "Settings",
+                        label = L.s(R.string.t_settings),
                         onClick = onOpenSettings
                     )
                 }
@@ -494,7 +496,7 @@ fun HomeScreen(
                             IconButton(onClick = { viewModel.deleteRecentHistoryItem(historyItem.id) }) {
                                 Icon(
                                     imageVector = Icons.Default.Close,
-                                    contentDescription = "Remove from recent",
+                                    contentDescription = L.s(R.string.t_remove_from_recent),
                                     modifier = Modifier.size(16.dp)
                                 )
                             }
@@ -509,7 +511,7 @@ fun HomeScreen(
             ModalBottomSheet(onDismissRequest = { showEnginePickerSheet = false }) {
                 Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)) {
                     Text(
-                        text = "Select Active Search Engine",
+                        text = L.s(R.string.t_select_active_search_engine),
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                     )
                     Spacer(modifier = Modifier.height(12.dp))
@@ -549,7 +551,7 @@ fun HomeScreen(
         // Add Shortcut Dialog
         if (showAddShortcutDialog) {
             ShortcutEditorDialog(
-                dialogTitle = "Add Website Shortcut",
+                dialogTitle = L.s(R.string.t_add_website_shortcut),
                 initialTitle = "",
                 initialUrl = "https://",
                 onDismiss = { showAddShortcutDialog = false },
@@ -564,7 +566,7 @@ fun HomeScreen(
         // Edit / Delete Shortcut Dialog
         editingShortcut?.let { target ->
             ShortcutEditorDialog(
-                dialogTitle = "Edit Shortcut",
+                dialogTitle = L.s(R.string.t_edit_shortcut),
                 initialTitle = target.title,
                 initialUrl = target.url,
                 onDismiss = { editingShortcut = null },
@@ -637,13 +639,13 @@ private fun ShortcutEditorDialog(
                 OutlinedTextField(
                     value = title,
                     onValueChange = { title = it },
-                    label = { Text("Website Name") },
+                    label = { Text(L.s(R.string.t_website_name)) },
                     singleLine = true
                 )
                 OutlinedTextField(
                     value = url,
                     onValueChange = { url = it },
-                    label = { Text("Website URL") },
+                    label = { Text(L.s(R.string.t_website_url)) },
                     singleLine = true
                 )
             }
@@ -652,18 +654,18 @@ private fun ShortcutEditorDialog(
             Button(
                 onClick = { if (url.isNotBlank()) onSave(title, url) }
             ) {
-                Text("Save")
+                Text(L.s(R.string.t_save))
             }
         },
         dismissButton = {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 if (onDelete != null) {
                     OutlinedButton(onClick = onDelete) {
-                        Text("Delete")
+                        Text(L.s(R.string.t_delete))
                     }
                 }
                 TextButton(onClick = onDismiss) {
-                    Text("Cancel")
+                    Text(L.s(R.string.t_cancel))
                 }
             }
         }

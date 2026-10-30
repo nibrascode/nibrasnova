@@ -1,5 +1,8 @@
 package com.nibras.nova.engine
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Message
@@ -111,7 +114,7 @@ class NovaWebChromeClient(
 
     override fun onPermissionRequest(request: PermissionRequest?) {
         if (request == null) return
-        val origin = request.origin?.toString() ?: "Unknown Website"
+        val origin = request.origin?.toString() ?: L.s(R.string.t_unknown_website)
         val mapped = request.resources.mapNotNull { res ->
             when (res) {
                 PermissionRequest.RESOURCE_VIDEO_CAPTURE -> SitePermissionType.CAMERA

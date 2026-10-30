@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.tools
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -69,18 +72,18 @@ fun RssReaderScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = L.s(R.string.t_back))
                     }
                     Text(
-                        text = "Nova RSS & Atom Reader",
+                        text = L.s(R.string.t_nova_rss_atom_reader),
                         style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                     )
                     Row {
                         IconButton(onClick = viewModel::refreshAllFeeds) {
-                            Icon(Icons.Default.Refresh, contentDescription = "Refresh Feeds")
+                            Icon(Icons.Default.Refresh, contentDescription = L.s(R.string.t_refresh_feeds))
                         }
                         IconButton(onClick = { showAddFeedDialog = true }) {
-                            Icon(Icons.Default.Add, contentDescription = "Add RSS Feed")
+                            Icon(Icons.Default.Add, contentDescription = L.s(R.string.t_add_rss_feed))
                         }
                     }
                 }
@@ -99,7 +102,7 @@ fun RssReaderScreen(
         ) {
             item {
                 Text(
-                    text = "Subscribed Channels (${state.feeds.size})",
+                    text = L.s(R.string.t_subscribed_channels, state.feeds.size),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -122,7 +125,7 @@ fun RssReaderScreen(
                             Text(feed.feedUrl, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
                         }
                         IconButton(onClick = { viewModel.removeSubscription(feed.id) }) {
-                            Icon(Icons.Default.Delete, contentDescription = "Remove Feed")
+                            Icon(Icons.Default.Delete, contentDescription = L.s(R.string.t_remove_feed))
                         }
                     }
                 }
@@ -131,7 +134,7 @@ fun RssReaderScreen(
             item {
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
-                    text = "Latest Feed Articles (${state.articles.size})",
+                    text = L.s(R.string.t_latest_feed_articles, state.articles.size),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -141,8 +144,8 @@ fun RssReaderScreen(
                 item {
                     EmptyStateView(
                         icon = Icons.Default.RssFeed,
-                        title = "No Feed Items Loaded",
-                        subtitle = "Tap Refresh to fetch latest articles from your subscribed RSS/Atom channels."
+                        title = L.s(R.string.t_no_feed_items_loaded),
+                        subtitle = L.s(R.string.t_tap_refresh_to_fetch_latest_articles_fro)
                     )
                 }
             } else {
@@ -189,19 +192,19 @@ fun RssReaderScreen(
         var url by remember { mutableStateOf("https://") }
         AlertDialog(
             onDismissRequest = { showAddFeedDialog = false },
-            title = { Text("Subscribe to RSS / Atom Feed") },
+            title = { Text(L.s(R.string.t_subscribe_to_rss_atom_feed)) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     OutlinedTextField(
                         value = title,
                         onValueChange = { title = it },
-                        label = { Text("Channel Name") },
+                        label = { Text(L.s(R.string.t_channel_name)) },
                         singleLine = true
                     )
                     OutlinedTextField(
                         value = url,
                         onValueChange = { url = it },
-                        label = { Text("RSS / Atom XML URL") },
+                        label = { Text(L.s(R.string.t_rss_atom_xml_url)) },
                         singleLine = true
                     )
                 }
@@ -213,12 +216,12 @@ fun RssReaderScreen(
                         showAddFeedDialog = false
                     }
                 }) {
-                    Text("Subscribe")
+                    Text(L.s(R.string.t_subscribe))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showAddFeedDialog = false }) {
-                    Text("Cancel")
+                    Text(L.s(R.string.t_cancel))
                 }
             }
         )

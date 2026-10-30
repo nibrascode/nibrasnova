@@ -1,5 +1,8 @@
 package com.nibras.nova.core.util
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -24,7 +27,7 @@ class ShareHelper @Inject constructor(
             putExtra(Intent.EXTRA_SUBJECT, title)
             putExtra(Intent.EXTRA_TEXT, shareText)
         }
-        val chooser = Intent.createChooser(sendIntent, "Share via Nibras Nova").apply {
+        val chooser = Intent.createChooser(sendIntent, L.s(R.string.t_share_via_nibras_nova)).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         activityContext.startActivity(chooser)
@@ -35,7 +38,7 @@ class ShareHelper @Inject constructor(
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, selectedText)
         }
-        val chooser = Intent.createChooser(sendIntent, "Share Selected Text").apply {
+        val chooser = Intent.createChooser(sendIntent, L.s(R.string.t_share_selected_text)).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         activityContext.startActivity(chooser)
@@ -62,7 +65,7 @@ class ShareHelper @Inject constructor(
                         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                     }
                     activityContext.startActivity(
-                        Intent.createChooser(shareIntent, "Share Webpage Screenshot").apply {
+                        Intent.createChooser(shareIntent, L.s(R.string.t_share_webpage_screenshot)).apply {
                             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         }
                     )

@@ -1,5 +1,8 @@
 package com.nibras.nova.domain.model
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import java.net.URLEncoder
 
 enum class SearchEngineType(
@@ -14,42 +17,42 @@ enum class SearchEngineType(
         displayName = "Google",
         hostLabel = "google.com",
         queryTemplateUrl = "https://www.google.com/search?q=%s",
-        description = "Comprehensive global web search."
+        description = L.s(R.string.t_comprehensive_global_web_search)
     ),
     DUCKDUCKGO(
         id = "duckduckgo",
         displayName = "DuckDuckGo",
         hostLabel = "duckduckgo.com",
         queryTemplateUrl = "https://duckduckgo.com/?q=%s",
-        description = "Privacy-first search that does not track you."
+        description = L.s(R.string.t_privacy_first_search_that_does_not_track)
     ),
     BRAVE(
         id = "brave",
         displayName = "Brave Search",
         hostLabel = "search.brave.com",
         queryTemplateUrl = "https://search.brave.com/search?q=%s",
-        description = "Independent index with strong privacy defaults."
+        description = L.s(R.string.t_independent_index_with_strong_privacy_de)
     ),
     STARTPAGE(
         id = "startpage",
         displayName = "Startpage",
         hostLabel = "startpage.com",
         queryTemplateUrl = "https://www.startpage.com/do/dsearch?query=%s",
-        description = "Google search results delivered with anonymized privacy."
+        description = L.s(R.string.t_google_search_results_delivered_with_ano)
     ),
     BING(
         id = "bing",
         displayName = "Microsoft Bing",
         hostLabel = "bing.com",
         queryTemplateUrl = "https://www.bing.com/search?q=%s",
-        description = "Visual and AI-assisted search index by Microsoft."
+        description = L.s(R.string.t_visual_and_ai_assisted_search_index_by_m)
     ),
     CUSTOM(
         id = "custom",
-        displayName = "Custom Search Engine",
+        displayName = L.s(R.string.t_custom_search_engine),
         hostLabel = "custom",
         queryTemplateUrl = "https://duckduckgo.com/?q=%s",
-        description = "User-configured URL template containing %s placeholder."
+        description = L.s(R.string.t_user_configured_url_template_containing)
     );
 
     companion object {

@@ -1,5 +1,8 @@
 package com.nibras.nova.core.security
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import android.content.Context
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
@@ -50,8 +53,8 @@ class BiometricLockHelper @Inject constructor(
         )
 
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle("Nibras Nova Private Vault")
-            .setSubtitle("Authenticate to unlock your isolated Private Tabs")
+            .setTitle(L.s(R.string.t_nibras_nova_private_vault))
+            .setSubtitle(L.s(R.string.t_authenticate_to_unlock_your_isolated_pri))
             .setAllowedAuthenticators(
                 BiometricManager.Authenticators.BIOMETRIC_STRONG or
                     BiometricManager.Authenticators.DEVICE_CREDENTIAL

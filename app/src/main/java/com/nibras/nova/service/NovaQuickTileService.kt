@@ -1,5 +1,8 @@
 package com.nibras.nova.service
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import android.app.PendingIntent
 import android.content.Intent
 import android.net.Uri
@@ -14,7 +17,7 @@ class NovaQuickTileService : TileService() {
         super.onStartListening()
         qsTile?.apply {
             state = Tile.STATE_ACTIVE
-            label = "Nova Private Tab"
+            label = L.s(R.string.t_nova_private_tab)
             updateTile()
         }
     }

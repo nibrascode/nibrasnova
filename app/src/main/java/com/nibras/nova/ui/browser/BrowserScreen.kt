@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.browser
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import android.app.Activity
 import android.view.ViewGroup
 import android.webkit.WebView
@@ -193,7 +196,7 @@ fun BrowserScreen(
                 if (!useBottomOmniBar) {
                     OmniAddressBar(
                         currentUrl = activeTab?.url ?: "nova://home",
-                        pageTitle = activeTab?.title ?: "New Tab",
+                        pageTitle = activeTab?.title ?: L.s(R.string.t_new_tab),
                         isLoading = state.isLoading,
                         loadingProgress = state.loadingProgress,
                         isPrivate = activeTab?.isPrivate == true,
@@ -225,7 +228,7 @@ fun BrowserScreen(
                             modifier = Modifier.weight(1f)
                         )
                         IconButton(onClick = viewModel::dismissHomographWarning) {
-                            Icon(Icons.Default.Close, contentDescription = "Dismiss", tint = Color.White)
+                            Icon(Icons.Default.Close, contentDescription = L.s(R.string.t_dismiss), tint = Color.White)
                         }
                     }
                 }
@@ -248,7 +251,7 @@ fun BrowserScreen(
                 if (useBottomOmniBar) {
                     OmniAddressBar(
                         currentUrl = activeTab?.url ?: "nova://home",
-                        pageTitle = activeTab?.title ?: "New Tab",
+                        pageTitle = activeTab?.title ?: L.s(R.string.t_new_tab),
                         isLoading = state.isLoading,
                         loadingProgress = state.loadingProgress,
                         isPrivate = activeTab?.isPrivate == true,
@@ -380,7 +383,7 @@ fun BrowserScreen(
                             value = splitInputDraft,
                             onValueChange = { splitInputDraft = it },
                             singleLine = true,
-                            placeholder = { Text("Second pane URL or search…") },
+                            placeholder = { Text(L.s(R.string.t_second_pane_url_or_search)) },
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Go),
                             keyboardActions = KeyboardActions(
                                 onGo = { viewModel.updateSplitSecondaryUrl(splitInputDraft) }
@@ -388,7 +391,7 @@ fun BrowserScreen(
                             modifier = Modifier.weight(1f)
                         )
                         IconButton(onClick = viewModel::toggleSplitScreenMode) {
-                            Icon(Icons.Default.Close, contentDescription = "Close Split Screen")
+                            Icon(Icons.Default.Close, contentDescription = L.s(R.string.t_close_split_screen))
                         }
                     }
 
@@ -426,18 +429,18 @@ fun BrowserScreen(
     state.pendingExternalAppPrompt?.let { extPrompt ->
         AlertDialog(
             onDismissRequest = viewModel::dismissExternalAppPrompt,
-            title = { Text("Open in External Application?") },
+            title = { Text(L.s(R.string.t_open_in_external_application)) },
             text = {
-                Text("This webpage wants to open a link outside Nibras Nova:\n\n${extPrompt.targetUri}")
+                Text(L.s(R.string.t_this_webpage_wants_to_open_a_link_outsid, extPrompt.targetUri))
             },
             confirmButton = {
                 Button(onClick = { viewModel.confirmExternalAppLaunch(context, extPrompt) }) {
-                    Text("Open App")
+                    Text(L.s(R.string.t_open_app))
                 }
             },
             dismissButton = {
                 OutlinedButton(onClick = viewModel::dismissExternalAppPrompt) {
-                    Text("Stay Here")
+                    Text(L.s(R.string.t_stay_here))
                 }
             }
         )
@@ -447,21 +450,21 @@ fun BrowserScreen(
     if (state.isDomainFocusLimitReached) {
         AlertDialog(
             onDismissRequest = viewModel::dismissDomainFocusLimitAlert,
-            title = { Text("Daily Focus Time Limit Reached") },
+            title = { Text(L.s(R.string.t_daily_focus_time_limit_reached)) },
             text = {
-                Text("You have reached your configured daily time budget for this website in Nibras Nova Digital Wellbeing.")
+                Text(L.s(R.string.t_you_have_reached_your_configured_daily_t))
             },
             confirmButton = {
                 Button(onClick = {
                     viewModel.dismissDomainFocusLimitAlert()
                     onNavigateToHome()
                 }) {
-                    Text("Return to Homepage")
+                    Text(L.s(R.string.t_return_to_homepage))
                 }
             },
             dismissButton = {
                 OutlinedButton(onClick = viewModel::dismissDomainFocusLimitAlert) {
-                    Text("Continue 5 More Mins")
+                    Text(L.s(R.string.t_continue_5_more_mins))
                 }
             }
         )
@@ -472,20 +475,20 @@ fun BrowserScreen(
         AlertDialog(
             onDismissRequest = { showConnectionSecuritySheet = false },
             title = {
-                Text(if (isHttps) "Connection Is Encrypted (HTTPS)" else "Unencrypted Connection (HTTP)")
+                Text(if (isHttps) L.s(R.string.t_connection_is_encrypted_https) else L.s(R.string.t_unencrypted_connection_http))
             },
             text = {
                 Text(
                     if (isHttps) {
-                        "Your connection to ${activeTab.url} is encrypted with TLS and verified by Android's system certificate store."
+                        L.s(R.string.t_your_connection_to_is_encrypted_with_tls, activeTab.url)
                     } else {
-                        "This page is not using HTTPS. Avoid entering passwords or sensitive financial details on unencrypted sites."
+                        L.s(R.string.t_this_page_is_not_using_https_avoid_enter)
                     }
                 )
             },
             confirmButton = {
                 Button(onClick = { showConnectionSecuritySheet = false }) {
-                    Text("Close")
+                    Text(L.s(R.string.t_close))
                 }
             }
         )
@@ -551,25 +554,25 @@ fun BrowserScreen(
     if (state.isOmniCommandPaletteOpen) {
         val commands = remember(state.isSplitScreenActive, state.isTtsSpeaking, state.isAutoScrollActive) {
             listOf(
-                NovaQuickCommand("cmd_vault", "Open Biometric Private Media & Bookmark Vault", "Security", onNavigateToPrivateVault),
-                NovaQuickCommand("cmd_split", "Toggle Dual Split-Screen WebView", "Multitasking", viewModel::toggleSplitScreenMode),
-                NovaQuickCommand("cmd_autoscroll", "Toggle Hands-Free Auto-Scroll (Teleprompter)", "Reading", viewModel::toggleHandsFreeAutoScroll),
-                NovaQuickCommand("cmd_color", "Eyedropper Color Picker & Font Inspector", "Developer", viewModel::inspectPageColorsAndFonts),
-                NovaQuickCommand("cmd_devtools", "Open F12 Web Developer Console & DOM Inspector", "Developer", viewModel::openDevToolsConsole),
-                NovaQuickCommand("cmd_userscripts", "Open UserScripts (JS) & Custom CSS Manager", "Developer", onNavigateToUserScripts),
-                NovaQuickCommand("cmd_json", "Format Page as JSON / XML Tree", "Developer", viewModel::openJsonXmlFormatterForActivePage),
-                NovaQuickCommand("cmd_monitor", "Open Web Page Change Monitor (Price/News Watcher)", "Tools", onNavigateToPageMonitor),
-                NovaQuickCommand("cmd_wellbeing", "Open Digital Wellbeing & Focus Site Timer", "Wellbeing", onNavigateToDigitalWellbeing),
-                NovaQuickCommand("cmd_reader", "Open Reader Mode & Extractive Summarizer", "Reading", onNavigateToReaderMode),
-                NovaQuickCommand("cmd_tts", "Listen to Webpage Aloud (TTS Voice Reader)", "Reading", viewModel::toggleTtsVoiceReader),
-                NovaQuickCommand("cmd_notes", "Annotate & Highlight Page Text", "Research", viewModel::openWebNotesAnnotator),
-                NovaQuickCommand("cmd_media", "Extract All Images & Videos (Media Grabber)", "Tools", viewModel::openMediaGrabberForActivePage),
-                NovaQuickCommand("cmd_mhtml", "Save Full Offline Web Archive (.mht)", "Offline", viewModel::saveFullWebArchiveMhtml),
-                NovaQuickCommand("cmd_rss", "Open Built-in RSS & Atom News Reader", "Feeds", onNavigateToRssReader),
-                NovaQuickCommand("cmd_fullshot", "Capture Full-Page Scrolling Screenshot", "Tools") {
+                NovaQuickCommand("cmd_vault", L.s(R.string.t_open_biometric_private_media_bookmark_va), L.s(R.string.t_security), onNavigateToPrivateVault),
+                NovaQuickCommand("cmd_split", L.s(R.string.t_toggle_dual_split_screen_webview), L.s(R.string.t_multitasking), viewModel::toggleSplitScreenMode),
+                NovaQuickCommand("cmd_autoscroll", L.s(R.string.t_toggle_hands_free_auto_scroll_teleprompt), L.s(R.string.t_reading), viewModel::toggleHandsFreeAutoScroll),
+                NovaQuickCommand("cmd_color", L.s(R.string.t_eyedropper_color_picker_font_inspector), L.s(R.string.t_developer), viewModel::inspectPageColorsAndFonts),
+                NovaQuickCommand("cmd_devtools", L.s(R.string.t_open_f12_web_developer_console_dom_inspe), L.s(R.string.t_developer), viewModel::openDevToolsConsole),
+                NovaQuickCommand("cmd_userscripts", L.s(R.string.t_open_userscripts_js_custom_css_manager), L.s(R.string.t_developer), onNavigateToUserScripts),
+                NovaQuickCommand("cmd_json", L.s(R.string.t_format_page_as_json_xml_tree), L.s(R.string.t_developer), viewModel::openJsonXmlFormatterForActivePage),
+                NovaQuickCommand("cmd_monitor", L.s(R.string.t_open_web_page_change_monitor_price_news), L.s(R.string.t_tools), onNavigateToPageMonitor),
+                NovaQuickCommand("cmd_wellbeing", L.s(R.string.t_open_digital_wellbeing_focus_site_timer), L.s(R.string.t_wellbeing), onNavigateToDigitalWellbeing),
+                NovaQuickCommand("cmd_reader", L.s(R.string.t_open_reader_mode_extractive_summarizer), L.s(R.string.t_reading), onNavigateToReaderMode),
+                NovaQuickCommand("cmd_tts", L.s(R.string.t_listen_to_webpage_aloud_tts_voice_reader), L.s(R.string.t_reading), viewModel::toggleTtsVoiceReader),
+                NovaQuickCommand("cmd_notes", L.s(R.string.t_annotate_highlight_page_text), L.s(R.string.t_research), viewModel::openWebNotesAnnotator),
+                NovaQuickCommand("cmd_media", L.s(R.string.t_extract_all_images_videos_media_grabber), L.s(R.string.t_tools), viewModel::openMediaGrabberForActivePage),
+                NovaQuickCommand("cmd_mhtml", L.s(R.string.t_save_full_offline_web_archive_mht), L.s(R.string.t_offline), viewModel::saveFullWebArchiveMhtml),
+                NovaQuickCommand("cmd_rss", L.s(R.string.t_open_built_in_rss_atom_news_reader), L.s(R.string.t_feeds), onNavigateToRssReader),
+                NovaQuickCommand("cmd_fullshot", L.s(R.string.t_capture_full_page_scrolling_screenshot), L.s(R.string.t_tools)) {
                     viewModel.captureAndShareFullScrollingScreenshot(context)
                 },
-                NovaQuickCommand("cmd_panic", "Emergency Panic Shred (Wipe All & Exit)", "Security") {
+                NovaQuickCommand("cmd_panic", L.s(R.string.t_emergency_panic_shred_wipe_all_exit), L.s(R.string.t_security)) {
                     viewModel.triggerEmergencyPanicShred(context as? Activity)
                 }
             )

@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.privacy
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -102,10 +105,10 @@ fun PrivacyDashboardScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = onBack) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = L.s(R.string.t_back))
                 }
                 Text(
-                    text = "Privacy, DoH, Anti-Fingerprint & Backup",
+                    text = L.s(R.string.t_privacy_doh_anti_fingerprint_backup),
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                 )
             }
@@ -129,7 +132,7 @@ fun PrivacyDashboardScreen(
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(Icons.Default.Security, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                             Text(
-                                text = "  Live Shield Telemetry (Local)",
+                                text = "  " + L.s(R.string.t_live_shield_telemetry_local),
                                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                             )
                         }
@@ -138,9 +141,9 @@ fun PrivacyDashboardScreen(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            MetricPill("Ads/Trackers", state.metrics.adsAndTrackersBlockedCount)
-                            MetricPill("Clean URLs", state.metrics.trackingParamsStrippedCount)
-                            MetricPill("Redirects", state.metrics.redirectChainsBlockedCount)
+                            MetricPill(L.s(R.string.t_ads_trackers), state.metrics.adsAndTrackersBlockedCount)
+                            MetricPill(L.s(R.string.t_clean_urls), state.metrics.trackingParamsStrippedCount)
+                            MetricPill(L.s(R.string.t_redirects), state.metrics.redirectChainsBlockedCount)
                             MetricPill("HTTPS", state.metrics.httpsUpgradesCount)
                         }
                     }
@@ -159,7 +162,7 @@ fun PrivacyDashboardScreen(
                         shape = RoundedCornerShape(14.dp)
                     ) {
                         Icon(Icons.Default.DeleteForever, contentDescription = null)
-                        Text(" Clear Data")
+                        Text(" " + L.s(R.string.t_clear_data_2))
                     }
                     OutlinedButton(
                         onClick = { showEncryptedBackupDialog = true },
@@ -167,7 +170,7 @@ fun PrivacyDashboardScreen(
                         shape = RoundedCornerShape(14.dp)
                     ) {
                         Icon(Icons.Default.EnhancedEncryption, contentDescription = null)
-                        Text(" AES-256 Backup")
+                        Text(" " + L.s(R.string.t_aes_256_backup))
                     }
                 }
             }
@@ -184,91 +187,91 @@ fun PrivacyDashboardScreen(
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         Text(
-                            text = "Shields, Anti-Fingerprinting & Zero-Trust",
+                            text = L.s(R.string.t_shields_anti_fingerprinting_zero_trust),
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.primary
                         )
 
                         ToggleSettingRow(
-                            title = "Canvas, WebGL & Audio Anti-Fingerprinting",
-                            subtitle = "Inject cryptographic LSB noise into Canvas/WebGL & mask hardware concurrency",
+                            title = L.s(R.string.t_canvas_webgl_audio_anti_fingerprinting),
+                            subtitle = L.s(R.string.t_inject_cryptographic_lsb_noise_into_canv),
                             checked = state.settings.enableAntiFingerprinting,
                             onCheckedChange = viewModel::setAntiFingerprinting
                         )
 
                         ToggleSettingRow(
-                            title = "Built-in Ad & Tracker Blocker",
-                            subtitle = "Block known advertising and analytics network requests",
+                            title = L.s(R.string.t_built_in_ad_tracker_blocker),
+                            subtitle = L.s(R.string.t_block_known_advertising_and_analytics_ne),
                             checked = state.settings.enableAdAndTrackerBlocker,
                             onCheckedChange = viewModel::setAdAndTrackerBlocker
                         )
 
                         ToggleSettingRow(
-                            title = "Strip Marketing & Tracking URL Parameters",
-                            subtitle = "Automatically remove utm_*, fbclid, gclid, and mc_cid from URLs",
+                            title = L.s(R.string.t_strip_marketing_tracking_url_parameters),
+                            subtitle = L.s(R.string.t_automatically_remove_utm_fbclid_gclid_an),
                             checked = state.settings.stripTrackingUrlParameters,
                             onCheckedChange = viewModel::setStripTrackingParams
                         )
 
                         ToggleSettingRow(
-                            title = "Redirect Chain & Clickjacking Guard",
+                            title = L.s(R.string.t_redirect_chain_clickjacking_guard),
                             subtitle = "Block rapid >3-hop cross-domain ad redirect chains automatically",
                             checked = state.settings.enableRedirectChainGuard,
                             onCheckedChange = viewModel::setRedirectChainGuard
                         )
 
                         ToggleSettingRow(
-                            title = "Biometric Lock for Private Tabs Vault",
-                            subtitle = "Require Fingerprint / Face / PIN before viewing open Private Tabs",
+                            title = L.s(R.string.t_biometric_lock_for_private_tabs_vault),
+                            subtitle = L.s(R.string.t_require_fingerprint_face_pin_before_view),
                             checked = state.settings.biometricLockIncognitoTabs,
                             onCheckedChange = viewModel::setBiometricLockIncognito
                         )
 
                         ToggleSettingRow(
-                            title = "HTTPS-Only Mode",
-                            subtitle = "Automatically upgrade HTTP navigations to encrypted HTTPS",
+                            title = L.s(R.string.t_https_only_mode),
+                            subtitle = L.s(R.string.t_automatically_upgrade_http_navigations_t),
                             checked = state.settings.httpsOnlyMode,
                             onCheckedChange = viewModel::setHttpsOnly
                         )
 
                         ToggleSettingRow(
-                            title = "Android Safe Browsing",
-                            subtitle = "Verify URLs against Play Protect / System WebView anti-phishing provider",
+                            title = L.s(R.string.t_android_safe_browsing),
+                            subtitle = L.s(R.string.t_verify_urls_against_play_protect_system),
                             checked = state.settings.enableSafeBrowsing,
                             onCheckedChange = viewModel::setSafeBrowsing
                         )
 
                         ToggleSettingRow(
-                            title = "Block Third-Party Cookies",
-                            subtitle = "Disallow cross-domain tracking cookies via CookieManager",
+                            title = L.s(R.string.t_block_third_party_cookies),
+                            subtitle = L.s(R.string.t_disallow_cross_domain_tracking_cookies_v),
                             checked = state.settings.blockThirdPartyCookies,
                             onCheckedChange = viewModel::setBlockThirdPartyCookies
                         )
 
                         ToggleSettingRow(
-                            title = "JavaScript Execution",
-                            subtitle = "Disable on untrusted sites to reduce attack surface",
+                            title = L.s(R.string.t_javascript_execution),
+                            subtitle = L.s(R.string.t_disable_on_untrusted_sites_to_reduce_att),
                             checked = state.settings.enableJavaScript,
                             onCheckedChange = viewModel::setJavaScriptEnabled
                         )
 
                         ToggleSettingRow(
-                            title = "DOM Storage (localStorage)",
-                            subtitle = "Allow websites to store local key-value state",
+                            title = L.s(R.string.t_dom_storage_localstorage),
+                            subtitle = L.s(R.string.t_allow_websites_to_store_local_key_value),
                             checked = state.settings.enableDomStorage,
                             onCheckedChange = viewModel::setDomStorageEnabled
                         )
 
                         ToggleSettingRow(
-                            title = "Send Do Not Track (DNT: 1)",
-                            subtitle = "Include DNT privacy header on outgoing requests",
+                            title = L.s(R.string.t_send_do_not_track_dnt_1),
+                            subtitle = L.s(R.string.t_include_dnt_privacy_header_on_outgoing_r),
                             checked = state.settings.sendDoNotTrackHeader,
                             onCheckedChange = viewModel::setDoNotTrack
                         )
 
                         ToggleSettingRow(
-                            title = "Block Screenshots in Private Tabs",
-                            subtitle = "Enforce WindowManager FLAG_SECURE during Incognito sessions",
+                            title = L.s(R.string.t_block_screenshots_in_private_tabs),
+                            subtitle = L.s(R.string.t_enforce_windowmanager_flag_secure_during),
                             checked = state.settings.blockScreenshotsInIncognito,
                             onCheckedChange = viewModel::setBlockIncognitoScreenshots
                         )
@@ -288,7 +291,7 @@ fun PrivacyDashboardScreen(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Text(
-                            text = "DNS-over-HTTPS (DoH) & Proxy Controller",
+                            text = L.s(R.string.t_dns_over_https_doh_proxy_controller),
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.primary
                         )
@@ -320,12 +323,12 @@ fun PrivacyDashboardScreen(
                             OutlinedTextField(
                                 value = proxyDraft,
                                 onValueChange = { proxyDraft = it },
-                                label = { Text("Custom Proxy (e.g. 127.0.0.1:8080)") },
+                                label = { Text(L.s(R.string.t_custom_proxy_e_g_127_0_0_1_8080)) },
                                 singleLine = true,
                                 modifier = Modifier.weight(1f)
                             )
                             Button(onClick = { viewModel.applyCustomProxy(proxyDraft) }) {
-                                Text("Apply")
+                                Text(L.s(R.string.t_apply))
                             }
                         }
                     }
@@ -344,7 +347,7 @@ fun PrivacyDashboardScreen(
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         Text(
-                            text = "Cookie Whitelist (Preserve Logins When Shredding Data)",
+                            text = L.s(R.string.t_cookie_whitelist_preserve_logins_when_sh),
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.primary
                         )
@@ -356,7 +359,7 @@ fun PrivacyDashboardScreen(
                             OutlinedTextField(
                                 value = newWhitelistDomain,
                                 onValueChange = { newWhitelistDomain = it },
-                                placeholder = { Text("e.g. github.com") },
+                                placeholder = { Text(L.s(R.string.t_e_g_github_com)) },
                                 singleLine = true,
                                 modifier = Modifier.weight(1f)
                             )
@@ -368,7 +371,7 @@ fun PrivacyDashboardScreen(
                                     }
                                 }
                             ) {
-                                Icon(Icons.Default.Add, contentDescription = "Add Domain")
+                                Icon(Icons.Default.Add, contentDescription = L.s(R.string.t_add_domain))
                             }
                         }
 
@@ -380,7 +383,7 @@ fun PrivacyDashboardScreen(
                             ) {
                                 Text(entry.domain, style = MaterialTheme.typography.bodyMedium)
                                 IconButton(onClick = { viewModel.removeWhitelistedCookieDomain(entry.id) }) {
-                                    Icon(Icons.Default.Delete, contentDescription = "Remove Whitelisted Domain")
+                                    Icon(Icons.Default.Delete, contentDescription = L.s(R.string.t_remove_whitelisted_domain))
                                 }
                             }
                         }
@@ -391,7 +394,7 @@ fun PrivacyDashboardScreen(
             if (state.sitePermissions.isNotEmpty()) {
                 item {
                     Text(
-                        text = "Saved Website Permissions",
+                        text = L.s(R.string.t_saved_website_permissions),
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                     )
                 }
@@ -417,7 +420,7 @@ fun PrivacyDashboardScreen(
                                 )
                             }
                             IconButton(onClick = { viewModel.removeSitePermission(perm.id) }) {
-                                Icon(Icons.Default.Delete, contentDescription = "Revoke Permission")
+                                Icon(Icons.Default.Delete, contentDescription = L.s(R.string.t_revoke_permission))
                             }
                         }
                     }
@@ -434,13 +437,13 @@ fun PrivacyDashboardScreen(
 
         AlertDialog(
             onDismissRequest = { showClearDataDialog = false },
-            title = { Text("Clear Browsing Data") },
+            title = { Text(L.s(R.string.t_clear_browsing_data)) },
             text = {
                 Column {
-                    CheckRow("Browsing History & Favicons", clearHistory) { clearHistory = it }
-                    CheckRow("Cookies & DOM Storage (Preserves Whitelisted Sites)", clearCookies) { clearCookies = it }
-                    CheckRow("Cached Images & Files", clearCache) { clearCache = it }
-                    CheckRow("Saved Site Hardware Permissions", clearPermissions) { clearPermissions = it }
+                    CheckRow(L.s(R.string.t_browsing_history_favicons), clearHistory) { clearHistory = it }
+                    CheckRow(L.s(R.string.t_cookies_dom_storage_preserves_whiteliste), clearCookies) { clearCookies = it }
+                    CheckRow(L.s(R.string.t_cached_images_files), clearCache) { clearCache = it }
+                    CheckRow(L.s(R.string.t_saved_site_hardware_permissions), clearPermissions) { clearPermissions = it }
                 }
             },
             confirmButton = {
@@ -453,16 +456,16 @@ fun PrivacyDashboardScreen(
                     ) {
                         showClearDataDialog = false
                         scope.launch {
-                            snackbarHostState.showSnackbar("Selected browsing data cleared.")
+                            snackbarHostState.showSnackbar(L.s(R.string.t_selected_browsing_data_cleared))
                         }
                     }
                 }) {
-                    Text("Clear Now")
+                    Text(L.s(R.string.t_clear_now))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showClearDataDialog = false }) {
-                    Text("Cancel")
+                    Text(L.s(R.string.t_cancel))
                 }
             }
         )
@@ -478,22 +481,22 @@ fun PrivacyDashboardScreen(
                 pendingRestoreUri = null
             },
             title = {
-                Text(if (isRestoring) "Decrypt & Restore .novabackup" else "AES-256-GCM Encrypted Backup")
+                Text(if (isRestoring) L.s(R.string.t_decrypt_restore_novabackup) else L.s(R.string.t_aes_256_gcm_encrypted_backup))
             },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text(
                         text = if (isRestoring) {
-                            "Enter the password used to encrypt this .novabackup archive."
+                            L.s(R.string.t_enter_the_password_used_to_encrypt_this)
                         } else {
-                            "Encrypts all Bookmarks, Quick Shortcuts, UserScripts/CSS, Cookie Whitelist, and RSS feeds using PBKDF2-HMAC-SHA256 + AES-256-GCM."
+                            L.s(R.string.t_encrypts_all_bookmarks_quick_shortcuts_u)
                         },
                         style = MaterialTheme.typography.bodyMedium
                     )
                     OutlinedTextField(
                         value = passphrase,
                         onValueChange = { passphrase = it },
-                        label = { Text("Encryption Passphrase (min 4 chars)") },
+                        label = { Text(L.s(R.string.t_encryption_passphrase_min_4_chars)) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -505,7 +508,7 @@ fun PrivacyDashboardScreen(
                             },
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text("Or Select Existing .novabackup File to Restore")
+                            Text(L.s(R.string.t_or_select_existing_novabackup_file_to_re))
                         }
                     }
                 }
@@ -522,7 +525,7 @@ fun PrivacyDashboardScreen(
                         pendingRestoreUri = null
                     }
                 }) {
-                    Text(if (isRestoring) "Decrypt & Restore" else "Encrypt & Export")
+                    Text(if (isRestoring) L.s(R.string.t_decrypt_restore) else L.s(R.string.t_encrypt_export))
                 }
             },
             dismissButton = {
@@ -530,7 +533,7 @@ fun PrivacyDashboardScreen(
                     showEncryptedBackupDialog = false
                     pendingRestoreUri = null
                 }) {
-                    Text("Cancel")
+                    Text(L.s(R.string.t_cancel))
                 }
             }
         )

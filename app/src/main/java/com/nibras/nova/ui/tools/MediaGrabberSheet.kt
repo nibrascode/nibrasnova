@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.tools
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -54,13 +57,13 @@ fun MediaGrabberSheet(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.Collections, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                     Text(
-                        text = "  Page Media & Asset Grabber (${extractedMediaUrls.size})",
+                        text = "  " + L.s(R.string.t_page_media_asset_grabber, extractedMediaUrls.size),
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                     )
                 }
                 if (extractedMediaUrls.isNotEmpty()) {
                     Button(onClick = onBatchDownloadAll) {
-                        Text("Batch Download All")
+                        Text(L.s(R.string.t_batch_download_all))
                     }
                 }
             }
@@ -69,7 +72,7 @@ fun MediaGrabberSheet(
 
             if (extractedMediaUrls.isEmpty()) {
                 Text(
-                    text = "No downloadable images, videos, audio streams, or PDF links were detected on this page.",
+                    text = L.s(R.string.t_no_downloadable_images_videos_audio_stre),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(16.dp)
@@ -100,7 +103,7 @@ fun MediaGrabberSheet(
                                     modifier = Modifier.weight(1f)
                                 )
                                 IconButton(onClick = { onDownloadSingleAsset(assetUrl) }) {
-                                    Icon(Icons.Default.Download, contentDescription = "Download Asset")
+                                    Icon(Icons.Default.Download, contentDescription = L.s(R.string.t_download_asset))
                                 }
                             }
                         }

@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.history
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -72,17 +75,17 @@ fun HistoryScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = L.s(R.string.t_back))
                     }
                     Text(
-                        text = "Browsing History",
+                        text = L.s(R.string.t_browsing_history),
                         style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                     )
                     IconButton(
                         onClick = { showClearRangeDialog = true },
                         enabled = state.historyItems.isNotEmpty()
                     ) {
-                        Icon(Icons.Default.DeleteSweep, contentDescription = "Clear History")
+                        Icon(Icons.Default.DeleteSweep, contentDescription = L.s(R.string.t_clear_history))
                     }
                 }
 
@@ -95,7 +98,7 @@ fun HistoryScreen(
                     shape = RoundedCornerShape(22.dp),
                     singleLine = true,
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-                    placeholder = { Text("Search visited pages…") }
+                    placeholder = { Text(L.s(R.string.t_search_visited_pages)) }
                 )
             }
         }
@@ -103,8 +106,8 @@ fun HistoryScreen(
         if (state.historyItems.isEmpty()) {
             EmptyStateView(
                 icon = Icons.Default.History,
-                title = "No Browsing History",
-                subtitle = "Visited pages in normal tabs appear here. Private tabs are strictly excluded.",
+                title = L.s(R.string.t_no_browsing_history),
+                subtitle = L.s(R.string.t_visited_pages_in_normal_tabs_appear_here),
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
@@ -155,7 +158,7 @@ fun HistoryScreen(
                             }
                             Spacer(modifier = Modifier.width(8.dp))
                             IconButton(onClick = { viewModel.deleteEntry(entry.id) }) {
-                                Icon(Icons.Default.Close, contentDescription = "Delete entry")
+                                Icon(Icons.Default.Close, contentDescription = L.s(R.string.t_delete_entry))
                             }
                         }
                     }
@@ -168,7 +171,7 @@ fun HistoryScreen(
         var selectedRange by remember { mutableStateOf(HistoryClearRange.LAST_24_HOURS) }
         AlertDialog(
             onDismissRequest = { showClearRangeDialog = false },
-            title = { Text("Clear Browsing History") },
+            title = { Text(L.s(R.string.t_clear_browsing_history)) },
             text = {
                 Column {
                     HistoryClearRange.entries.forEach { range ->
@@ -193,12 +196,12 @@ fun HistoryScreen(
                     viewModel.clearByRange(selectedRange)
                     showClearRangeDialog = false
                 }) {
-                    Text("Clear Data")
+                    Text(L.s(R.string.t_clear_data))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showClearRangeDialog = false }) {
-                    Text("Cancel")
+                    Text(L.s(R.string.t_cancel))
                 }
             }
         )

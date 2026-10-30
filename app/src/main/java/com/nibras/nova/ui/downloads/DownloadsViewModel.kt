@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.downloads
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import android.content.Context
 import android.content.Intent
 import androidx.core.content.FileProvider
@@ -44,7 +47,7 @@ class DownloadsViewModel @Inject constructor(
                     _verifiedChecksums.value = item.fileName to sums
                 }
                 .onFailure { err ->
-                    _events.tryEmit(err.localizedMessage ?: "Could not compute file hash.")
+                    _events.tryEmit(err.localizedMessage ?: L.s(R.string.t_could_not_compute_file_hash))
                 }
         }
     }
@@ -56,7 +59,7 @@ class DownloadsViewModel @Inject constructor(
     fun pauseDownload(id: Long) {
         viewModelScope.launch {
             downloadRepository.pauseDownload(id).onFailure { err ->
-                _events.tryEmit(err.localizedMessage ?: "Pause not supported for this server")
+                _events.tryEmit(err.localizedMessage ?: L.s(R.string.t_pause_not_supported_for_this_server))
             }
         }
     }
@@ -64,7 +67,7 @@ class DownloadsViewModel @Inject constructor(
     fun resumeDownload(id: Long) {
         viewModelScope.launch {
             downloadRepository.resumeDownload(id).onFailure { err ->
-                _events.tryEmit(err.localizedMessage ?: "Resume not supported")
+                _events.tryEmit(err.localizedMessage ?: L.s(R.string.t_resume_not_supported))
             }
         }
     }
@@ -85,7 +88,7 @@ class DownloadsViewModel @Inject constructor(
         val path = item.localFilePath ?: return
         val file = File(path)
         if (!file.exists()) {
-            _events.tryEmit("File no longer exists on storage.")
+            _events.tryEmit(L.s(R.string.t_file_no_longer_exists_on_storage))
             return
         }
         runCatching {
@@ -94,9 +97,9 @@ class DownloadsViewModel @Inject constructor(
                 setDataAndType(uri, item.mimeType.ifBlank { "*/*" })
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
             }
-            context.startActivity(Intent.createChooser(intent, "Open ${item.fileName}"))
+            context.startActivity(Intent.createChooser(intent, L.s(R.string.t_open, item.fileName)))
         }.onFailure {
-            _events.tryEmit("No installed app can open ${item.fileName}")
+            _events.tryEmit(L.s(R.string.t_no_installed_app_can_open, item.fileName))
         }
     }
 
@@ -104,7 +107,7 @@ class DownloadsViewModel @Inject constructor(
         val path = item.localFilePath ?: return
         val file = File(path)
         if (!file.exists()) {
-            _events.tryEmit("File not found on disk.")
+            _events.tryEmit(L.s(R.string.t_file_not_found_on_disk))
             return
         }
         runCatching {
@@ -114,7 +117,7 @@ class DownloadsViewModel @Inject constructor(
                 putExtra(Intent.EXTRA_STREAM, uri)
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            context.startActivity(Intent.createChooser(intent, "Share ${item.fileName}"))
+            context.startActivity(Intent.createChooser(intent, L.s(R.string.t_share, item.fileName)))
         }
     }
 }

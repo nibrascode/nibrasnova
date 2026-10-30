@@ -1,5 +1,8 @@
 package com.nibras.nova.core.util
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import android.content.Context
 import android.content.Intent
 import androidx.core.content.FileProvider
@@ -83,7 +86,7 @@ class BookmarkImportExportHelper @Inject constructor(
                     addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 }
                 activityContext.startActivity(
-                    Intent.createChooser(shareIntent, "Export Nibras Nova Bookmarks (.html)").apply {
+                    Intent.createChooser(shareIntent, L.s(R.string.t_export_nibras_nova_bookmarks_html)).apply {
                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     }
                 )

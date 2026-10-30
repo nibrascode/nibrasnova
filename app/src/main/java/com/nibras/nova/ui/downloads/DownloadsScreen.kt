@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.downloads
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -83,10 +86,10 @@ fun DownloadsScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = onBack) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = L.s(R.string.t_back))
                 }
                 Text(
-                    text = "Download Center & SHA-256 Verifier",
+                    text = L.s(R.string.t_download_center_sha_256_verifier),
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                 )
             }
@@ -95,8 +98,8 @@ fun DownloadsScreen(
         if (downloads.isEmpty()) {
             EmptyStateView(
                 icon = Icons.Default.Download,
-                title = "No Downloads Yet",
-                subtitle = "Files downloaded from websites appear here with real-time progress and SHA-256 / MD5 cryptographic verification.",
+                title = L.s(R.string.t_no_downloads_yet),
+                subtitle = L.s(R.string.t_files_downloaded_from_websites_appear_he),
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
@@ -128,11 +131,11 @@ fun DownloadsScreen(
     checksumPair?.let { (fileName, sums) ->
         AlertDialog(
             onDismissRequest = viewModel::dismissChecksumDialog,
-            title = { Text("Cryptographic Checksum Verified") },
+            title = { Text(L.s(R.string.t_cryptographic_checksum_verified)) },
             text = {
                 SelectionContainer {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text("File: $fileName", style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold))
+                        Text(L.s(R.string.t_file, fileName), style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold))
                         Text(
                             text = "SHA-256:\n${sums.sha256Hex}",
                             style = MaterialTheme.typography.labelSmall.copy(fontFamily = FontFamily.Monospace),
@@ -147,7 +150,7 @@ fun DownloadsScreen(
             },
             confirmButton = {
                 Button(onClick = viewModel::dismissChecksumDialog) {
-                    Text("Done")
+                    Text(L.s(R.string.t_done))
                 }
             }
         )
@@ -193,47 +196,47 @@ private fun DownloadItemCard(
                     DownloadStatus.DOWNLOADING, DownloadStatus.QUEUED -> {
                         if (item.supportsPauseResume) {
                             IconButton(onClick = onPause) {
-                                Icon(Icons.Default.Pause, contentDescription = "Pause Download")
+                                Icon(Icons.Default.Pause, contentDescription = L.s(R.string.t_pause_download))
                             }
                         }
                         IconButton(onClick = onCancel) {
-                            Icon(Icons.Default.Cancel, contentDescription = "Cancel Download")
+                            Icon(Icons.Default.Cancel, contentDescription = L.s(R.string.t_cancel_download))
                         }
                     }
                     DownloadStatus.PAUSED -> {
                         IconButton(onClick = onResume) {
-                            Icon(Icons.Default.PlayArrow, contentDescription = "Resume Download")
+                            Icon(Icons.Default.PlayArrow, contentDescription = L.s(R.string.t_resume_download))
                         }
                         IconButton(onClick = onCancel) {
-                            Icon(Icons.Default.Cancel, contentDescription = "Cancel Download")
+                            Icon(Icons.Default.Cancel, contentDescription = L.s(R.string.t_cancel_download))
                         }
                     }
                     DownloadStatus.COMPLETED -> {
                         IconButton(onClick = onVerifyHash) {
                             Icon(
                                 imageVector = Icons.Default.VerifiedUser,
-                                contentDescription = "Verify SHA-256 Checksum",
+                                contentDescription = L.s(R.string.t_verify_sha_256_checksum),
                                 tint = MaterialTheme.colorScheme.primary
                             )
                         }
                         IconButton(onClick = onOpen) {
-                            Icon(Icons.Default.FolderOpen, contentDescription = "Open File")
+                            Icon(Icons.Default.FolderOpen, contentDescription = L.s(R.string.t_open_file))
                         }
                         IconButton(onClick = onShare) {
-                            Icon(Icons.Default.Share, contentDescription = "Share File")
+                            Icon(Icons.Default.Share, contentDescription = L.s(R.string.t_share_file))
                         }
                         IconButton(onClick = onDelete) {
-                            Icon(Icons.Default.Delete, contentDescription = "Delete File")
+                            Icon(Icons.Default.Delete, contentDescription = L.s(R.string.t_delete_file))
                         }
                     }
                     DownloadStatus.FAILED, DownloadStatus.CANCELLED -> {
                         if (item.supportsPauseResume) {
                             IconButton(onClick = onResume) {
-                                Icon(Icons.Default.PlayArrow, contentDescription = "Retry Download")
+                                Icon(Icons.Default.PlayArrow, contentDescription = L.s(R.string.t_retry_download))
                             }
                         }
                         IconButton(onClick = onDelete) {
-                            Icon(Icons.Default.Delete, contentDescription = "Remove Record")
+                            Icon(Icons.Default.Delete, contentDescription = L.s(R.string.t_remove_record))
                         }
                     }
                 }

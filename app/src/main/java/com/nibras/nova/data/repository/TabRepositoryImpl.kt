@@ -1,5 +1,8 @@
 package com.nibras.nova.data.repository
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import com.nibras.nova.core.common.DispatcherProvider
 import com.nibras.nova.core.common.NovaConstants
 import com.nibras.nova.core.util.TabThumbnailManager
@@ -67,7 +70,7 @@ class TabRepositoryImpl @Inject constructor(
                 val initialTab = TabItem(
                     id = UUID.randomUUID().toString(),
                     url = NovaConstants.DEFAULT_HOMEPAGE_SENTINEL,
-                    title = "New Tab",
+                    title = L.s(R.string.t_new_tab),
                     isPrivate = false,
                     isDesktopMode = defaultDesktopMode,
                     isActive = true,
@@ -93,7 +96,7 @@ class TabRepositoryImpl @Inject constructor(
             val newTab = TabItem(
                 id = UUID.randomUUID().toString(),
                 url = url.ifBlank { NovaConstants.DEFAULT_HOMEPAGE_SENTINEL },
-                title = if (url.isBlank() || url == NovaConstants.DEFAULT_HOMEPAGE_SENTINEL) "New Tab" else url,
+                title = if (url.isBlank() || url == NovaConstants.DEFAULT_HOMEPAGE_SENTINEL) L.s(R.string.t_new_tab) else url,
                 isPrivate = isPrivate,
                 isDesktopMode = isDesktopMode,
                 isActive = selectImmediately,
@@ -241,7 +244,7 @@ class TabRepositoryImpl @Inject constructor(
                 val replacement = TabItem(
                     id = UUID.randomUUID().toString(),
                     url = NovaConstants.DEFAULT_HOMEPAGE_SENTINEL,
-                    title = "New Tab",
+                    title = L.s(R.string.t_new_tab),
                     isPrivate = false,
                     isActive = true,
                     workspace = closingTab.workspace
@@ -285,7 +288,7 @@ class TabRepositoryImpl @Inject constructor(
                 val freshTab = TabItem(
                     id = UUID.randomUUID().toString(),
                     url = NovaConstants.DEFAULT_HOMEPAGE_SENTINEL,
-                    title = "New Tab",
+                    title = L.s(R.string.t_new_tab),
                     isPrivate = false,
                     isActive = true
                 )

@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.components
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,13 +32,13 @@ fun SslWarningDialog(
         icon = {
             Icon(
                 imageVector = Icons.Default.GppBad,
-                contentDescription = "SSL Certificate Error",
+                contentDescription = L.s(R.string.t_ssl_certificate_error),
                 tint = NovaDangerRed
             )
         },
         title = {
             Text(
-                text = "Connection Is Not Private (${challenge.errorTitle})",
+                text = L.s(R.string.t_connection_is_not_private, challenge.errorTitle),
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
             )
         },
@@ -47,17 +50,17 @@ fun SslWarningDialog(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    text = "URL: ${challenge.failingUrl}",
+                    text = L.s(R.string.t_url, challenge.failingUrl),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = "Issued To: ${challenge.issuedTo}",
+                    text = L.s(R.string.t_issued_to, challenge.issuedTo),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = "Issued By: ${challenge.issuedBy}",
+                    text = L.s(R.string.t_issued_by, challenge.issuedBy),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -65,7 +68,7 @@ fun SslWarningDialog(
         },
         confirmButton = {
             Button(onClick = challenge.onCancelNavigation) {
-                Text("Back to Safety")
+                Text(L.s(R.string.t_back_to_safety))
             }
         },
         dismissButton = {
@@ -73,7 +76,7 @@ fun SslWarningDialog(
                 onClick = challenge.onProceedWithExplicitRisk,
                 colors = ButtonDefaults.outlinedButtonColors(contentColor = NovaDangerRed)
             ) {
-                Text("Proceed (Unsafe)")
+                Text(L.s(R.string.t_proceed_unsafe))
             }
         }
     )

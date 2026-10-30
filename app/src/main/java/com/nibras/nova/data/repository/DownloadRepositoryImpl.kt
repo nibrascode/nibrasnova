@@ -1,5 +1,8 @@
 package com.nibras.nova.data.repository
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
@@ -56,7 +59,7 @@ class DownloadRepositoryImpl @Inject constructor(
             if (!cleanUrl.startsWith("https://", ignoreCase = true) &&
                 !cleanUrl.startsWith("http://", ignoreCase = true)
             ) {
-                return@withContext Result.failure(IllegalArgumentException("Only HTTP and HTTPS downloads are supported."))
+                return@withContext Result.failure(IllegalArgumentException(L.s(R.string.t_only_http_and_https_downloads_are_suppor)))
             }
 
             val guessedFileName = URLUtil.guessFileName(cleanUrl, contentDisposition, mimeType)
@@ -105,7 +108,7 @@ class DownloadRepositoryImpl @Inject constructor(
 
     override suspend fun pauseDownload(downloadId: Long): Result<Unit> = withContext(dispatchers.io) {
         val entity = downloadDao.getDownloadById(downloadId)
-            ?: return@withContext Result.failure(IllegalStateException("Download not found"))
+            ?: return@withContext Result.failure(IllegalStateException(L.s(R.string.t_download_not_found)))
 
         if (!entity.supportsPauseResume) {
             return@withContext Result.failure(
@@ -120,14 +123,14 @@ class DownloadRepositoryImpl @Inject constructor(
 
     override suspend fun resumeDownload(downloadId: Long): Result<Unit> = withContext(dispatchers.io) {
         val entity = downloadDao.getDownloadById(downloadId)
-            ?: return@withContext Result.failure(IllegalStateException("Download not found"))
+            ?: return@withContext Result.failure(IllegalStateException(L.s(R.string.t_download_not_found)))
 
         if (!entity.supportsPauseResume) {
             return@withContext Result.failure(
-                UnsupportedOperationException("Pause/Resume is not supported by this server.")
+                UnsupportedOperationException(L.s(R.string.t_pause_resume_is_not_supported_by_this_se))
             )
         }
-        val path = entity.localFilePath ?: return@withContext Result.failure(IllegalStateException("Missing file path"))
+        val path = entity.localFilePath ?: return@withContext Result.failure(IllegalStateException(L.s(R.string.t_missing_file_path)))
         startOrResumeHttpTransfer(
             downloadId = downloadId,
             url = entity.url,
@@ -251,7 +254,7 @@ class DownloadRepositoryImpl @Inject constructor(
                     downloadDao.updateDownload(
                         entity.copy(
                             status = DownloadStatus.FAILED.name,
-                            errorReason = e.localizedMessage ?: "Network transfer interrupted"
+                            errorReason = e.localizedMessage ?: L.s(R.string.t_network_transfer_interrupted)
                         )
                     )
                 }

@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.tools
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -71,14 +74,14 @@ fun UserScriptsScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 IconButton(onClick = onBack) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = L.s(R.string.t_back))
                 }
                 Text(
-                    text = "UserScripts & Custom CSS",
+                    text = L.s(R.string.t_userscripts_custom_css),
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                 )
                 IconButton(onClick = { showCreateDialog = true }) {
-                    Icon(Icons.Default.Add, contentDescription = "Add UserScript or CSS")
+                    Icon(Icons.Default.Add, contentDescription = L.s(R.string.t_add_userscript_or_css))
                 }
             }
         }
@@ -86,8 +89,8 @@ fun UserScriptsScreen(
         if (scripts.isEmpty()) {
             EmptyStateView(
                 icon = Icons.Default.Code,
-                title = "No Custom UserScripts or CSS Rules",
-                subtitle = "Create Tampermonkey-style JavaScript snippets or custom CSS overrides for any domain.",
+                title = L.s(R.string.t_no_custom_userscripts_or_css_rules),
+                subtitle = L.s(R.string.t_create_tampermonkey_style_javascript_sni),
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
@@ -117,7 +120,7 @@ fun UserScriptsScreen(
                                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold)
                                     )
                                     Text(
-                                        text = "${script.scriptType.label} • Domain: ${script.matchDomainPattern}",
+                                        text = L.s(R.string.t_domain, script.scriptType.label, script.matchDomainPattern),
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.primary
                                     )
@@ -140,10 +143,10 @@ fun UserScriptsScreen(
                                 horizontalArrangement = Arrangement.End
                             ) {
                                 IconButton(onClick = { editingScript = script }) {
-                                    Icon(Icons.Default.Edit, contentDescription = "Edit Script")
+                                    Icon(Icons.Default.Edit, contentDescription = L.s(R.string.t_edit_script))
                                 }
                                 IconButton(onClick = { viewModel.deleteScript(script.id) }) {
-                                    Icon(Icons.Default.Delete, contentDescription = "Delete Script")
+                                    Icon(Icons.Default.Delete, contentDescription = L.s(R.string.t_delete_script))
                                 }
                             }
                         }
@@ -165,19 +168,19 @@ fun UserScriptsScreen(
                 showCreateDialog = false
                 editingScript = null
             },
-            title = { Text(if (target == null) "New UserScript / CSS" else "Edit UserScript / CSS") },
+            title = { Text(if (target == null) L.s(R.string.t_new_userscript_css) else L.s(R.string.t_edit_userscript_css)) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     OutlinedTextField(
                         value = name,
                         onValueChange = { name = it },
-                        label = { Text("Rule Name") },
+                        label = { Text(L.s(R.string.t_rule_name)) },
                         singleLine = true
                     )
                     OutlinedTextField(
                         value = domain,
                         onValueChange = { domain = it },
-                        label = { Text("Domain Match (* for all, or example.com)") },
+                        label = { Text(L.s(R.string.t_domain_match_for_all_or_example_com)) },
                         singleLine = true
                     )
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -192,7 +195,7 @@ fun UserScriptsScreen(
                     OutlinedTextField(
                         value = code,
                         onValueChange = { code = it },
-                        label = { Text(if (scriptType == ScriptInjectionType.JAVASCRIPT) "JavaScript Code" else "CSS Stylesheet") },
+                        label = { Text(if (scriptType == ScriptInjectionType.JAVASCRIPT) L.s(R.string.t_javascript_code) else L.s(R.string.t_css_stylesheet)) },
                         minLines = 4,
                         maxLines = 8
                     )
@@ -212,7 +215,7 @@ fun UserScriptsScreen(
                         editingScript = null
                     }
                 }) {
-                    Text("Save")
+                    Text(L.s(R.string.t_save))
                 }
             },
             dismissButton = {
@@ -220,7 +223,7 @@ fun UserScriptsScreen(
                     showCreateDialog = false
                     editingScript = null
                 }) {
-                    Text("Cancel")
+                    Text(L.s(R.string.t_cancel))
                 }
             }
         )

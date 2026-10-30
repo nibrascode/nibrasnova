@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.tools
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nibras.nova.data.local.entity.PageWatchEntity
@@ -42,9 +45,9 @@ class PageMonitorViewModel @Inject constructor(
             _isChecking.value = true
             val changedCount = privacyRepository.checkAllWatchedPagesForChanges()
             _lastCheckSummary.value = if (changedCount > 0) {
-                "$changedCount monitored page(s) have updated content!"
+                L.s(R.string.t_monitored_page_s_have_updated_content, changedCount)
             } else {
-                "All monitored pages checked — no content changes detected."
+                L.s(R.string.t_all_monitored_pages_checked_no_content_c)
             }
             _isChecking.value = false
         }

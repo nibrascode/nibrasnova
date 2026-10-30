@@ -1,5 +1,8 @@
 package com.nibras.nova.core.security
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import android.util.Base64
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
@@ -69,7 +72,7 @@ class EncryptedBackupManager @Inject constructor() {
 
     fun encryptBackupPayload(payload: NovaBackupPayload, passphrase: String): Result<String> {
         if (passphrase.length < 4) {
-            return Result.failure(IllegalArgumentException("Backup password must be at least 4 characters."))
+            return Result.failure(IllegalArgumentException(L.s(R.string.t_backup_password_must_be_at_least_4_chara)))
         }
         return try {
             val random = SecureRandom()
@@ -109,7 +112,7 @@ class EncryptedBackupManager @Inject constructor() {
             val payload = json.decodeFromString<NovaBackupPayload>(String(plainBytes, Charsets.UTF_8))
             Result.success(payload)
         } catch (e: Exception) {
-            Result.failure(SecurityException("Decryption failed: Invalid password or corrupted .novabackup archive.", e))
+            Result.failure(SecurityException(L.s(R.string.t_decryption_failed_invalid_password_or_co), e))
         }
     }
 

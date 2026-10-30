@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.settings
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -61,10 +64,10 @@ fun SearchEngineSettingsScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = onBack) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = L.s(R.string.t_back))
                 }
                 Text(
-                    text = "Search Engine Configuration",
+                    text = L.s(R.string.t_search_engine_configuration),
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                 )
             }
@@ -85,7 +88,7 @@ fun SearchEngineSettingsScreen(
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = "Default Search Engine",
+                            text = L.s(R.string.t_default_search_engine),
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.primary
                         )
@@ -118,7 +121,7 @@ fun SearchEngineSettingsScreen(
                             OutlinedTextField(
                                 value = customTemplateDraft,
                                 onValueChange = { customTemplateDraft = it },
-                                label = { Text("Custom Search URL (must include %s)") },
+                                label = { Text(L.s(R.string.t_custom_search_url_must_include_s)) },
                                 singleLine = true,
                                 modifier = Modifier.fillMaxWidth()
                             )
@@ -130,7 +133,7 @@ fun SearchEngineSettingsScreen(
                                     }
                                 }
                             ) {
-                                Text("Save Custom Search URL")
+                                Text(L.s(R.string.t_save_custom_search_url))
                             }
                         }
                     }
@@ -150,9 +153,9 @@ fun SearchEngineSettingsScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
-                            Text("Local Autocomplete Suggestions", style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium))
+                            Text(L.s(R.string.t_local_autocomplete_suggestions), style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium))
                             Text(
-                                "Match address bar typing against your local Bookmarks and History only. Nibras Nova never sends keystrokes to external telemetry servers.",
+                                L.s(R.string.t_match_address_bar_typing_against_your_lo),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )

@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.privacy
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -107,10 +110,10 @@ class PrivacyViewModel @Inject constructor(
             settingsRepository.updateCustomProxyHostPort(hostPort)
             proxyDoHManager.applyCustomProxyOrClear(hostPort)
                 .onSuccess { active ->
-                    _events.tryEmit(if (active) "Custom Proxy active: $hostPort" else "Cleared Custom Proxy")
+                    _events.tryEmit(if (active) L.s(R.string.t_custom_proxy_active, hostPort) else L.s(R.string.t_cleared_custom_proxy))
                 }
                 .onFailure { err ->
-                    _events.tryEmit(err.localizedMessage ?: "Proxy configuration failed")
+                    _events.tryEmit(err.localizedMessage ?: L.s(R.string.t_proxy_configuration_failed))
                 }
         }
     }
@@ -191,13 +194,13 @@ class PrivacyViewModel @Inject constructor(
                                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                             }
                             activityContext.startActivity(
-                                Intent.createChooser(shareIntent, "Export Encrypted .novabackup (AES-256-GCM)")
+                                Intent.createChooser(shareIntent, L.s(R.string.t_export_encrypted_novabackup_aes_256_gcm))
                             )
                         }
                     }
                 }
                 .onFailure { err ->
-                    _events.tryEmit(err.localizedMessage ?: "Encryption failed")
+                    _events.tryEmit(err.localizedMessage ?: L.s(R.string.t_encryption_failed))
                 }
         }
     }
@@ -231,10 +234,10 @@ class PrivacyViewModel @Inject constructor(
                     for (feedUrl in payload.rssFeedUrls) {
                         privacyRepository.addRssFeed(feedUrl, feedUrl)
                     }
-                    _events.tryEmit("Restored ${payload.bookmarks.size} bookmarks & ${payload.userScripts.size} scripts from encrypted backup!")
+                    _events.tryEmit(L.s(R.string.t_restored_bookmarks_scripts_from_encrypte, payload.bookmarks.size, payload.userScripts.size))
                 }
                 .onFailure { err ->
-                    _events.tryEmit(err.localizedMessage ?: "Failed to decrypt .novabackup archive")
+                    _events.tryEmit(err.localizedMessage ?: L.s(R.string.t_failed_to_decrypt_novabackup_archive))
                 }
         }
     }

@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.bookmarks
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -112,27 +115,27 @@ fun BookmarksScreen(
                             }
                         }
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = L.s(R.string.t_back))
                     }
 
                     Text(
-                        text = if (state.currentFolderId == null) "Bookmarks"
-                        else state.allFolders.firstOrNull { it.id == state.currentFolderId }?.name ?: "Folder",
+                        text = if (state.currentFolderId == null) L.s(R.string.t_bookmarks)
+                        else state.allFolders.firstOrNull { it.id == state.currentFolderId }?.name ?: L.s(R.string.t_folder),
                         style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                     )
 
                     Row {
                         IconButton(onClick = { importHtmlLauncher.launch(arrayOf("text/html", "*/*")) }) {
-                            Icon(Icons.Default.FileDownload, contentDescription = "Import Bookmarks (.html)")
+                            Icon(Icons.Default.FileDownload, contentDescription = L.s(R.string.t_import_bookmarks_html))
                         }
                         IconButton(onClick = { viewModel.exportAllBookmarksToHtml(context) }) {
-                            Icon(Icons.Default.FileUpload, contentDescription = "Export Bookmarks (.html)")
+                            Icon(Icons.Default.FileUpload, contentDescription = L.s(R.string.t_export_bookmarks_html))
                         }
                         IconButton(onClick = { showCreateFolderDialog = true }) {
-                            Icon(Icons.Default.CreateNewFolder, contentDescription = "New Folder")
+                            Icon(Icons.Default.CreateNewFolder, contentDescription = L.s(R.string.t_new_folder))
                         }
                         IconButton(onClick = { showNewBookmarkDialog = true }) {
-                            Icon(Icons.Default.Add, contentDescription = "Add Bookmark")
+                            Icon(Icons.Default.Add, contentDescription = L.s(R.string.t_add_bookmark))
                         }
                     }
                 }
@@ -146,7 +149,7 @@ fun BookmarksScreen(
                     shape = RoundedCornerShape(22.dp),
                     singleLine = true,
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-                    placeholder = { Text("Search bookmarks by title or URL…") }
+                    placeholder = { Text(L.s(R.string.t_search_bookmarks_by_title_or_url)) }
                 )
             }
         }
@@ -154,8 +157,8 @@ fun BookmarksScreen(
         if (state.folders.isEmpty() && state.bookmarks.isEmpty()) {
             EmptyStateView(
                 icon = Icons.Default.Bookmarks,
-                title = "No Bookmarks Found",
-                subtitle = "Save websites, organize folders, or use the top buttons to Import / Export Netscape HTML bookmarks.",
+                title = L.s(R.string.t_no_bookmarks_found),
+                subtitle = L.s(R.string.t_save_websites_organize_folders_or_use_th),
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
@@ -194,7 +197,7 @@ fun BookmarksScreen(
                                 modifier = Modifier.weight(1f)
                             )
                             IconButton(onClick = { viewModel.deleteFolder(folder.id) }) {
-                                Icon(Icons.Default.Delete, contentDescription = "Delete Folder")
+                                Icon(Icons.Default.Delete, contentDescription = L.s(R.string.t_delete_folder))
                             }
                         }
                     }
@@ -255,10 +258,10 @@ fun BookmarksScreen(
                                 )
                             }
                             IconButton(onClick = { editingBookmark = item }) {
-                                Icon(Icons.Default.Edit, contentDescription = "Edit Bookmark")
+                                Icon(Icons.Default.Edit, contentDescription = L.s(R.string.t_edit_bookmark))
                             }
                             IconButton(onClick = { viewModel.deleteBookmark(item.id) }) {
-                                Icon(Icons.Default.Delete, contentDescription = "Delete Bookmark")
+                                Icon(Icons.Default.Delete, contentDescription = L.s(R.string.t_delete_bookmark))
                             }
                         }
                     }
@@ -271,12 +274,12 @@ fun BookmarksScreen(
         var folderName by remember { mutableStateOf("") }
         AlertDialog(
             onDismissRequest = { showCreateFolderDialog = false },
-            title = { Text("Create Bookmark Folder") },
+            title = { Text(L.s(R.string.t_create_bookmark_folder)) },
             text = {
                 OutlinedTextField(
                     value = folderName,
                     onValueChange = { folderName = it },
-                    label = { Text("Folder Name") },
+                    label = { Text(L.s(R.string.t_folder_name)) },
                     singleLine = true
                 )
             },
@@ -287,12 +290,12 @@ fun BookmarksScreen(
                         showCreateFolderDialog = false
                     }
                 }) {
-                    Text("Create")
+                    Text(L.s(R.string.t_create))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showCreateFolderDialog = false }) {
-                    Text("Cancel")
+                    Text(L.s(R.string.t_cancel))
                 }
             }
         )
@@ -308,13 +311,13 @@ fun BookmarksScreen(
                 showNewBookmarkDialog = false
                 editingBookmark = null
             },
-            title = { Text(if (target == null) "Add Bookmark" else "Edit Bookmark") },
+            title = { Text(if (target == null) L.s(R.string.t_add_bookmark) else L.s(R.string.t_edit_bookmark)) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     OutlinedTextField(
                         value = title,
                         onValueChange = { title = it },
-                        label = { Text("Title") },
+                        label = { Text(L.s(R.string.t_title)) },
                         singleLine = true
                     )
                     OutlinedTextField(
@@ -338,7 +341,7 @@ fun BookmarksScreen(
                         editingBookmark = null
                     }
                 }) {
-                    Text("Save")
+                    Text(L.s(R.string.t_save))
                 }
             },
             dismissButton = {
@@ -346,7 +349,7 @@ fun BookmarksScreen(
                     showNewBookmarkDialog = false
                     editingBookmark = null
                 }) {
-                    Text("Cancel")
+                    Text(L.s(R.string.t_cancel))
                 }
             }
         )

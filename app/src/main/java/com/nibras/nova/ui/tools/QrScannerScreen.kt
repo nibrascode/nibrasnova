@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.tools
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import android.Manifest
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -97,14 +100,14 @@ fun QrScannerScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconButton(onClick = onBack) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = L.s(R.string.t_back))
             }
             Text(
-                text = "QR Scanner & Generator",
+                text = L.s(R.string.t_qr_scanner_generator),
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
             )
             IconButton(onClick = { showQrGeneratorModal = true }) {
-                Icon(Icons.Default.QrCode2, contentDescription = "Open QR Generator")
+                Icon(Icons.Default.QrCode2, contentDescription = L.s(R.string.t_open_qr_generator))
             }
         }
 
@@ -170,12 +173,12 @@ fun QrScannerScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "Camera permission is required for live QR scanning, or enter/paste a code below.",
+                    text = L.s(R.string.t_camera_permission_is_required_for_live_q),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Button(onClick = { permissionLauncher.launch(Manifest.permission.CAMERA) }) {
-                    Text("Grant Camera Permission")
+                    Text(L.s(R.string.t_grant_camera_permission))
                 }
             }
         }
@@ -190,7 +193,7 @@ fun QrScannerScreen(
             OutlinedTextField(
                 value = manualEntryText,
                 onValueChange = { manualEntryText = it },
-                label = { Text("Or paste QR URL / text directly…") },
+                label = { Text(L.s(R.string.t_or_paste_qr_url_text_directly)) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -202,7 +205,7 @@ fun QrScannerScreen(
                     onClick = { showQrGeneratorModal = true },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("Create QR Code")
+                    Text(L.s(R.string.t_create_qr_code))
                 }
                 Button(
                     onClick = {
@@ -212,7 +215,7 @@ fun QrScannerScreen(
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("Open URL / Search")
+                    Text(L.s(R.string.t_open_url_search))
                 }
             }
         }

@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.components
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -45,7 +48,7 @@ fun FindInPageBar(
                 onValueChange = onQueryChange,
                 modifier = Modifier.weight(1f),
                 singleLine = true,
-                placeholder = { Text("Find on page…") },
+                placeholder = { Text(L.s(R.string.t_find_on_page)) },
                 trailingIcon = {
                     if (query.isNotEmpty()) {
                         Text(
@@ -58,13 +61,13 @@ fun FindInPageBar(
                 }
             )
             IconButton(onClick = onFindPrevious, enabled = numberOfMatches > 0) {
-                Icon(Icons.Default.KeyboardArrowUp, contentDescription = "Previous Match")
+                Icon(Icons.Default.KeyboardArrowUp, contentDescription = L.s(R.string.t_previous_match))
             }
             IconButton(onClick = onFindNext, enabled = numberOfMatches > 0) {
-                Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Next Match")
+                Icon(Icons.Default.KeyboardArrowDown, contentDescription = L.s(R.string.t_next_match))
             }
             IconButton(onClick = onClose) {
-                Icon(Icons.Default.Close, contentDescription = "Close Find in Page")
+                Icon(Icons.Default.Close, contentDescription = L.s(R.string.t_close_find_in_page))
             }
         }
     }

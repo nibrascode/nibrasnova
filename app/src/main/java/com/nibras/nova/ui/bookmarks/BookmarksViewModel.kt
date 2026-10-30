@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.bookmarks
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
@@ -118,7 +121,7 @@ class BookmarksViewModel @Inject constructor(
         viewModelScope.launch {
             val all = bookmarkRepository.observeAllBookmarks().firstOrNull().orEmpty()
             if (all.isEmpty()) {
-                _events.tryEmit("No bookmarks to export.")
+                _events.tryEmit(L.s(R.string.t_no_bookmarks_to_export))
                 return@launch
             }
             importExportHelper.exportAndShareHtmlFile(activityContext, all)
@@ -133,9 +136,9 @@ class BookmarksViewModel @Inject constructor(
                 for (bm in parsed) {
                     bookmarkRepository.addOrUpdateBookmark(bm.copy(folderId = _currentFolderId.value))
                 }
-                _events.tryEmit("Imported ${parsed.size} bookmarks from HTML file.")
+                _events.tryEmit(L.s(R.string.t_imported_bookmarks_from_html_file, parsed.size))
             }.onFailure {
-                _events.tryEmit("Could not parse bookmark HTML file.")
+                _events.tryEmit(L.s(R.string.t_could_not_parse_bookmark_html_file))
             }
         }
     }

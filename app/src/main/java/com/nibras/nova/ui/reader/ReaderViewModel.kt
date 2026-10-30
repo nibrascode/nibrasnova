@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.reader
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -133,7 +136,7 @@ class ReaderViewModel @Inject constructor(
         val currentArticle = _localState.value.article ?: return
         if (currentArticle.plainText.isBlank()) return
         viewModelScope.launch {
-            _localState.update { it.copy(isTranslating = true, statusMessage = "Translating article on-device…") }
+            _localState.update { it.copy(isTranslating = true, statusMessage = L.s(R.string.t_translating_article_on_device)) }
             val result = translationHelper.translateText(
                 sourceText = currentArticle.plainText.take(4000),
                 targetLanguageCode = targetLangCode
@@ -143,14 +146,14 @@ class ReaderViewModel @Inject constructor(
                     it.copy(
                         isTranslating = false,
                         translatedText = translated,
-                        statusMessage = "Translated to ${targetLangCode.uppercase()}"
+                        statusMessage = L.s(R.string.t_translated_to, targetLangCode.uppercase())
                     )
                 }
             }.onFailure { err ->
                 _localState.update {
                     it.copy(
                         isTranslating = false,
-                        statusMessage = err.localizedMessage ?: "Translation model download required"
+                        statusMessage = err.localizedMessage ?: L.s(R.string.t_translation_model_download_required)
                     )
                 }
             }
@@ -168,7 +171,7 @@ class ReaderViewModel @Inject constructor(
                 plainText = article.plainText,
                 estimatedReadMinutes = article.estimatedReadMinutes
             )
-            _localState.update { it.copy(statusMessage = "Saved article text for offline reading") }
+            _localState.update { it.copy(statusMessage = L.s(R.string.t_saved_article_text_for_offline_reading)) }
         }
     }
 

@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.components
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -67,7 +70,7 @@ fun BottomBrowserToolbar(
             IconButton(onClick = onBackClick, enabled = canGoBack) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Navigate Back",
+                    contentDescription = L.s(R.string.t_navigate_back),
                     tint = if (canGoBack) MaterialTheme.colorScheme.onSurface
                     else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
                 )
@@ -76,7 +79,7 @@ fun BottomBrowserToolbar(
             IconButton(onClick = onForwardClick, enabled = canGoForward) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                    contentDescription = "Navigate Forward",
+                    contentDescription = L.s(R.string.t_navigate_forward),
                     tint = if (canGoForward) MaterialTheme.colorScheme.onSurface
                     else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
                 )
@@ -85,7 +88,7 @@ fun BottomBrowserToolbar(
             IconButton(onClick = onHomeClick) {
                 Icon(
                     imageVector = Icons.Default.Home,
-                    contentDescription = "Browser Homepage",
+                    contentDescription = L.s(R.string.t_browser_homepage),
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }
@@ -93,7 +96,7 @@ fun BottomBrowserToolbar(
             IconButton(onClick = onBookmarkToggleClick) {
                 Icon(
                     imageVector = if (isBookmarked) Icons.Default.Bookmark else Icons.Default.BookmarkBorder,
-                    contentDescription = if (isBookmarked) "Remove Bookmark" else "Bookmark Page",
+                    contentDescription = if (isBookmarked) L.s(R.string.t_remove_bookmark) else L.s(R.string.t_bookmark_page),
                     tint = if (isBookmarked) accentColor else MaterialTheme.colorScheme.onSurface
                 )
             }
@@ -104,7 +107,7 @@ fun BottomBrowserToolbar(
                     .size(32.dp)
                     .border(2.dp, accentColor, RoundedCornerShape(8.dp))
                     .clickable(onClick = onTabsClick)
-                    .semantics { contentDescription = "$tabCount Open Tabs" },
+                    .semantics { contentDescription = L.s(R.string.t_open_tabs, tabCount) },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -117,7 +120,7 @@ fun BottomBrowserToolbar(
             IconButton(onClick = onMenuClick) {
                 Icon(
                     imageVector = Icons.Default.MoreVert,
-                    contentDescription = "Browser Tools and Menu",
+                    contentDescription = L.s(R.string.t_browser_tools_and_menu),
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }

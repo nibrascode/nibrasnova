@@ -1,15 +1,18 @@
 package com.nibras.nova.domain.model
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 enum class SitePermissionType(val displayName: String) {
-    CAMERA("Camera"),
-    MICROPHONE("Microphone"),
-    LOCATION("Geolocation"),
-    PROTECTED_MEDIA_DRM("Protected DRM Media")
+    CAMERA(L.s(R.string.t_camera)),
+    MICROPHONE(L.s(R.string.t_microphone)),
+    LOCATION(L.s(R.string.t_geolocation)),
+    PROTECTED_MEDIA_DRM(L.s(R.string.t_protected_drm_media))
 }
 
 enum class PermissionDecision(val label: String) {
-    ALLOW("Allowed"),
-    DENY("Blocked")
+    ALLOW(L.s(R.string.t_allowed)),
+    DENY(L.s(R.string.t_blocked))
 }
 
 data class SitePermission(

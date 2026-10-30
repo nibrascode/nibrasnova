@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.tools
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -65,18 +68,18 @@ fun DigitalWellbeingScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 IconButton(onClick = onBack) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = L.s(R.string.t_back))
                 }
                 Text(
-                    text = "Digital Wellbeing & Focus Timer",
+                    text = L.s(R.string.t_digital_wellbeing_focus_timer),
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                 )
                 Row {
                     IconButton(onClick = { showLimitDialog = true }) {
-                        Icon(Icons.Default.AddAlarm, contentDescription = "Set Daily Domain Timer")
+                        Icon(Icons.Default.AddAlarm, contentDescription = L.s(R.string.t_set_daily_domain_timer))
                     }
                     IconButton(onClick = viewModel::resetAllUsage) {
-                        Icon(Icons.Default.DeleteSweep, contentDescription = "Reset Usage Analytics")
+                        Icon(Icons.Default.DeleteSweep, contentDescription = L.s(R.string.t_reset_usage_analytics))
                     }
                 }
             }
@@ -85,8 +88,8 @@ fun DigitalWellbeingScreen(
         if (usageList.isEmpty()) {
             EmptyStateView(
                 icon = Icons.Default.Timer,
-                title = "No Local Browsing Time Recorded Yet",
-                subtitle = "Nibras Nova calculates your active reading time per domain 100% locally on-device and lets you set focus timers.",
+                title = L.s(R.string.t_no_local_browsing_time_recorded_yet),
+                subtitle = L.s(R.string.t_nibras_nova_calculates_your_active_readi),
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
@@ -120,15 +123,15 @@ fun DigitalWellbeingScreen(
                                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold)
                                 )
                                 Text(
-                                    text = "Active Time: ${mins}m ${secs}s" +
-                                        if (stat.dailyLimitMinutes > 0) " • Limit: ${stat.dailyLimitMinutes}m" else "",
+                                    text = L.s(R.string.t_active_time_m_s, mins, secs) +
+                                        if (stat.dailyLimitMinutes > 0) " " + L.s(R.string.t_limit_m, stat.dailyLimitMinutes) else "",
                                     style = MaterialTheme.typography.labelSmall,
                                     color = if (stat.isDailyLimitExceeded) NovaDangerRed else NovaHttpsVerifiedGreen
                                 )
                             }
                             if (stat.isDailyLimitExceeded) {
                                 Text(
-                                    text = "LIMIT REACHED",
+                                    text = L.s(R.string.t_limit_reached),
                                     style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                                     color = NovaDangerRed
                                 )
@@ -145,19 +148,19 @@ fun DigitalWellbeingScreen(
         var minutesText by remember { mutableStateOf("30") }
         AlertDialog(
             onDismissRequest = { showLimitDialog = false },
-            title = { Text("Set Daily Focus Timer for Domain") },
+            title = { Text(L.s(R.string.t_set_daily_focus_timer_for_domain)) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     OutlinedTextField(
                         value = domain,
                         onValueChange = { domain = it },
-                        label = { Text("Domain (e.g. youtube.com or x.com)") },
+                        label = { Text(L.s(R.string.t_domain_e_g_youtube_com_or_x_com)) },
                         singleLine = true
                     )
                     OutlinedTextField(
                         value = minutesText,
                         onValueChange = { minutesText = it },
-                        label = { Text("Daily Limit in Minutes (0 to remove)") },
+                        label = { Text(L.s(R.string.t_daily_limit_in_minutes_0_to_remove)) },
                         singleLine = true
                     )
                 }
@@ -170,12 +173,12 @@ fun DigitalWellbeingScreen(
                         showLimitDialog = false
                     }
                 }) {
-                    Text("Save Focus Limit")
+                    Text(L.s(R.string.t_save_focus_limit))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showLimitDialog = false }) {
-                    Text("Cancel")
+                    Text(L.s(R.string.t_cancel))
                 }
             }
         )

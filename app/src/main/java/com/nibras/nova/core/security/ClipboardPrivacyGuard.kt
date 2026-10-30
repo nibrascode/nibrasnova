@@ -1,5 +1,8 @@
 package com.nibras.nova.core.security
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -31,7 +34,7 @@ class ClipboardPrivacyGuard @Inject constructor(
     fun copyCleanUrlToClipboard(rawUrl: String, autoClearAfterSeconds: Long = 60L): String {
         val cleanUrl = trackingParamStripper.stripTrackingParameters(rawUrl).sanitizedUrl
         val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager ?: return cleanUrl
-        cm.setPrimaryClip(ClipData.newPlainText("Nibras Nova Clean URL", cleanUrl))
+        cm.setPrimaryClip(ClipData.newPlainText(L.s(R.string.t_nibras_nova_clean_url), cleanUrl))
 
         if (autoClearAfterSeconds > 0L) {
             scheduleClipboardAutoScrub(autoClearAfterSeconds)

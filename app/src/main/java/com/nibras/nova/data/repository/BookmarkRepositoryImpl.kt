@@ -1,5 +1,8 @@
 package com.nibras.nova.data.repository
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import com.nibras.nova.core.common.DispatcherProvider
 import com.nibras.nova.data.local.dao.BookmarkDao
 import com.nibras.nova.data.local.dao.BookmarkFolderDao
@@ -42,7 +45,7 @@ class BookmarkRepositoryImpl @Inject constructor(
     override suspend fun createFolder(name: String, parentFolderId: Long?): Long = withContext(dispatchers.io) {
         folderDao.insertFolder(
             BookmarkFolderEntity(
-                name = name.trim().ifBlank { "New Folder" },
+                name = name.trim().ifBlank { L.s(R.string.t_new_folder) },
                 parentFolderId = parentFolderId
             )
         )

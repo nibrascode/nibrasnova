@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.tools
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -42,7 +45,7 @@ fun JsonXmlFormatterSheet(
                 .padding(16.dp)
         ) {
             Text(
-                text = "Formatted JSON / XML / API Payload Viewer",
+                text = L.s(R.string.t_formatted_json_xml_api_payload_viewer),
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.primary
             )
@@ -69,7 +72,7 @@ fun JsonXmlFormatterSheet(
 
 fun prettyFormatJsonOrXml(raw: String): String {
     val trimmed = raw.trim()
-    if (trimmed.isEmpty()) return "(Empty document body)"
+    if (trimmed.isEmpty()) return L.s(R.string.t_empty_document_body)
     return try {
         val json = Json { prettyPrint = true; isLenient = true }
         val element = json.decodeFromString<JsonElement>(trimmed)

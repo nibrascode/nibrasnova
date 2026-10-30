@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.tools
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -80,12 +83,12 @@ fun DevToolsSheet(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.Code, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                     Text(
-                        text = "  Nibras Nova DevTools (F12)",
+                        text = "  " + L.s(R.string.t_nibras_nova_devtools_f12),
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                     )
                 }
                 IconButton(onClick = onClearLogs) {
-                    Icon(Icons.Default.DeleteSweep, contentDescription = "Clear Console & Network Logs")
+                    Icon(Icons.Default.DeleteSweep, contentDescription = L.s(R.string.t_clear_console_network_logs))
                 }
             }
 
@@ -97,12 +100,12 @@ fun DevToolsSheet(
                 FilterChip(
                     selected = selectedTab == 0,
                     onClick = { selectedTab = 0 },
-                    label = { Text("Console (${consoleLogs.size})") }
+                    label = { Text(L.s(R.string.t_console, consoleLogs.size)) }
                 )
                 FilterChip(
                     selected = selectedTab == 1,
                     onClick = { selectedTab = 1 },
-                    label = { Text("Network (${networkLogs.size})") }
+                    label = { Text(L.s(R.string.t_network, networkLogs.size)) }
                 )
                 FilterChip(
                     selected = selectedTab == 2,
@@ -118,7 +121,7 @@ fun DevToolsSheet(
                         selectedTab = 3
                         onRefreshDomAndStorage()
                     },
-                    label = { Text("Storage") }
+                    label = { Text(L.s(R.string.t_storage)) }
                 )
             }
 
@@ -174,7 +177,7 @@ fun DevToolsSheet(
                                 }
                             }
                         ) {
-                            Icon(Icons.Default.PlayArrow, contentDescription = "Run JS")
+                            Icon(Icons.Default.PlayArrow, contentDescription = L.s(R.string.t_run_js))
                         }
                     }
                 }
@@ -213,7 +216,7 @@ fun DevToolsSheet(
                             style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold)
                         )
                         OutlinedButton(onClick = { onToggleLiveDomDesignMode(!isDesignModeEnabled) }) {
-                            Text(if (isDesignModeEnabled) "Disable Live Edit" else "Enable Live Edit")
+                            Text(if (isDesignModeEnabled) L.s(R.string.t_disable_live_edit) else L.s(R.string.t_enable_live_edit))
                         }
                     }
                     Spacer(modifier = Modifier.height(8.dp))
@@ -247,7 +250,7 @@ fun DevToolsSheet(
                         LazyColumn {
                             item {
                                 Text(
-                                    text = storageSummary.ifBlank { "No storage entries found for this origin." },
+                                    text = storageSummary.ifBlank { L.s(R.string.t_no_storage_entries_found_for_this_origin) },
                                     style = MaterialTheme.typography.labelSmall.copy(fontFamily = FontFamily.Monospace)
                                 )
                             }

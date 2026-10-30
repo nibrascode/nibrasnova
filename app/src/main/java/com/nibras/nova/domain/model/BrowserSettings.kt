@@ -1,18 +1,21 @@
 package com.nibras.nova.domain.model
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import com.nibras.nova.core.common.NovaConstants
 import com.nibras.nova.core.security.DnsOverHttpsProvider
 
 enum class ThemeMode(val label: String) {
-    DARK("Nibras Signature Dark"),
-    LIGHT("Nibras Crisp Light"),
-    SYSTEM("Follow System Theme")
+    DARK(L.s(R.string.t_nibras_signature_dark)),
+    LIGHT(L.s(R.string.t_nibras_crisp_light)),
+    SYSTEM(L.s(R.string.t_follow_system_theme))
 }
 
 enum class ExternalLinkPolicy(val label: String) {
-    ASK_EVERY_TIME("Ask Before Opening External App"),
-    ALWAYS_OPEN_EXTERNAL("Always Open External App Automatically"),
-    STAY_IN_BROWSER("Keep Links Inside Nibras Nova")
+    ASK_EVERY_TIME(L.s(R.string.t_ask_before_opening_external_app)),
+    ALWAYS_OPEN_EXTERNAL(L.s(R.string.t_always_open_external_app_automatically)),
+    STAY_IN_BROWSER(L.s(R.string.t_keep_links_inside_nibras_nova))
 }
 
 data class BrowserSettings(

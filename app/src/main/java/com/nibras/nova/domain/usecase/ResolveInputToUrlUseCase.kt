@@ -1,5 +1,8 @@
 package com.nibras.nova.domain.usecase
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import com.nibras.nova.core.security.InputClassification
 import com.nibras.nova.core.security.TrackingParamStripper
 import com.nibras.nova.core.security.UrlValidator
@@ -38,7 +41,7 @@ class ResolveInputToUrlUseCase @Inject constructor(
             InputClassification.DANGEROUS_BLOCKED_SCHEME -> {
                 ResolvedNavigationTarget.BlockedUnsafeInput(
                     rawInput = trimmed,
-                    reason = "Direct execution of javascript:, file:, content:, or data: URI schemes in the address bar is prohibited."
+                    reason = L.s(R.string.t_direct_execution_of_javascript_file_cont)
                 )
             }
             InputClassification.VALID_HTTPS_URL -> {

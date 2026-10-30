@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.components
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -39,7 +42,7 @@ fun NovaLogo(
     val secondaryAccent = if (isIncognito) Color(0xFF7E22CE) else NovaCyanSecondary
 
     Row(
-        modifier = modifier.semantics { contentDescription = "Nibras Nova Browser Logo" },
+        modifier = modifier.semantics { contentDescription = L.s(R.string.t_nibras_nova_browser_logo) },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
@@ -105,7 +108,7 @@ fun NovaLogo(
             }
             if (showSubtitle) {
                 Text(
-                    text = if (isIncognito) "PRIVATE SESSION ISOLATED" else "BY NIBRAS CODE",
+                    text = if (isIncognito) L.s(R.string.t_private_session_isolated) else "BY NIBRAS CODE",
                     style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 1.4.sp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

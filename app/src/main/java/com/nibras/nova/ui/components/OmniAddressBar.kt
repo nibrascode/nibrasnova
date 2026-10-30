@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.components
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -141,19 +144,19 @@ fun OmniAddressBar(
                 when {
                     isHome || isFocused -> Icon(
                         imageVector = Icons.Default.Search,
-                        contentDescription = "Search or enter URL",
+                        contentDescription = L.s(R.string.t_search_or_enter_url),
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(20.dp)
                     )
                     isHttps -> Icon(
                         imageVector = Icons.Default.Lock,
-                        contentDescription = "Secure HTTPS Connection",
+                        contentDescription = L.s(R.string.t_secure_https_connection),
                         tint = NovaHttpsVerifiedGreen,
                         modifier = Modifier.size(18.dp)
                     )
                     else -> Icon(
                         imageVector = Icons.Default.WarningAmber,
-                        contentDescription = "Unencrypted HTTP Connection",
+                        contentDescription = L.s(R.string.t_unencrypted_http_connection),
                         tint = NovaWarningAmber,
                         modifier = Modifier.size(18.dp)
                     )
@@ -205,7 +208,7 @@ fun OmniAddressBar(
                     decorationBox = { innerTextField ->
                         if (textValue.isEmpty() && !isFocused) {
                             Text(
-                                text = if (!isHome && pageTitle.isNotBlank()) pageTitle else "Search or enter address…",
+                                text = if (!isHome && pageTitle.isNotBlank()) pageTitle else L.s(R.string.t_search_or_enter_address),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 maxLines = 1,
@@ -227,7 +230,7 @@ fun OmniAddressBar(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Clear text",
+                        contentDescription = L.s(R.string.t_clear_text),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(18.dp)
                     )
@@ -240,7 +243,7 @@ fun OmniAddressBar(
                     ) {
                         Icon(
                             imageVector = Icons.Default.MenuBook,
-                            contentDescription = "Open Reader Mode",
+                            contentDescription = L.s(R.string.t_open_reader_mode),
                             tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(19.dp)
                         )
@@ -253,7 +256,7 @@ fun OmniAddressBar(
                 ) {
                     Icon(
                         imageVector = Icons.Default.QrCodeScanner,
-                        contentDescription = "Scan QR Code",
+                        contentDescription = L.s(R.string.t_scan_qr_code),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(19.dp)
                     )
@@ -266,7 +269,7 @@ fun OmniAddressBar(
                     ) {
                         Icon(
                             imageVector = if (isLoading) Icons.Default.Close else Icons.Default.Refresh,
-                            contentDescription = if (isLoading) "Stop loading" else "Reload page",
+                            contentDescription = if (isLoading) L.s(R.string.t_stop_loading) else L.s(R.string.t_reload_page),
                             tint = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.size(19.dp)
                         )

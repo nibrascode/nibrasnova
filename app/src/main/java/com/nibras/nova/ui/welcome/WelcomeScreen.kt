@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.welcome
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import android.app.role.RoleManager
 import android.content.Context
 import android.content.Intent
@@ -73,7 +76,7 @@ fun WelcomeScreen(
         NovaLogo(iconSize = 56.dp, showSubtitle = true)
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = "Engineered for speed, local privacy, and visual clarity.",
+            text = L.s(R.string.t_engineered_for_speed_local_privacy_and_v),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -88,7 +91,7 @@ fun WelcomeScreen(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = "1. Choose Your Search Engine",
+                    text = L.s(R.string.t_1_choose_your_search_engine),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -139,7 +142,7 @@ fun WelcomeScreen(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = "2. Appearance Mode",
+                    text = L.s(R.string.t_2_appearance_mode),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -195,7 +198,7 @@ fun WelcomeScreen(
                         tint = MaterialTheme.colorScheme.primary
                     )
                     Text(
-                        text = "  3. Active Security Controls",
+                        text = "  " + L.s(R.string.t_3_active_security_controls),
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -207,9 +210,9 @@ fun WelcomeScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
-                        Text("HTTPS-Only Navigation", style = MaterialTheme.typography.bodyMedium)
+                        Text(L.s(R.string.t_https_only_navigation), style = MaterialTheme.typography.bodyMedium)
                         Text(
-                            "Automatically upgrade unencrypted HTTP links to HTTPS",
+                            L.s(R.string.t_automatically_upgrade_unencrypted_http_l),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -227,9 +230,9 @@ fun WelcomeScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
-                        Text("Block Third-Party Cookies", style = MaterialTheme.typography.bodyMedium)
+                        Text(L.s(R.string.t_block_third_party_cookies), style = MaterialTheme.typography.bodyMedium)
                         Text(
-                            "Prevent cross-site tracking cookies inside WebView",
+                            L.s(R.string.t_prevent_cross_site_tracking_cookies_insi),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -249,7 +252,7 @@ fun WelcomeScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             Icon(Icons.Default.Public, contentDescription = null)
-            Text("  Set Nibras Nova as Default Browser")
+            Text("  " + L.s(R.string.t_set_nibras_nova_as_default_browser))
         }
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -262,7 +265,7 @@ fun WelcomeScreen(
             shape = RoundedCornerShape(16.dp)
         ) {
             Text(
-                text = "Launch Nibras Nova",
+                text = L.s(R.string.t_launch_nibras_nova),
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
             )
         }

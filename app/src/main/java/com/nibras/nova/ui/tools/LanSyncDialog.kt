@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.tools
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -34,7 +37,7 @@ fun LanSyncDialog(
     AlertDialog(
         onDismissRequest = onStopAndDismiss,
         title = {
-            Text("Peer-to-Peer Wi-Fi / LAN Sync Active")
+            Text(L.s(R.string.t_peer_to_peer_wi_fi_lan_sync_active))
         },
         text = {
             Column(
@@ -42,7 +45,7 @@ fun LanSyncDialog(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Scan this QR code with another phone or open the address below on any computer connected to the same Wi-Fi network. Zero cloud servers are used.",
+                    text = L.s(R.string.t_scan_this_qr_code_with_another_phone_or),
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center
                 )
@@ -50,7 +53,7 @@ fun LanSyncDialog(
                 qrBitmap?.let { bmp ->
                     Image(
                         bitmap = bmp.asImageBitmap(),
-                        contentDescription = "LAN Sync QR Code",
+                        contentDescription = L.s(R.string.t_lan_sync_qr_code),
                         modifier = Modifier.size(210.dp)
                     )
                 }
@@ -69,7 +72,7 @@ fun LanSyncDialog(
         },
         confirmButton = {
             Button(onClick = onStopAndDismiss) {
-                Text("Stop Server & Close")
+                Text(L.s(R.string.t_stop_server_close))
             }
         }
     )

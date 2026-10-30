@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.browser
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
@@ -271,10 +274,10 @@ class BrowserViewModel @Inject constructor(
         if (_runtimeState.value.isAutoScrollActive) {
             autoScrollJob?.cancel()
             _runtimeState.update { it.copy(isAutoScrollActive = false) }
-            _snackbarMessages.tryEmit("Stopped Hands-Free Auto-Scroll")
+            _snackbarMessages.tryEmit(L.s(R.string.t_stopped_hands_free_auto_scroll))
         } else {
             _runtimeState.update { it.copy(isAutoScrollActive = true) }
-            _snackbarMessages.tryEmit("Hands-Free Auto-Scroll active")
+            _snackbarMessages.tryEmit(L.s(R.string.t_hands_free_auto_scroll_active))
             autoScrollJob?.cancel()
             autoScrollJob = viewModelScope.launch {
                 while (isActive && _runtimeState.value.isAutoScrollActive) {
@@ -291,7 +294,7 @@ class BrowserViewModel @Inject constructor(
         val active = uiState.value.activeTab ?: return
         if (active.isHomePage) return
         val clean = clipboardPrivacyGuard.copyCleanUrlToClipboard(active.url, autoClearAfterSeconds = 60L)
-        _snackbarMessages.tryEmit("Copied sanitized URL (Clipboard will auto-scrub in 60s): $clean")
+        _snackbarMessages.tryEmit(L.s(R.string.t_copied_sanitized_url_clipboard_will_auto, clean))
     }
 
     // Stage 13.8: Eyedropper Color Picker & CSS Typography Inspector
@@ -377,7 +380,7 @@ class BrowserViewModel @Inject constructor(
             is ResolvedNavigationTarget.OpenNovaHome -> {
                 val active = uiState.value.activeTab ?: return
                 viewModelScope.launch {
-                    tabRepository.updateTabMetadata(active.id, url = "nova://home", title = "New Tab")
+                    tabRepository.updateTabMetadata(active.id, url = "nova://home", title = L.s(R.string.t_new_tab))
                 }
             }
             is ResolvedNavigationTarget.BlockedUnsafeInput -> {
@@ -525,7 +528,7 @@ class BrowserViewModel @Inject constructor(
                 )
             }
             _runtimeState.update { it.copy(isMediaGrabberSheetOpen = false) }
-            _snackbarMessages.tryEmit("Queued ${urls.take(15).size} media assets in Download Center")
+            _snackbarMessages.tryEmit(L.s(R.string.t_queued_media_assets_in_download_center, urls.take(15).size))
         }
     }
 
@@ -560,7 +563,7 @@ class BrowserViewModel @Inject constructor(
                 quote = quote,
                 note = note
             )
-            _snackbarMessages.tryEmit("Saved persistent highlight & note for this page")
+            _snackbarMessages.tryEmit(L.s(R.string.t_saved_persistent_highlight_note_for_this))
         }
     }
 
@@ -673,7 +676,7 @@ class BrowserViewModel @Inject constructor(
                 url = active.url,
                 faviconPath = active.faviconPath
             )
-            _snackbarMessages.tryEmit(if (added) "Added to Bookmarks" else "Removed from Bookmarks")
+            _snackbarMessages.tryEmit(if (added) L.s(R.string.t_added_to_bookmarks) else L.s(R.string.t_removed_from_bookmarks))
         }
     }
 
@@ -732,19 +735,19 @@ class BrowserViewModel @Inject constructor(
             if (!savedPath.isNullOrBlank()) {
                 viewModelScope.launch {
                     val plainBody = _runtimeState.value.latestReaderArticle?.plainText
-                        ?: "Full offline MHTML Web Archive saved at: $savedPath"
+                        ?: L.s(R.string.t_full_offline_mhtml_web_archive_saved_at, savedPath)
                     privacyRepository.saveOfflineArticle(
-                        title = "${active.title} [MHTML Web Archive]",
+                        title = L.s(R.string.t_mhtml_web_archive, active.title),
                         url = active.url,
                         siteName = active.url,
                         plainText = plainBody,
                         estimatedReadMinutes = _runtimeState.value.latestReaderArticle?.estimatedReadMinutes ?: 3,
                         archivePath = savedPath
                     )
-                    _snackbarMessages.tryEmit("Full offline Web Archive (.mht) saved!")
+                    _snackbarMessages.tryEmit(L.s(R.string.t_full_offline_web_archive_mht_saved))
                 }
             } else {
-                _snackbarMessages.tryEmit("Failed to save Web Archive.")
+                _snackbarMessages.tryEmit(L.s(R.string.t_failed_to_save_web_archive))
             }
         }
     }
@@ -752,7 +755,7 @@ class BrowserViewModel @Inject constructor(
     fun toggleTtsVoiceReader() {
         if (ttsReaderManager.state.value.isSpeaking) {
             ttsReaderManager.stopSpeaking()
-            _snackbarMessages.tryEmit("Stopped voice reader")
+            _snackbarMessages.tryEmit(L.s(R.string.t_stopped_voice_reader))
             return
         }
         val active = uiState.value.activeTab ?: return
@@ -762,7 +765,7 @@ class BrowserViewModel @Inject constructor(
                 ?: readerModeJsBridge.evaluateCurrentPageReadability(wv)
             val textToRead = article?.plainText?.takeIf { it.isNotBlank() } ?: active.title
             ttsReaderManager.speakArticleText(textToRead)
-            _snackbarMessages.tryEmit("Reading webpage aloud…")
+            _snackbarMessages.tryEmit(L.s(R.string.t_reading_webpage_aloud))
         }
     }
 
@@ -823,8 +826,8 @@ class BrowserViewModel @Inject constructor(
         )
         _runtimeState.update { it.copy(isLiveDomDesignModeEnabled = enabled) }
         _snackbarMessages.tryEmit(
-            if (enabled) "Live DOM DesignMode ON: tap any text on page to edit live!"
-            else "Live DOM DesignMode OFF"
+            if (enabled) L.s(R.string.t_live_dom_designmode_on_tap_any_text_on_p)
+            else L.s(R.string.t_live_dom_designmode_off)
         )
     }
 
@@ -888,7 +891,7 @@ class BrowserViewModel @Inject constructor(
         val bmp = fullPageScreenshotHelper.captureFullScrollingPageOnMainThread(wv)
             ?: thumbnailManager.captureWebViewSnapshotOnMainThread(wv)
         if (bmp == null) {
-            _snackbarMessages.tryEmit("Unable to capture webpage snapshot.")
+            _snackbarMessages.tryEmit(L.s(R.string.t_unable_to_capture_webpage_snapshot))
             return
         }
         viewModelScope.launch {
@@ -919,8 +922,8 @@ class BrowserViewModel @Inject constructor(
         val favicon = faviconCacheManager.getMemoryFavicon(active.url)
         val pinned = shortcutHelper.createHomeScreenWebsiteShortcut(active.title, active.url, favicon)
         _snackbarMessages.tryEmit(
-            if (pinned) "Shortcut requested on launcher home screen"
-            else "Launcher does not support pinned shortcuts"
+            if (pinned) L.s(R.string.t_shortcut_requested_on_launcher_home_scre)
+            else L.s(R.string.t_launcher_does_not_support_pinned_shortcu)
         )
     }
 
@@ -942,7 +945,7 @@ class BrowserViewModel @Inject constructor(
             fileUploadValidator.validateSelectedUri(uri)
                 .onSuccess { validatedUris.add(it.uri) }
                 .onFailure { err ->
-                    _snackbarMessages.tryEmit(err.localizedMessage ?: "Blocked unsafe file upload")
+                    _snackbarMessages.tryEmit(err.localizedMessage ?: L.s(R.string.t_blocked_unsafe_file_upload))
                 }
         }
         if (validatedUris.isEmpty()) {
@@ -960,7 +963,7 @@ class BrowserViewModel @Inject constructor(
         )
         if (!launched) {
             disposition.fallbackUrl?.let { loadUrlInActiveTab(it) }
-                ?: _snackbarMessages.tryEmit("No installed application can open this link.")
+                ?: _snackbarMessages.tryEmit(L.s(R.string.t_no_installed_application_can_open_this_l))
         }
     }
 
@@ -1087,7 +1090,7 @@ class BrowserViewModel @Inject constructor(
     override fun onRedirectChainBlocked(tabId: String, blockedTargetUrl: String, hopCount: Int) {
         viewModelScope.launch {
             privacyRepository.recordRedirectChainBlocked()
-            _snackbarMessages.tryEmit("Redirect Guard blocked rapid $hopCount-hop cross-domain redirect chain.")
+            _snackbarMessages.tryEmit(L.s(R.string.t_redirect_guard_blocked_rapid_hop_cross_d, hopCount))
         }
     }
 
@@ -1105,7 +1108,7 @@ class BrowserViewModel @Inject constructor(
         when (uiState.value.settings.externalLinkPolicy) {
             ExternalLinkPolicy.STAY_IN_BROWSER -> {
                 disposition.fallbackUrl?.let { loadUrlInActiveTab(it) }
-                    ?: _snackbarMessages.tryEmit("External app link blocked by your Stay in Browser policy.")
+                    ?: _snackbarMessages.tryEmit(L.s(R.string.t_external_app_link_blocked_by_your_stay_i))
             }
             ExternalLinkPolicy.ASK_EVERY_TIME, ExternalLinkPolicy.ALWAYS_OPEN_EXTERNAL -> {
                 _runtimeState.update { it.copy(pendingExternalAppPrompt = disposition) }
@@ -1258,9 +1261,9 @@ class BrowserViewModel @Inject constructor(
                 cookies = request.cookies
             )
             result.onSuccess {
-                _snackbarMessages.tryEmit("Download started in Download Center")
+                _snackbarMessages.tryEmit(L.s(R.string.t_download_started_in_download_center))
             }.onFailure { err ->
-                _snackbarMessages.tryEmit(err.localizedMessage ?: "Could not start download")
+                _snackbarMessages.tryEmit(err.localizedMessage ?: L.s(R.string.t_could_not_start_download))
             }
         }
     }

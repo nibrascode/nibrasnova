@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.tools
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -73,18 +76,18 @@ fun PageMonitorScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = L.s(R.string.t_back))
                     }
                     Text(
-                        text = "Web Page Change Monitor",
+                        text = L.s(R.string.t_web_page_change_monitor),
                         style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                     )
                     Row {
                         IconButton(onClick = viewModel::checkAllNow) {
-                            Icon(Icons.Default.Refresh, contentDescription = "Check All Pages for Changes")
+                            Icon(Icons.Default.Refresh, contentDescription = L.s(R.string.t_check_all_pages_for_changes))
                         }
                         IconButton(onClick = { showAddDialog = true }) {
-                            Icon(Icons.Default.Add, contentDescription = "Add Page to Watch")
+                            Icon(Icons.Default.Add, contentDescription = L.s(R.string.t_add_page_to_watch))
                         }
                     }
                 }
@@ -105,8 +108,8 @@ fun PageMonitorScreen(
         if (watchedPages.isEmpty()) {
             EmptyStateView(
                 icon = Icons.Default.TrackChanges,
-                title = "No Pages Monitored Yet",
-                subtitle = "Track product prices, university announcements, or documentation pages for DOM content changes via SHA-256 diffing.",
+                title = L.s(R.string.t_no_pages_monitored_yet),
+                subtitle = L.s(R.string.t_track_product_prices_university_announce),
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
@@ -137,7 +140,7 @@ fun PageMonitorScreen(
                         ) {
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = if (item.hasChangedSinceLastCheck) "UPDATED • ${item.title}" else "UNCHANGED • ${item.title}",
+                                    text = if (item.hasChangedSinceLastCheck) L.s(R.string.t_updated, item.title) else L.s(R.string.t_unchanged, item.title),
                                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                                     color = if (item.hasChangedSinceLastCheck) NovaWarningAmber else NovaHttpsVerifiedGreen
                                 )
@@ -160,7 +163,7 @@ fun PageMonitorScreen(
                                 }
                             }
                             IconButton(onClick = { viewModel.deleteWatchedPage(item.id) }) {
-                                Icon(Icons.Default.Delete, contentDescription = "Remove Watcher")
+                                Icon(Icons.Default.Delete, contentDescription = L.s(R.string.t_remove_watcher))
                             }
                         }
                     }
@@ -174,19 +177,19 @@ fun PageMonitorScreen(
         var url by remember { mutableStateOf("https://") }
         AlertDialog(
             onDismissRequest = { showAddDialog = false },
-            title = { Text("Monitor Webpage for Changes") },
+            title = { Text(L.s(R.string.t_monitor_webpage_for_changes)) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     OutlinedTextField(
                         value = title,
                         onValueChange = { title = it },
-                        label = { Text("Label (e.g. Exam Results / Product Page)") },
+                        label = { Text(L.s(R.string.t_label_e_g_exam_results_product_page)) },
                         singleLine = true
                     )
                     OutlinedTextField(
                         value = url,
                         onValueChange = { url = it },
-                        label = { Text("Target Webpage URL") },
+                        label = { Text(L.s(R.string.t_target_webpage_url)) },
                         singleLine = true
                     )
                 }
@@ -198,12 +201,12 @@ fun PageMonitorScreen(
                         showAddDialog = false
                     }
                 }) {
-                    Text("Start Monitoring")
+                    Text(L.s(R.string.t_start_monitoring))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showAddDialog = false }) {
-                    Text("Cancel")
+                    Text(L.s(R.string.t_cancel))
                 }
             }
         )

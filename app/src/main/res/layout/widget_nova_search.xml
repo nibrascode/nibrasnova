@@ -16,7 +16,7 @@
         android:gravity="center_vertical"
         android:paddingStart="12dp"
         android:paddingEnd="12dp"
-        android:text="Nibras Nova — Search or enter URL…"
+        android:text="@string/widget_hint"
         android:textColor="#E2E8F0"
         android:textSize="14sp" />
 
@@ -27,7 +27,7 @@
         android:gravity="center"
         android:paddingStart="12dp"
         android:paddingEnd="12dp"
-        android:text="PRIVATE"
+        android:text="@string/widget_private"
         android:textColor="#00E5FF"
         android:textSize="12sp"
         android:textStyle="bold" />

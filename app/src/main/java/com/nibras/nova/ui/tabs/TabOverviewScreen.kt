@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.tabs
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -103,33 +106,33 @@ fun TabOverviewScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = L.s(R.string.t_back))
                     }
 
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         FilterChip(
                             selected = !viewingPrivateTabs,
                             onClick = { viewingPrivateTabs = false },
-                            label = { Text("Normal (${state.normalTabs.size})") },
+                            label = { Text(L.s(R.string.t_normal, state.normalTabs.size)) },
                             leadingIcon = { Icon(Icons.Default.Tab, contentDescription = null, modifier = Modifier.size(16.dp)) }
                         )
                         FilterChip(
                             selected = viewingPrivateTabs,
                             onClick = { viewingPrivateTabs = true },
-                            label = { Text("Private (${state.privateTabs.size})") },
+                            label = { Text(L.s(R.string.t_private, state.privateTabs.size)) },
                             leadingIcon = { Icon(Icons.Default.VisibilityOff, contentDescription = null, modifier = Modifier.size(16.dp)) }
                         )
                     }
 
                     Row {
                         IconButton(onClick = { showSnapshotsDialog = true }) {
-                            Icon(Icons.Default.Bookmarks, contentDescription = "Tab Session Snapshots")
+                            Icon(Icons.Default.Bookmarks, contentDescription = L.s(R.string.t_tab_session_snapshots))
                         }
                         IconButton(
                             onClick = { viewModel.closeAllTabs(viewingPrivateTabs) },
                             enabled = displayedTabs.isNotEmpty()
                         ) {
-                            Icon(Icons.Default.DeleteSweep, contentDescription = "Close All Tabs")
+                            Icon(Icons.Default.DeleteSweep, contentDescription = L.s(R.string.t_close_all_tabs))
                         }
                     }
                 }
@@ -170,7 +173,7 @@ fun TabOverviewScreen(
                         modifier = Modifier.weight(1f)
                     ) {
                         Icon(Icons.Default.Restore, contentDescription = null)
-                        Text(" Reopen (${state.recentlyClosedCount})")
+                        Text(" " + L.s(R.string.t_reopen, state.recentlyClosedCount))
                     }
                 }
 
@@ -184,8 +187,8 @@ fun TabOverviewScreen(
                 ) {
                     Icon(Icons.Default.Add, contentDescription = null)
                     Text(
-                        if (viewingPrivateTabs) " New Private Tab"
-                        else " New ${state.selectedWorkspace.displayName} Tab"
+                        if (viewingPrivateTabs) " " + L.s(R.string.t_new_private_tab)
+                        else " " + L.s(R.string.t_new_tab_2, state.selectedWorkspace.displayName)
                     )
                 }
             }
@@ -202,18 +205,18 @@ fun TabOverviewScreen(
             ) {
                 Icon(
                     imageVector = Icons.Default.Fingerprint,
-                    contentDescription = "Biometric Vault Locked",
+                    contentDescription = L.s(R.string.t_biometric_vault_locked),
                     tint = NovaIncognitoAccent,
                     modifier = Modifier.size(68.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "Private Tabs Vault Locked",
+                    text = L.s(R.string.t_private_tabs_vault_locked),
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Biometric protection is active for your private session.",
+                    text = L.s(R.string.t_biometric_protection_is_active_for_your),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -232,7 +235,7 @@ fun TabOverviewScreen(
                         }
                     }
                 ) {
-                    Text("Unlock with Biometrics / PIN")
+                    Text(L.s(R.string.t_unlock_with_biometrics_pin))
                 }
             }
             return@Scaffold
@@ -241,12 +244,12 @@ fun TabOverviewScreen(
         if (displayedTabs.isEmpty()) {
             EmptyStateView(
                 icon = if (viewingPrivateTabs) Icons.Default.VisibilityOff else Icons.Default.Tab,
-                title = if (viewingPrivateTabs) "No Private Tabs Open"
-                else "No Tabs in ${state.selectedWorkspace.displayName} Workspace",
+                title = if (viewingPrivateTabs) L.s(R.string.t_no_private_tabs_open)
+                else L.s(R.string.t_no_tabs_in_workspace, state.selectedWorkspace.displayName),
                 subtitle = if (viewingPrivateTabs) {
-                    "Private tabs never store history, search queries, or persistent site cookies after you close them."
+                    L.s(R.string.t_private_tabs_never_store_history_search)
                 } else {
-                    "Create a new tab in this workspace to keep your browsing organized."
+                    L.s(R.string.t_create_a_new_tab_in_this_workspace_to_ke)
                 },
                 modifier = Modifier
                     .fillMaxSize()
@@ -284,7 +287,7 @@ fun TabOverviewScreen(
         var newCollectionName by remember { mutableStateOf("") }
         AlertDialog(
             onDismissRequest = { showSnapshotsDialog = false },
-            title = { Text("Tab Session Collections") },
+            title = { Text(L.s(R.string.t_tab_session_collections)) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Row(
@@ -295,7 +298,7 @@ fun TabOverviewScreen(
                         OutlinedTextField(
                             value = newCollectionName,
                             onValueChange = { newCollectionName = it },
-                            placeholder = { Text("Save open tabs as…") },
+                            placeholder = { Text(L.s(R.string.t_save_open_tabs_as)) },
                             singleLine = true,
                             modifier = Modifier.weight(1f)
                         )
@@ -303,7 +306,7 @@ fun TabOverviewScreen(
                             viewModel.saveCurrentNormalTabsAsSnapshot(newCollectionName)
                             newCollectionName = ""
                         }) {
-                            Text("Save")
+                            Text(L.s(R.string.t_save))
                         }
                     }
 
@@ -331,10 +334,10 @@ fun TabOverviewScreen(
                                 ) {
                                     Column(modifier = Modifier.weight(1f)) {
                                         Text(snap.name, style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold))
-                                        Text("${snap.tabCount} saved tabs • Tap to restore", style = MaterialTheme.typography.labelSmall)
+                                        Text(L.s(R.string.t_saved_tabs_tap_to_restore, snap.tabCount), style = MaterialTheme.typography.labelSmall)
                                     }
                                     IconButton(onClick = { viewModel.deleteSessionSnapshot(snap.id) }) {
-                                        Icon(Icons.Default.Delete, contentDescription = "Delete Snapshot")
+                                        Icon(Icons.Default.Delete, contentDescription = L.s(R.string.t_delete_snapshot))
                                     }
                                 }
                             }
@@ -344,7 +347,7 @@ fun TabOverviewScreen(
             },
             confirmButton = {
                 TextButton(onClick = { showSnapshotsDialog = false }) {
-                    Text("Close")
+                    Text(L.s(R.string.t_close))
                 }
             }
         )
@@ -379,7 +382,7 @@ private fun TabPreviewCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = tab.title.ifBlank { "New Tab" },
+                    text = tab.title.ifBlank { L.s(R.string.t_new_tab) },
                     style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -388,14 +391,14 @@ private fun TabPreviewCard(
                 IconButton(onClick = onDuplicate, modifier = Modifier.size(28.dp)) {
                     Icon(
                         imageVector = Icons.Default.ContentCopy,
-                        contentDescription = "Duplicate Tab",
+                        contentDescription = L.s(R.string.t_duplicate_tab),
                         modifier = Modifier.size(15.dp)
                     )
                 }
                 IconButton(onClick = onClose, modifier = Modifier.size(28.dp)) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Close Tab",
+                        contentDescription = L.s(R.string.t_close_tab),
                         modifier = Modifier.size(16.dp)
                     )
                 }
@@ -414,14 +417,14 @@ private fun TabPreviewCard(
                 if (thumbFile != null && thumbFile.exists()) {
                     AsyncImage(
                         model = thumbFile,
-                        contentDescription = "Preview of ${tab.title}",
+                        contentDescription = L.s(R.string.t_preview_of, tab.title),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()
                     )
                 } else {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                            text = if (tab.isHomePage) "NOVA HOME" else tab.url.removePrefix("https://").removePrefix("http://").take(22),
+                            text = if (tab.isHomePage) L.s(R.string.t_nova_home) else tab.url.removePrefix("https://").removePrefix("http://").take(22),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

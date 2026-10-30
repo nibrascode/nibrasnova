@@ -100,6 +100,19 @@ fun AboutScreen(
             OutlinedButton(onClick = { openUrl(NovaLinks.WEBSITE) }, modifier = Modifier.fillMaxWidth()) {
                 Text(stringResource(R.string.set_website))
             }
+            OutlinedButton(
+                onClick = {
+                    runCatching {
+                        context.startActivity(
+                            android.content.Intent(android.content.Intent.ACTION_SENDTO, android.net.Uri.parse("mailto:" + NovaLinks.CONTACT_EMAIL))
+                                .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                        )
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(R.string.about_contact, NovaLinks.CONTACT_EMAIL))
+            }
         }
     }
 }

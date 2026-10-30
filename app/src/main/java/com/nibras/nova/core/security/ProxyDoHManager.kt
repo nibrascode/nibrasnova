@@ -1,5 +1,8 @@
 package com.nibras.nova.core.security
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.webkit.ProxyConfig
 import androidx.webkit.ProxyController
 import androidx.webkit.WebViewFeature
@@ -15,27 +18,27 @@ enum class DnsOverHttpsProvider(
 ) {
     SYSTEM_DEFAULT(
         id = "system",
-        displayName = "System Default DNS",
+        displayName = L.s(R.string.t_system_default_dns),
         endpointTemplate = "",
-        description = "Uses standard Android Private DNS / network resolver."
+        description = L.s(R.string.t_uses_standard_android_private_dns_networ)
     ),
     CLOUDFLARE_1111(
         id = "cloudflare",
         displayName = "Cloudflare (1.1.1.1)",
         endpointTemplate = "https://cloudflare-dns.com/dns-query",
-        description = "Fast global DNS-over-HTTPS resolver with zero query logging."
+        description = L.s(R.string.t_fast_global_dns_over_https_resolver_with)
     ),
     QUAD9_SECURITY(
         id = "quad9",
         displayName = "Quad9 Security (9.9.9.9)",
         endpointTemplate = "https://dns.quad9.net/dns-query",
-        description = "Swiss privacy foundation DoH blocking known malware & phishing domains."
+        description = L.s(R.string.t_swiss_privacy_foundation_doh_blocking_kn)
     ),
     ADGUARD_DNS(
         id = "adguard",
         displayName = "AdGuard DoH",
         endpointTemplate = "https://dns.adguard-dns.com/dns-query",
-        description = "Encrypted DNS that filters advertising and tracking hosts."
+        description = L.s(R.string.t_encrypted_dns_that_filters_advertising_a)
     );
 
     companion object {
@@ -54,7 +57,7 @@ class ProxyDoHManager @Inject constructor() {
 
     fun applyCustomProxyOrClear(customProxyHostPort: String): Result<Boolean> {
         if (!isProxyOverrideSupported) {
-            return Result.failure(UnsupportedOperationException("WebViewFeature.PROXY_OVERRIDE is not supported on this device's System WebView."))
+            return Result.failure(UnsupportedOperationException(L.s(R.string.t_webviewfeature_proxy_override_is_not_sup)))
         }
         return try {
             val clean = customProxyHostPort.trim()

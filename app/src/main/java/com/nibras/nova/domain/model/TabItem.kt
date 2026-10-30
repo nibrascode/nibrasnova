@@ -1,12 +1,15 @@
 package com.nibras.nova.domain.model
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import com.nibras.nova.core.common.NovaConstants
 
 enum class TabWorkspace(val id: String, val displayName: String) {
-    GENERAL("general", "General"),
-    WORK("work", "Work"),
-    RESEARCH("research", "Research"),
-    PERSONAL("personal", "Personal");
+    GENERAL("general", L.s(R.string.t_general)),
+    WORK("work", L.s(R.string.t_work)),
+    RESEARCH("research", L.s(R.string.t_research)),
+    PERSONAL("personal", L.s(R.string.t_personal));
 
     companion object {
         fun fromId(id: String): TabWorkspace =
@@ -17,7 +20,7 @@ enum class TabWorkspace(val id: String, val displayName: String) {
 data class TabItem(
     val id: String,
     val url: String = NovaConstants.DEFAULT_HOMEPAGE_SENTINEL,
-    val title: String = "New Tab",
+    val title: String = L.s(R.string.t_new_tab),
     val isPrivate: Boolean = false,
     val isDesktopMode: Boolean = false,
     val isActive: Boolean = false,

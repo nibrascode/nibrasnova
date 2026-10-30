@@ -1,5 +1,8 @@
 package com.nibras.nova.domain.model
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 enum class UserAgentProfile(
     val id: String,
     val displayName: String,
@@ -8,7 +11,7 @@ enum class UserAgentProfile(
 ) {
     ANDROID_DEFAULT(
         id = "android_default",
-        displayName = "Android Mobile (Default)",
+        displayName = L.s(R.string.t_android_mobile_default),
         userAgentString = null,
         forceWideDesktopViewport = false
     ),

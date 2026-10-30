@@ -9,6 +9,7 @@ import dagger.hilt.android.HiltAndroidApp
 class NovaApplication : Application() {
 
     override fun onCreate() {
+        com.nibras.nova.core.common.L.init(this)
         super.onCreate()
         configureWebViewProcessDataDirectory()
     }

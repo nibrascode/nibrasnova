@@ -1,5 +1,8 @@
 package com.nibras.nova.core.security
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import java.security.SecureRandom
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -74,10 +77,10 @@ class PasswordGeneratorHelper @Inject constructor() {
 
         val entropy = safeLen * log2(pool.length.toDouble())
         val label = when {
-            entropy >= 110.0 -> "Military / Post-Quantum Grade (${entropy.toInt()} bits)"
-            entropy >= 80.0 -> "Very Strong (${entropy.toInt()} bits)"
-            entropy >= 60.0 -> "Strong (${entropy.toInt()} bits)"
-            else -> "Moderate (${entropy.toInt()} bits)"
+            entropy >= 110.0 -> L.s(R.string.t_military_post_quantum_grade_bits, entropy.toInt())
+            entropy >= 80.0 -> L.s(R.string.t_very_strong_bits, entropy.toInt())
+            entropy >= 60.0 -> L.s(R.string.t_strong_bits, entropy.toInt())
+            else -> L.s(R.string.t_moderate_bits, entropy.toInt())
         }
 
         return GeneratedPasswordResult(

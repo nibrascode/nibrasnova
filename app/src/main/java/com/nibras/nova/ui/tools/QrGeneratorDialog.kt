@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.tools
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import android.graphics.Bitmap
 import android.graphics.Color
 import androidx.compose.foundation.Image
@@ -40,7 +43,7 @@ fun QrGeneratorDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("QR Code Generator") },
+        title = { Text(L.s(R.string.t_qr_code_generator)) },
         text = {
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -49,7 +52,7 @@ fun QrGeneratorDialog(
                 qrBitmap?.let { bmp ->
                     Image(
                         bitmap = bmp.asImageBitmap(),
-                        contentDescription = "Generated QR Code",
+                        contentDescription = L.s(R.string.t_generated_qr_code),
                         modifier = Modifier.size(220.dp)
                     )
                 }
@@ -57,7 +60,7 @@ fun QrGeneratorDialog(
                 OutlinedTextField(
                     value = content,
                     onValueChange = { content = it },
-                    label = { Text("URL or Text to Encode") },
+                    label = { Text(L.s(R.string.t_url_or_text_to_encode)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -65,12 +68,12 @@ fun QrGeneratorDialog(
         },
         confirmButton = {
             Button(onClick = onDismiss) {
-                Text("Done")
+                Text(L.s(R.string.t_done))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Close")
+                Text(L.s(R.string.t_close))
             }
         }
     )

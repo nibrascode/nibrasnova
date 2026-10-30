@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.settings
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -42,9 +45,9 @@ fun ThemeSettingsScreen(
     val settings by viewModel.settings.collectAsStateWithLifecycle()
 
     val wallpaperPresets = listOf(
-        "nova_deep_navy" to "Nibras Deep Navy Gradient (Default)",
-        "nova_turquoise_aurora" to "Turquoise Horizon Aurora",
-        "nova_graphite_minimal" to "Minimalist Graphite Matte"
+        "nova_deep_navy" to L.s(R.string.t_nibras_deep_navy_gradient_default),
+        "nova_turquoise_aurora" to L.s(R.string.t_turquoise_horizon_aurora),
+        "nova_graphite_minimal" to L.s(R.string.t_minimalist_graphite_matte)
     )
 
     Scaffold(
@@ -59,10 +62,10 @@ fun ThemeSettingsScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = onBack) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = L.s(R.string.t_back))
                 }
                 Text(
-                    text = "Theme & Wallpaper",
+                    text = L.s(R.string.t_theme_wallpaper),
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                 )
             }
@@ -83,7 +86,7 @@ fun ThemeSettingsScreen(
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = "Color Theme",
+                            text = L.s(R.string.t_color_theme),
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.primary
                         )
@@ -120,9 +123,9 @@ fun ThemeSettingsScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
-                            Text("High-Contrast Electric Turquoise Accent", style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium))
+                            Text(L.s(R.string.t_high_contrast_electric_turquoise_accent), style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium))
                             Text(
-                                "Use vivid #00E5FF cyan highlights on active tabs and security indicators",
+                                L.s(R.string.t_use_vivid_00e5ff_cyan_highlights_on_acti),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -143,7 +146,7 @@ fun ThemeSettingsScreen(
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = "Homepage Background Atmosphere",
+                            text = L.s(R.string.t_homepage_background_atmosphere),
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.primary
                         )

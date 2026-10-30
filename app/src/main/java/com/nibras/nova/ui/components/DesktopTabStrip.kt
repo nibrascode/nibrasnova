@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.components
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -79,7 +82,7 @@ fun DesktopTabStrip(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = tab.title.ifBlank { "New Tab" },
+                        text = tab.title.ifBlank { L.s(R.string.t_new_tab) },
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                         ),
@@ -90,7 +93,7 @@ fun DesktopTabStrip(
                     Spacer(modifier = Modifier.width(4.dp))
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Close tab",
+                        contentDescription = L.s(R.string.t_close_tab_2),
                         modifier = Modifier
                             .size(14.dp)
                             .clickable { onCloseTab(tab) }
@@ -102,7 +105,7 @@ fun DesktopTabStrip(
         IconButton(onClick = onNewTabClick, modifier = Modifier.size(32.dp)) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = "New Tab",
+                contentDescription = L.s(R.string.t_new_tab),
                 tint = accent,
                 modifier = Modifier.size(18.dp)
             )

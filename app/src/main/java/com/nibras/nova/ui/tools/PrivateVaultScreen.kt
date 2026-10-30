@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.tools
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -78,19 +81,19 @@ fun PrivateVaultScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 IconButton(onClick = onBack) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = L.s(R.string.t_back))
                 }
                 Text(
-                    text = "Biometric Private Vault & Key Generator",
+                    text = L.s(R.string.t_biometric_private_vault_key_generator),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                 )
                 if (isUnlocked) {
                     Row {
                         IconButton(onClick = { showPasswordGeneratorDialog = true }) {
-                            Icon(Icons.Default.Key, contentDescription = "Password & Passphrase Generator")
+                            Icon(Icons.Default.Key, contentDescription = L.s(R.string.t_password_passphrase_generator))
                         }
                         IconButton(onClick = { showAddDialog = true }) {
-                            Icon(Icons.Default.Add, contentDescription = "Add Secret Bookmark or Note")
+                            Icon(Icons.Default.Add, contentDescription = L.s(R.string.t_add_secret_bookmark_or_note))
                         }
                     }
                 }
@@ -108,18 +111,18 @@ fun PrivateVaultScreen(
             ) {
                 Icon(
                     imageVector = Icons.Default.Fingerprint,
-                    contentDescription = "Unlock Biometric Vault",
+                    contentDescription = L.s(R.string.t_unlock_biometric_vault),
                     tint = NovaIncognitoAccent,
                     modifier = Modifier.size(72.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "Zero-Trust Private Vault",
+                    text = L.s(R.string.t_zero_trust_private_vault),
                     style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Your private bookmarks, generated credentials, and secret notes are isolated from standard browser search and require biometric verification.",
+                    text = L.s(R.string.t_your_private_bookmarks_generated_credent),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -138,7 +141,7 @@ fun PrivateVaultScreen(
                         }
                     }
                 ) {
-                    Text("Authenticate to Unlock Vault")
+                    Text(L.s(R.string.t_authenticate_to_unlock_vault))
                 }
             }
             return@Scaffold
@@ -147,8 +150,8 @@ fun PrivateVaultScreen(
         if (items.isEmpty()) {
             EmptyStateView(
                 icon = Icons.Default.Lock,
-                title = "Private Vault Is Empty",
-                subtitle = "Tap the Key icon to generate high-entropy passwords or tap + to store confidential links.",
+                title = L.s(R.string.t_private_vault_is_empty),
+                subtitle = L.s(R.string.t_tap_the_key_icon_to_generate_high_entrop),
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
@@ -193,7 +196,7 @@ fun PrivateVaultScreen(
                                 }
                             }
                             IconButton(onClick = { viewModel.deleteVaultEntry(entry.id) }) {
-                                Icon(Icons.Default.Delete, contentDescription = "Delete Vault Entry")
+                                Icon(Icons.Default.Delete, contentDescription = L.s(R.string.t_delete_vault_entry))
                             }
                         }
                     }
@@ -206,7 +209,7 @@ fun PrivateVaultScreen(
         var label by remember { mutableStateOf("") }
         AlertDialog(
             onDismissRequest = { showPasswordGeneratorDialog = false },
-            title = { Text("Cryptographic Key & Passphrase Generator") },
+            title = { Text(L.s(R.string.t_cryptographic_key_passphrase_generator)) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     SelectionContainer {
@@ -226,16 +229,16 @@ fun PrivateVaultScreen(
                     )
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         OutlinedButton(onClick = { viewModel.regeneratePassword(24, true) }) {
-                            Text("24-Char Random")
+                            Text(L.s(R.string.t_24_char_random))
                         }
                         OutlinedButton(onClick = { viewModel.generateDicewarePassphrase() }) {
-                            Text("Passphrase")
+                            Text(L.s(R.string.t_passphrase))
                         }
                     }
                     OutlinedTextField(
                         value = label,
                         onValueChange = { label = it },
-                        label = { Text("Account / Website Label") },
+                        label = { Text(L.s(R.string.t_account_website_label)) },
                         singleLine = true
                     )
                 }
@@ -245,12 +248,12 @@ fun PrivateVaultScreen(
                     viewModel.copyAndSaveGeneratedPassword(label)
                     showPasswordGeneratorDialog = false
                 }) {
-                    Text("Copy & Save in Vault")
+                    Text(L.s(R.string.t_copy_save_in_vault))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showPasswordGeneratorDialog = false }) {
-                    Text("Close")
+                    Text(L.s(R.string.t_close))
                 }
             }
         )
@@ -261,19 +264,19 @@ fun PrivateVaultScreen(
         var urlOrNote by remember { mutableStateOf("https://") }
         AlertDialog(
             onDismissRequest = { showAddDialog = false },
-            title = { Text("Add to Private Vault") },
+            title = { Text(L.s(R.string.t_add_to_private_vault)) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     OutlinedTextField(
                         value = title,
                         onValueChange = { title = it },
-                        label = { Text("Title / Label") },
+                        label = { Text(L.s(R.string.t_title_label)) },
                         singleLine = true
                     )
                     OutlinedTextField(
                         value = urlOrNote,
                         onValueChange = { urlOrNote = it },
-                        label = { Text("Confidential URL or Secret Note") }
+                        label = { Text(L.s(R.string.t_confidential_url_or_secret_note)) }
                     )
                 }
             },
@@ -284,12 +287,12 @@ fun PrivateVaultScreen(
                         showAddDialog = false
                     }
                 }) {
-                    Text("Save in Vault")
+                    Text(L.s(R.string.t_save_in_vault))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showAddDialog = false }) {
-                    Text("Cancel")
+                    Text(L.s(R.string.t_cancel))
                 }
             }
         )

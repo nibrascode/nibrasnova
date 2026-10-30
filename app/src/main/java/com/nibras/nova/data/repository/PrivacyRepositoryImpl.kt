@@ -1,5 +1,8 @@
 package com.nibras.nova.data.repository
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import android.content.Context
 import android.webkit.CookieManager
 import android.webkit.WebStorage
@@ -112,7 +115,7 @@ class PrivacyRepositoryImpl @Inject constructor(
         withContext(dispatchers.io) {
             privateVaultDao.insertVaultItem(
                 PrivateVaultEntity(
-                    title = title.trim().ifBlank { "Vault Entry" },
+                    title = title.trim().ifBlank { L.s(R.string.t_vault_entry) },
                     urlOrNote = urlOrNote.trim(),
                     category = category
                 )
@@ -270,7 +273,7 @@ class PrivacyRepositoryImpl @Inject constructor(
         if (cleanUrls.isNotEmpty()) {
             sessionSnapshotDao.insertSnapshot(
                 SessionSnapshotEntity(
-                    name = name.trim().ifBlank { "Session (${cleanUrls.size} Tabs)" },
+                    name = name.trim().ifBlank { L.s(R.string.t_session_tabs, cleanUrls.size) },
                     serializedUrlsJson = Json.encodeToString(cleanUrls),
                     tabCount = cleanUrls.size
                 )

@@ -1,5 +1,8 @@
 package com.nibras.nova.data.repository
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import android.net.Uri
 import com.nibras.nova.core.common.DispatcherProvider
 import com.nibras.nova.data.local.dao.UserScriptDao
@@ -26,7 +29,7 @@ class UserScriptRepositoryImpl @Inject constructor(
         if (userScriptDao.getCount() == 0) {
             userScriptDao.insertScript(
                 UserScriptEntity(
-                    name = "Universal Cookie Banner Hider (CSS)",
+                    name = L.s(R.string.t_universal_cookie_banner_hider_css),
                     matchDomainPattern = "*",
                     scriptType = ScriptInjectionType.CSS.name,
                     codeContent = "#onetrust-consent-sdk, .cc-window, #cookie-banner, .cookie-consent-banner { display: none !important; }",
@@ -35,7 +38,7 @@ class UserScriptRepositoryImpl @Inject constructor(
             )
             userScriptDao.insertScript(
                 UserScriptEntity(
-                    name = "Disable Page Text Selection Locks (JS)",
+                    name = L.s(R.string.t_disable_page_text_selection_locks_js),
                     matchDomainPattern = "*",
                     scriptType = ScriptInjectionType.JAVASCRIPT.name,
                     codeContent = "document.querySelectorAll('*').forEach(el => { el.style.userSelect = 'auto'; }); document.oncopy = null; document.oncontextmenu = null;",
@@ -64,7 +67,7 @@ class UserScriptRepositoryImpl @Inject constructor(
     ): Long = withContext(dispatchers.io) {
         val entity = UserScriptEntity(
             id = id,
-            name = name.trim().ifBlank { "Custom Script" },
+            name = name.trim().ifBlank { L.s(R.string.t_custom_script) },
             matchDomainPattern = matchDomainPattern.trim().ifBlank { "*" },
             scriptType = scriptType.name,
             codeContent = codeContent,

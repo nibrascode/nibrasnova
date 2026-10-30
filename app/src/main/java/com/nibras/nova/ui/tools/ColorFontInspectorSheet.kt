@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.tools
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -57,7 +60,7 @@ fun ColorFontInspectorSheet(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Default.Colorize, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                 Text(
-                    text = "  Eyedropper Color Palette & Font Inspector",
+                    text = "  " + L.s(R.string.t_eyedropper_color_palette_font_inspector),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                 )
             }
@@ -70,7 +73,7 @@ fun ColorFontInspectorSheet(
             ) {
                 item {
                     Text(
-                        text = "Extracted DOM Color Swatches (${report.detectedColorsHex.size})",
+                        text = L.s(R.string.t_extracted_dom_color_swatches, report.detectedColorsHex.size),
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -112,7 +115,7 @@ fun ColorFontInspectorSheet(
                 item {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Computed Font Families & Typography",
+                        text = L.s(R.string.t_computed_font_families_typography),
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
                         color = MaterialTheme.colorScheme.primary
                     )

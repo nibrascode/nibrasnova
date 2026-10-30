@@ -25,4 +25,5 @@ h2:before{content:"";width:10px;height:10px;border-radius:50%;background:linear-
 .doc h2{margin-top:26px}.doc li{margin:4px 0}.doc p,.doc li{color:#cfd6f7}
 table{width:100%;border-collapse:collapse;font-size:.92rem}td,th{border-bottom:1px solid var(--line);padding:8px;text-align:start;vertical-align:top}th{color:var(--cyan)}
 footer{margin-top:40px;text-align:center;color:var(--mut);font-size:.85rem}
-[data-lang]{display:none}body.az [data-lang=az],body.en [data-lang=en]{display:revert}
+[data-lang]{display:none}body.az [data-lang=az],body.en [data-lang=en],body.tr [data-lang=tr],body.ru [data-lang=ru],body.ar [data-lang=ar]{display:revert}
+[dir=rtl] body{font-family:"Noto Naskh Arabic","Segoe UI",Tahoma,sans-serif}

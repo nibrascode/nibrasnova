@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.components
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material3.AlertDialog
@@ -22,27 +25,27 @@ fun PermissionPromptDialog(
         icon = {
             Icon(
                 imageVector = Icons.Default.Security,
-                contentDescription = "Website Permission Request",
+                contentDescription = L.s(R.string.t_website_permission_request),
                 tint = MaterialTheme.colorScheme.primary
             )
         },
         title = {
-            Text(text = "Website Permission Request")
+            Text(text = L.s(R.string.t_website_permission_request))
         },
         text = {
             Text(
-                text = "${prompt.origin} is requesting access to: $permissionsList.\n\nGranting access allows this site to use the requested hardware or media capability during your session.",
+                text = L.s(R.string.t_is_requesting_access_to_n_ngranting_acce, prompt.origin, permissionsList),
                 style = MaterialTheme.typography.bodyMedium
             )
         },
         confirmButton = {
             Button(onClick = prompt.onGrant) {
-                Text("Allow")
+                Text(L.s(R.string.t_allow))
             }
         },
         dismissButton = {
             OutlinedButton(onClick = prompt.onDeny) {
-                Text("Block")
+                Text(L.s(R.string.t_block))
             }
         }
     )

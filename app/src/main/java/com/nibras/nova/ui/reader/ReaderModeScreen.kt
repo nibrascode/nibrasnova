@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.reader
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -97,12 +100,12 @@ fun ReaderModeScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = fgColor)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = L.s(R.string.t_back), tint = fgColor)
                     }
 
                     Text(
-                        text = if (showSavedPagesDrawer) "Saved Offline (${state.savedOfflinePages.size})"
-                        else "Reader Mode",
+                        text = if (showSavedPagesDrawer) L.s(R.string.t_saved_offline, state.savedOfflinePages.size)
+                        else L.s(R.string.t_reader_mode),
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                         color = fgColor
                     )
@@ -114,28 +117,28 @@ fun ReaderModeScreen(
                         }) {
                             Icon(
                                 imageVector = Icons.Default.AutoAwesome,
-                                contentDescription = "Toggle On-Device Article Summary",
+                                contentDescription = L.s(R.string.t_toggle_on_device_article_summary),
                                 tint = accentColor
                             )
                         }
                         IconButton(onClick = viewModel::toggleTtsSpeech) {
                             Icon(
                                 imageVector = if (state.ttsState.isSpeaking) Icons.Default.StopCircle else Icons.Default.RecordVoiceOver,
-                                contentDescription = "Listen to Article (TTS)",
+                                contentDescription = L.s(R.string.t_listen_to_article_tts),
                                 tint = if (state.ttsState.isSpeaking) accentColor else fgColor
                             )
                         }
                         IconButton(onClick = { showTypographyControls = !showTypographyControls }) {
-                            Icon(Icons.Default.FormatSize, contentDescription = "Typography & Themes", tint = fgColor)
+                            Icon(Icons.Default.FormatSize, contentDescription = L.s(R.string.t_typography_themes), tint = fgColor)
                         }
                         IconButton(onClick = { viewModel.translateArticleOnDevice("en") }) {
-                            Icon(Icons.Default.Translate, contentDescription = "Translate Article", tint = fgColor)
+                            Icon(Icons.Default.Translate, contentDescription = L.s(R.string.t_translate_article), tint = fgColor)
                         }
                         IconButton(onClick = viewModel::saveArticleForOfflineReading) {
-                            Icon(Icons.Default.BookmarkAdded, contentDescription = "Save Offline", tint = accentColor)
+                            Icon(Icons.Default.BookmarkAdded, contentDescription = L.s(R.string.t_save_offline), tint = accentColor)
                         }
                         IconButton(onClick = { viewModel.shareArticleText(context) }) {
-                            Icon(Icons.Default.Share, contentDescription = "Share Article", tint = fgColor)
+                            Icon(Icons.Default.Share, contentDescription = L.s(R.string.t_share_article), tint = fgColor)
                         }
                     }
                 }
@@ -160,7 +163,7 @@ fun ReaderModeScreen(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text("Font Size (${state.fontSizeSp.toInt()}sp)", color = fgColor)
+                            Text(L.s(R.string.t_font_size_sp, state.fontSizeSp.toInt()), color = fgColor)
                             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 OutlinedButton(onClick = { viewModel.adjustFontSize(-2f) }) { Text("A-") }
                                 OutlinedButton(onClick = { viewModel.adjustFontSize(2f) }) { Text("A+") }
@@ -172,7 +175,7 @@ fun ReaderModeScreen(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text("TTS Voice Speed (${state.ttsState.speechRate}x)", color = fgColor)
+                            Text(L.s(R.string.t_tts_voice_speed_x, state.ttsState.speechRate), color = fgColor)
                             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 listOf(0.8f, 1.0f, 1.25f, 1.5f).forEach { speed ->
                                     FilterChip(
@@ -198,7 +201,7 @@ fun ReaderModeScreen(
                         }
 
                         OutlinedButton(onClick = { showSavedPagesDrawer = !showSavedPagesDrawer }) {
-                            Text(if (showSavedPagesDrawer) "Back to Active Article" else "View Saved Offline Articles & Archives (${state.savedOfflinePages.size})")
+                            Text(if (showSavedPagesDrawer) L.s(R.string.t_back_to_active_article) else L.s(R.string.t_view_saved_offline_articles_archives, state.savedOfflinePages.size))
                         }
                     }
                     HorizontalDivider()
@@ -210,8 +213,8 @@ fun ReaderModeScreen(
             if (state.savedOfflinePages.isEmpty()) {
                 EmptyStateView(
                     icon = Icons.Default.MenuBook,
-                    title = "No Offline Articles or Web Archives Saved",
-                    subtitle = "Use the Save icon in Reader Mode or 'Save Full Offline Web Archive (.mht)' in the Browser menu.",
+                    title = L.s(R.string.t_no_offline_articles_or_web_archives_save),
+                    subtitle = L.s(R.string.t_use_the_save_icon_in_reader_mode_or_save),
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding)
@@ -245,13 +248,13 @@ fun ReaderModeScreen(
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(saved.title, style = MaterialTheme.typography.titleMedium)
                                     Text(
-                                        "${saved.siteName} • ${saved.estimatedReadMinutes} min read",
+                                        L.s(R.string.t_min_read, saved.siteName, saved.estimatedReadMinutes),
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
                                 IconButton(onClick = { viewModel.deleteSavedOfflineArticle(saved.id) }) {
-                                    Icon(Icons.Default.Delete, contentDescription = "Delete saved article")
+                                    Icon(Icons.Default.Delete, contentDescription = L.s(R.string.t_delete_saved_article))
                                 }
                             }
                         }
@@ -273,11 +276,11 @@ fun ReaderModeScreen(
             ) {
                 EmptyStateView(
                     icon = Icons.Default.MenuBook,
-                    title = "Reader Mode Unavailable on This Page",
-                    subtitle = "This page does not contain a structured article body suitable for distraction-free extraction."
+                    title = L.s(R.string.t_reader_mode_unavailable_on_this_page),
+                    subtitle = L.s(R.string.t_this_page_does_not_contain_a_structured)
                 )
                 Button(onClick = { showSavedPagesDrawer = true }) {
-                    Text("Open Saved Offline Articles (${state.savedOfflinePages.size})")
+                    Text(L.s(R.string.t_open_saved_offline_articles, state.savedOfflinePages.size))
                 }
             }
         } else {
@@ -299,7 +302,7 @@ fun ReaderModeScreen(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "${article.siteName} • ${article.estimatedReadMinutes} min read • ${article.wordCount} words",
+                        text = L.s(R.string.t_min_read_words, article.siteName, article.estimatedReadMinutes, article.wordCount),
                         style = MaterialTheme.typography.labelLarge,
                         color = accentColor
                     )
@@ -319,7 +322,7 @@ fun ReaderModeScreen(
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Icon(Icons.Default.AutoAwesome, contentDescription = null, tint = accentColor)
                                     Text(
-                                        text = "  On-Device Key Takeaways (100% Local)",
+                                        text = "  " + L.s(R.string.t_on_device_key_takeaways_100_local),
                                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                                         color = accentColor
                                     )
@@ -327,7 +330,7 @@ fun ReaderModeScreen(
                                 if (summary.topKeywords.isNotEmpty()) {
                                     Spacer(modifier = Modifier.height(4.dp))
                                     Text(
-                                        text = "Keywords: ${summary.topKeywords.joinToString(", ")}",
+                                        text = L.s(R.string.t_keywords, summary.topKeywords.joinToString(", ")),
                                         style = MaterialTheme.typography.labelSmall,
                                         color = fgColor.copy(alpha = 0.75f)
                                     )

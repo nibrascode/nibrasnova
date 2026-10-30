@@ -1,5 +1,8 @@
 package com.nibras.nova.core.security
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import android.content.Intent
 import android.net.Uri
 import java.util.Locale
@@ -23,7 +26,7 @@ class SchemePolicy @Inject constructor(
     ): NavigationDisposition {
         val trimmed = url.trim()
         if (trimmed.isEmpty()) {
-            return NavigationDisposition.BlockUnsafeScheme(url, "Empty URL")
+            return NavigationDisposition.BlockUnsafeScheme(url, L.s(R.string.t_empty_url))
         }
 
         val lower = trimmed.lowercase(Locale.ROOT)
@@ -38,7 +41,7 @@ class SchemePolicy @Inject constructor(
             lower.startsWith("data:") -> {
                 return NavigationDisposition.BlockUnsafeScheme(
                     blockedUrl = trimmed,
-                    reason = "Blocked dangerous URI scheme for security protection."
+                    reason = L.s(R.string.t_blocked_dangerous_uri_scheme_for_securit)
                 )
             }
             lower.startsWith("http://") -> {
@@ -70,7 +73,7 @@ class SchemePolicy @Inject constructor(
                         fallbackUrl = null
                     )
                 } catch (e: Exception) {
-                    NavigationDisposition.BlockUnsafeScheme(trimmed, "Malformed external scheme")
+                    NavigationDisposition.BlockUnsafeScheme(trimmed, L.s(R.string.t_malformed_external_scheme))
                 }
             }
         }
@@ -95,7 +98,7 @@ class SchemePolicy @Inject constructor(
                 fallbackUrl = fallbackUrl
             )
         } catch (e: Exception) {
-            NavigationDisposition.BlockUnsafeScheme(intentUriString, "Invalid intent:// syntax")
+            NavigationDisposition.BlockUnsafeScheme(intentUriString, L.s(R.string.t_invalid_intent_syntax))
         }
     }
 }

@@ -1,5 +1,8 @@
 package com.nibras.nova.core.security
 
+import com.nibras.nova.R
+import com.nibras.nova.core.common.L
+
 import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
@@ -28,7 +31,7 @@ class FileUploadValidator @Inject constructor(
             val path = uri.path.orEmpty()
             val appDataDir = context.applicationInfo.dataDir
             if (path.startsWith(appDataDir)) {
-                return Result.failure(SecurityException("Uploading internal application sandbox files is forbidden."))
+                return Result.failure(SecurityException(L.s(R.string.t_uploading_internal_application_sandbox_f)))
             }
         }
 
@@ -51,7 +54,7 @@ class FileUploadValidator @Inject constructor(
         }
 
         if (sizeBytes > MAX_UPLOAD_SIZE_BYTES) {
-            return Result.failure(IllegalArgumentException("File exceeds maximum safe upload limit (200 MB)."))
+            return Result.failure(IllegalArgumentException(L.s(R.string.t_file_exceeds_maximum_safe_upload_limit_2)))
         }
 
         return Result.success(
