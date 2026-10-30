@@ -17,6 +17,7 @@ import javax.inject.Singleton
 class WebViewConfigurator @Inject constructor() {
 
     private var defaultMobileUserAgent: String? = null
+    private val desktopScripts = java.util.WeakHashMap<WebView, androidx.webkit.ScriptHandler>()
 
     @SuppressLint("SetJavaScriptEnabled")
     fun applySecurityAndUserSettings(
@@ -29,7 +30,9 @@ class WebViewConfigurator @Inject constructor() {
         val ws = webView.settings
 
         if (defaultMobileUserAgent == null) {
-            defaultMobileUserAgent = ws.userAgentString + NovaConstants.MOBILE_USER_AGENT_SUFFIX
+            // Use the platform default, never the (possibly already desktop) UA of a reused WebView.
+            val base = runCatching { WebSettings.getDefaultUserAgent(webView.context) }.getOrNull() ?: ws.userAgentString
+            defaultMobileUserAgent = base + NovaConstants.MOBILE_USER_AGENT_SUFFIX
         }
 
         // Strict Security Hardening
@@ -56,15 +59,18 @@ class WebViewConfigurator @Inject constructor() {
         ws.textZoom = siteTextZoomPercent.coerceIn(50, 250)
 
         val customProfile = settings.userAgentProfile
+        val desktopRequested = isDesktopMode && customProfile == UserAgentProfile.ANDROID_DEFAULT
         val useDesktopViewport = isDesktopMode || customProfile.forceWideDesktopViewport
-        ws.loadWithOverviewMode = useDesktopViewport
         ws.useWideViewPort = useDesktopViewport
+        ws.loadWithOverviewMode = useDesktopViewport
 
-        ws.userAgentString = when {
-            isDesktopMode && customProfile == UserAgentProfile.ANDROID_DEFAULT -> NovaConstants.DESKTOP_USER_AGENT
+        val targetUa = when {
+            desktopRequested -> DesktopMode.desktopUserAgent(defaultMobileUserAgent)
             customProfile.userAgentString != null -> customProfile.userAgentString
             else -> defaultMobileUserAgent ?: ws.userAgentString
         }
+        if (ws.userAgentString != targetUa) ws.userAgentString = targetUa
+        applyDesktopOverrides(webView, ws, if (useDesktopViewport && !DesktopMode.isMobileUserAgent(targetUa)) targetUa else null)
 
         // Stage 12.10: Smart Data Saver Mode (restrict heavy network image auto-loading & media autoplay)
         ws.loadsImagesAutomatically = true
@@ -104,6 +110,42 @@ class WebViewConfigurator @Inject constructor() {
                 WebView.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS
             } else {
                 WebView.IMPORTANT_FOR_AUTOFILL_YES
+            }
+        }
+    }
+
+    /** Client hints + document-start JS so both server and JS mobile detection see desktop. Null = restore mobile. */
+    private fun applyDesktopOverrides(webView: WebView, ws: WebSettings, desktopUa: String?) {
+        if (WebViewFeature.isFeatureSupported(WebViewFeature.USER_AGENT_METADATA)) {
+            runCatching {
+                if (desktopUa != null) {
+                    val major = DesktopMode.chromeVersion(desktopUa).substringBefore('.')
+                    val brands = listOf(
+                        androidx.webkit.UserAgentMetadata.BrandVersion.Builder().setBrand("Chromium").setMajorVersion(major).setFullVersion(DesktopMode.chromeVersion(desktopUa)).build(),
+                        androidx.webkit.UserAgentMetadata.BrandVersion.Builder().setBrand("Google Chrome").setMajorVersion(major).setFullVersion(DesktopMode.chromeVersion(desktopUa)).build()
+                    )
+                    WebSettingsCompat.setUserAgentMetadata(
+                        ws,
+                        androidx.webkit.UserAgentMetadata.Builder()
+                            .setBrandVersionList(brands)
+                            .setFullVersion(DesktopMode.chromeVersion(desktopUa))
+                            .setPlatform("Linux").setPlatformVersion("")
+                            .setArchitecture("x86").setBitness(64).setModel("")
+                            .setMobile(false).build()
+                    )
+                } else {
+                    WebSettingsCompat.setUserAgentMetadata(ws, androidx.webkit.UserAgentMetadata.Builder().build())
+                }
+            }
+        }
+        val existing = desktopScripts[webView]
+        if (desktopUa == null) {
+            existing?.remove(); desktopScripts.remove(webView)
+        } else if (existing == null && WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {
+            runCatching {
+                desktopScripts[webView] = androidx.webkit.WebViewCompat.addDocumentStartJavaScript(
+                    webView, DesktopMode.documentStartScript(desktopUa), setOf("*")
+                )
             }
         }
     }

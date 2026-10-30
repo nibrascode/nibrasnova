@@ -108,6 +108,17 @@ class WebViewPoolManager(
 
     fun getLiveWebView(tabId: String): WebView? = livePool[tabId]
 
+    /** Applies desktop/mobile mode to one live tab only (other tabs keep their own mode). */
+    fun applyDesktopMode(tab: TabItem, settings: BrowserSettings): WebView? {
+        val wv = livePool[tab.id] ?: return null
+        configurator.applySecurityAndUserSettings(
+            webView = wv, settings = settings,
+            isPrivateTab = tab.isPrivate || incognitoTabIds.contains(tab.id),
+            isDesktopMode = tab.isDesktopMode
+        )
+        return wv
+    }
+
     fun updateSettingsAcrossLivePool(
         settings: BrowserSettings,
         activeTabsById: Map<String, TabItem>

@@ -684,12 +684,15 @@ class BrowserViewModel @Inject constructor(
         val active = uiState.value.activeTab ?: return
         viewModelScope.launch {
             tabRepository.updateTabMetadata(active.id, isDesktopMode = enabled)
-            val wv = webViewPoolManager.getLiveWebView(active.id) ?: return@launch
-            webViewPoolManager.updateSettingsAcrossLivePool(
-                settings = uiState.value.settings,
-                activeTabsById = mapOf(active.id to active.copy(isDesktopMode = enabled))
-            )
-            wv.reload()
+            val wv = webViewPoolManager.applyDesktopMode(active.copy(isDesktopMode = enabled), uiState.value.settings) ?: return@launch
+            val current = wv.url
+            if (!current.isNullOrBlank() && current.startsWith("http")) {
+                // Load fresh (not reload) so the server sees the new UA and the new viewport is used.
+                wv.stopLoading()
+                wv.loadUrl(current)
+            } else {
+                wv.reload()
+            }
         }
     }
 
