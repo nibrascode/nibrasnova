@@ -32,8 +32,27 @@ jobs:
       - name: Assemble Debug APK
         run: gradle assembleDebug --stacktrace
 
+      - name: Decode upload keystore
+        env:
+          NOVA_KEYSTORE_BASE64: ${{ secrets.NOVA_KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$NOVA_KEYSTORE_BASE64" ]; then
+            echo "$NOVA_KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/nova-upload.jks"
+            echo "NOVA_KEYSTORE_PATH=$RUNNER_TEMP/nova-upload.jks" >> "$GITHUB_ENV"
+          else
+            echo "No keystore secret: release falls back to debug signing."
+          fi
+
       - name: Assemble Release APK & Play Store AAB
+        env:
+          NOVA_KEYSTORE_PASSWORD: ${{ secrets.NOVA_KEYSTORE_PASSWORD }}
+          NOVA_KEY_ALIAS: ${{ secrets.NOVA_KEY_ALIAS }}
+          NOVA_KEY_PASSWORD: ${{ secrets.NOVA_KEY_PASSWORD }}
         run: gradle assembleRelease bundleRelease --stacktrace
+
+      - name: Remove keystore
+        if: always()
+        run: rm -f "$RUNNER_TEMP/nova-upload.jks"
 
       - name: Upload Debug APK Artifact
         uses: actions/upload-artifact@v4
@@ -48,3 +67,4 @@ jobs:
           path: |
             app/build/outputs/apk/release/*.apk
             app/build/outputs/bundle/release/*.aab
+            app/build/outputs/mapping/release/mapping.txt
