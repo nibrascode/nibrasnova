@@ -681,7 +681,7 @@
     <string name="pr_location">موقع تقريبي</string>
     <string name="pr_choose_city">أو اختر مدينة</string>
     <string name="pr_method">طريقة الحساب</string>
-    <string name="pr_method_info">كيفية حساب زاويتي الفجر والعشاء. الافتراضي: رابطة العالم الإسلامي.</string>
+    <string name="pr_method_info">كيفية حساب زاويتي الفجر والعشاء. الافتراضي: أم القرى (مكة).</string>
     <string name="pr_show">مواقيت الصلاة في الرئيسية</string>
     <string name="pr_show_info">يعرض الصلاة التالية والعد التنازلي. يُستخدم الموقع على الجهاز فقط.</string>
     <string name="pr_close">إغلاق</string>
@@ -707,4 +707,8 @@
     <string name="lp_copy">نسخ الرابط</string>
     <string name="lp_share">مشاركة الرابط</string>
     <string name="lp_copied">تم نسخ الرابط</string>
+    <string name="pr_choose_country">اختر الدولة</string>
+    <string name="pr_search_country">ابحث عن دولة</string>
+    <string name="pr_search_city">ابحث عن مدينة</string>
+    <string name="pr_back_countries">الدول</string>
 </resources>

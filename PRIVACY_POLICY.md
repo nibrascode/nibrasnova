@@ -306,3 +306,13 @@ Nibras Code — nibrascode@gmail.com — https://nibrascode.com
 - **ru**: Резервные копии: экспорт/импорт закладок и истории в JSON записывает и читает только выбранный вами файл; ничего не загружается в сеть.
 
 - **ar**: النسخ الاحتياطي: تصدير/استيراد الإشارات والسجل بصيغة JSON يكتب أو يقرأ الملف الذي تختاره فقط؛ ولا يُرفع أي شيء.
+
+- **az**: Namaz vaxtları standart olaraq Ümmül-Qura (Məkkə) metodu ilə hesablanır; metod ayarlarda dəyişdirilə bilər. Şəhər seçimi: əvvəl ölkə, sonra şəhər (oflayn, GeoNames, CC BY 4.0), vaxtlar həmin şəhərin saat qurşağında göstərilir.
+
+- **en**: Prayer times use the Umm al-Qura (Makkah) method by default; the method can be changed in Settings. City selection: country first, then city (offline, GeoNames, CC BY 4.0); times are shown in that city’s time zone.
+
+- **tr**: Namaz vakitleri varsayılan olarak Ümmü’l-Kurâ (Mekke) yöntemiyle hesaplanır; yöntem ayarlardan değiştirilebilir. Şehir seçimi: önce ülke, sonra şehir (çevrimdışı, GeoNames, CC BY 4.0); vakitler o şehrin saat diliminde gösterilir.
+
+- **ru**: Время намаза по умолчанию рассчитывается методом Умм аль-Кура (Мекка); метод можно изменить в настройках. Выбор города: сначала страна, затем город (офлайн, GeoNames, CC BY 4.0); время показывается в часовом поясе этого города.
+
+- **ar**: تُحسب مواقيت الصلاة افتراضيًا بطريقة أم القرى (مكة)، ويمكن تغيير الطريقة من الإعدادات. اختيار المدينة: الدولة أولًا ثم المدينة (دون اتصال، GeoNames، رخصة CC BY 4.0)، وتُعرض الأوقات بتوقيت تلك المدينة.

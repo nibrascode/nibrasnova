@@ -681,7 +681,7 @@
     <string name="pr_location">Примерное местоположение</string>
     <string name="pr_choose_city">Или выберите город</string>
     <string name="pr_method">Метод расчёта</string>
-    <string name="pr_method_info">Как рассчитываются углы Фаджра и Иши. По умолчанию: Всемирная исламская лига.</string>
+    <string name="pr_method_info">Как рассчитываются углы Фаджра и Иши. По умолчанию: Умм аль-Кура (Мекка).</string>
     <string name="pr_show">Время намаза на главной</string>
     <string name="pr_show_info">Показывает следующий намаз и обратный отсчёт. Местоположение используется только на устройстве.</string>
     <string name="pr_close">Закрыть</string>
@@ -707,4 +707,8 @@
     <string name="lp_copy">Копировать ссылку</string>
     <string name="lp_share">Поделиться ссылкой</string>
     <string name="lp_copied">Ссылка скопирована</string>
+    <string name="pr_choose_country">Выберите страну</string>
+    <string name="pr_search_country">Поиск страны</string>
+    <string name="pr_search_city">Поиск города</string>
+    <string name="pr_back_countries">Страны</string>
 </resources>

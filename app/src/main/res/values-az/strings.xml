@@ -681,7 +681,7 @@
     <string name="pr_location">Təxmini yer</string>
     <string name="pr_choose_city">Və ya şəhər seçin</string>
     <string name="pr_method">Hesablama metodu</string>
-    <string name="pr_method_info">Sübh və işa bucaqlarının necə hesablandığı. Standart: Müsəlman Dünya Liqası.</string>
+    <string name="pr_method_info">Sübh və işa bucaqlarının necə hesablandığı. Standart: Ümmül-Qura (Məkkə).</string>
     <string name="pr_show">Ana səhifədə namaz vaxtları</string>
     <string name="pr_show_info">Növbəti namazı və geri sayımı göstərir. Yer yalnız cihazda istifadə olunur.</string>
     <string name="pr_close">Bağla</string>
@@ -707,4 +707,8 @@
     <string name="lp_copy">Linki kopyala</string>
     <string name="lp_share">Linki paylaş</string>
     <string name="lp_copied">Link kopyalandı</string>
+    <string name="pr_choose_country">Ölkə seçin</string>
+    <string name="pr_search_country">Ölkə axtar</string>
+    <string name="pr_search_city">Şəhər axtar</string>
+    <string name="pr_back_countries">Ölkələr</string>
 </resources>

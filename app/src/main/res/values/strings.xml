@@ -683,7 +683,7 @@
     <string name="pr_location">Approximate location</string>
     <string name="pr_choose_city">Or choose a city</string>
     <string name="pr_method">Calculation method</string>
-    <string name="pr_method_info">How Fajr and Isha angles are calculated. Default: Muslim World League.</string>
+    <string name="pr_method_info">How Fajr and Isha angles are calculated. Default: Umm al-Qura (Makkah).</string>
     <string name="pr_show">Prayer times on home</string>
     <string name="pr_show_info">Shows the next prayer and a countdown. Location is used only on the device.</string>
     <string name="pr_close">Close</string>
@@ -709,4 +709,8 @@
     <string name="lp_copy">Copy link</string>
     <string name="lp_share">Share link</string>
     <string name="lp_copied">Link copied</string>
+    <string name="pr_choose_country">Choose a country</string>
+    <string name="pr_search_country">Search country</string>
+    <string name="pr_search_city">Search city</string>
+    <string name="pr_back_countries">Countries</string>
 </resources>

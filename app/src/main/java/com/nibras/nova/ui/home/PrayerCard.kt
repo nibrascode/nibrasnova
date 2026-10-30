@@ -31,7 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.nibras.nova.R
-import com.nibras.nova.core.prayer.PRAYER_CITIES
+import com.nibras.nova.core.prayer.CityDatabase
+import com.nibras.nova.core.prayer.GeoCity
 import com.nibras.nova.core.prayer.PrayerEngine
 import com.nibras.nova.core.prayer.PrayerName
 import com.nibras.nova.core.prayer.PrayerPrefs
@@ -81,7 +82,7 @@ fun PrayerCard(modifier: Modifier = Modifier) {
     val permLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
         if (granted) {
             val c = coarseLocation(context)
-            if (c != null) { prefs.lat = c.first; prefs.lng = c.second; prefs.useLocation = true; prefs.cityName = null }
+            if (c != null) { prefs.lat = c.first; prefs.lng = c.second; prefs.useLocation = true; prefs.cityName = null; prefs.tz = null; prefs.country = null }
             else android.widget.Toast.makeText(context, context.getString(R.string.pr_no_location), android.widget.Toast.LENGTH_SHORT).show()
         }
         version++
@@ -108,10 +109,11 @@ fun PrayerCard(modifier: Modifier = Modifier) {
                 Text(stringResource(R.string.pr_setup), color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
                 if (hijri.isNotEmpty()) Text(hijri, color = Color(0xFFB4BED8), fontSize = 12.sp)
             } else {
+                val zone = remember(version) { prefs.tz?.let { runCatching { java.time.ZoneId.of(it) }.getOrNull() } ?: java.time.ZoneId.systemDefault() }
                 val next = remember(coords, now / 30_000, version) {
-                    PrayerEngine.next(coords.first, coords.second, now, java.time.ZoneId.systemDefault(), PrayerEngine.method(prefs.method))
+                    PrayerEngine.next(coords.first, coords.second, now, zone, PrayerEngine.method(prefs.method))
                 }
-                val time = DateFormat.getTimeInstance(DateFormat.SHORT, locale).format(Date(next.atEpochMs))
+                val time = DateFormat.getTimeInstance(DateFormat.SHORT, locale).apply { timeZone = java.util.TimeZone.getTimeZone(zone) }.format(Date(next.atEpochMs))
                 Text(stringResource(R.string.pr_next, stringResource(prayerLabel(next.prayer)), time), color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
                 Text(
                     listOfNotNull(hijri.ifEmpty { null }, prefs.cityName ?: stringResource(R.string.pr_location)).joinToString(" · "),
@@ -124,34 +126,84 @@ fun PrayerCard(modifier: Modifier = Modifier) {
     }
 
     if (showSetup) {
-        AlertDialog(
-            onDismissRequest = { showSetup = false },
-            confirmButton = { TextButton(onClick = { showSetup = false }) { Text(stringResource(R.string.pr_close)) } },
-            title = { Text(stringResource(R.string.pr_setup)) },
-            text = {
-                Column {
+        CityPickerDialog(
+            onDismiss = { showSetup = false },
+            onUseLocation = { permLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION); showSetup = false },
+            onPick = { c ->
+                prefs.useLocation = false; prefs.cityName = c.name; prefs.lat = c.lat; prefs.lng = c.lng
+                prefs.tz = c.tz; prefs.country = c.country
+                version++; showSetup = false
+            },
+            selectedCity = prefs.cityName,
+            initialCountry = prefs.country
+        )
+    }
+}
+
+@Composable
+private fun CityPickerDialog(
+    onDismiss: () -> Unit,
+    onUseLocation: () -> Unit,
+    onPick: (GeoCity) -> Unit,
+    selectedCity: String?,
+    initialCountry: String?
+) {
+    val context = LocalContext.current
+    val locale = context.resources.configuration.locales[0]
+    var db by remember { mutableStateOf<CityDatabase?>(null) }
+    LaunchedEffect(Unit) { db = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { CityDatabase.get(context) } }
+    var country by remember { mutableStateOf<String?>(null) }
+    var query by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.pr_close)) } },
+        dismissButton = if (country != null) ({ TextButton(onClick = { country = null; query = "" }) { Text(stringResource(R.string.pr_back_countries)) } }) else null,
+        title = { Text(if (country == null) stringResource(R.string.pr_choose_country) else CityDatabase.countryName(country!!, locale)) },
+        text = {
+            Column {
+                if (country == null) {
                     Text(stringResource(R.string.pr_setup_hint), style = MaterialTheme.typography.bodySmall)
-                    Spacer(Modifier.height(10.dp))
-                    OutlinedButton(onClick = { permLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION); showSetup = false }, modifier = Modifier.fillMaxWidth()) {
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedButton(onClick = onUseLocation, modifier = Modifier.fillMaxWidth()) {
                         Icon(Icons.Default.MyLocation, null, modifier = Modifier.size(18.dp)); Spacer(Modifier.width(6.dp))
                         Text(stringResource(R.string.pr_use_location))
                     }
                     Spacer(Modifier.height(8.dp))
-                    Text(stringResource(R.string.pr_choose_city), style = MaterialTheme.typography.labelLarge)
-                    LazyColumn(Modifier.heightIn(max = 260.dp)) {
-                        items(PRAYER_CITIES, key = { it.name }) { c ->
+                }
+                OutlinedTextField(
+                    value = query, onValueChange = { query = it }, singleLine = true,
+                    placeholder = { Text(stringResource(if (country == null) R.string.pr_search_country else R.string.pr_search_city)) },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(Modifier.height(6.dp))
+                val d = db
+                if (d == null) {
+                    Box(Modifier.fillMaxWidth().height(80.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
+                } else if (country == null) {
+                    val list = remember(d, query, locale) { d.sortedCountries(locale, query) }
+                    LazyColumn(Modifier.heightIn(max = 320.dp)) {
+                        items(list, key = { it.first }) { (cc, name) ->
+                            Text(
+                                name,
+                                modifier = Modifier.fillMaxWidth().clickable { country = cc; query = "" }.padding(vertical = 10.dp),
+                                fontWeight = if (cc == initialCountry || cc in CityDatabase.PINNED) FontWeight.SemiBold else FontWeight.Normal
+                            )
+                        }
+                    }
+                } else {
+                    val list = remember(d, country, query) { d.citiesIn(country!!, query) }
+                    LazyColumn(Modifier.heightIn(max = 320.dp)) {
+                        items(list, key = { it.name + it.lat + it.lng }) { c ->
                             Text(
                                 c.name,
-                                modifier = Modifier.fillMaxWidth().clickable {
-                                    prefs.useLocation = false; prefs.cityName = c.name; prefs.lat = c.lat; prefs.lng = c.lng
-                                    version++; showSetup = false
-                                }.padding(vertical = 10.dp),
-                                fontWeight = if (prefs.cityName == c.name) FontWeight.Bold else FontWeight.Normal
+                                modifier = Modifier.fillMaxWidth().clickable { onPick(c) }.padding(vertical = 10.dp),
+                                fontWeight = if (c.name == selectedCity) FontWeight.Bold else FontWeight.Normal
                             )
                         }
                     }
                 }
             }
-        )
-    }
+        }
+    )
 }

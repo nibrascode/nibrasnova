@@ -681,7 +681,7 @@
     <string name="pr_location">Yaklaşık konum</string>
     <string name="pr_choose_city">Veya şehir seçin</string>
     <string name="pr_method">Hesaplama yöntemi</string>
-    <string name="pr_method_info">İmsak ve yatsı açılarının hesaplanması. Varsayılan: Müslüman Dünya Birliği.</string>
+    <string name="pr_method_info">İmsak ve yatsı açılarının hesaplanması. Varsayılan: Ümmü’l-Kurâ (Mekke).</string>
     <string name="pr_show">Ana sayfada namaz vakitleri</string>
     <string name="pr_show_info">Sıradaki namazı ve geri sayımı gösterir. Konum yalnızca cihazda kullanılır.</string>
     <string name="pr_close">Kapat</string>
@@ -707,4 +707,8 @@
     <string name="lp_copy">Bağlantıyı kopyala</string>
     <string name="lp_share">Bağlantıyı paylaş</string>
     <string name="lp_copied">Bağlantı kopyalandı</string>
+    <string name="pr_choose_country">Ülke seçin</string>
+    <string name="pr_search_country">Ülke ara</string>
+    <string name="pr_search_city">Şehir ara</string>
+    <string name="pr_back_countries">Ülkeler</string>
 </resources>
