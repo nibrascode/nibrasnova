@@ -72,10 +72,13 @@ class HomographAttackDetector @Inject constructor() {
     }
 
     private fun extractHost(url: String): String? {
-        return try {
-            URI(url.trim()).host
-        } catch (_: Exception) {
-            null
-        }
+        val trimmed = url.trim()
+        // java.net.URI returns a null host for non-ASCII (IDN) hosts, so fall back to manual parsing.
+        val uriHost = runCatching { URI(trimmed).host }.getOrNull()
+        if (!uriHost.isNullOrBlank()) return uriHost
+        val afterScheme = trimmed.substringAfter("://", trimmed)
+        val authority = afterScheme.substringBefore('/').substringBefore('?').substringBefore('#')
+        val host = authority.substringAfterLast('@').substringBefore(':')
+        return host.ifBlank { null }
     }
 }
