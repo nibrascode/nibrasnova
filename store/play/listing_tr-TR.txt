@@ -39,7 +39,7 @@ Gizlilik politikası: https://nibrascode.com/privacy/nibras-nova
 İletişim: nibrascode@gmail.com
 
 == Release notes ==
-• Nibras Nova v1.0.0: ilk sürüm
+• Nibras Nova v1.0.2: ilk sürüm
 • +18 site engeli ve Helal arama modu, cihazda
 • Namaz vakitleri (Ümmü’l-Kurâ), bildirimler ve Kıble pusulası
 • Aile profilleri ve ebeveyn PIN’i

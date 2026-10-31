@@ -15,3 +15,7 @@ nsfw_open.tflite (Halal search mode image classifier)
   (https://github.com/devzwy/open_nsfw_android). Runs entirely on the device; images are never uploaded.
 
 TensorFlow Lite (org.tensorflow:tensorflow-lite) — Apache License 2.0.
+
+ML Kit Face Detection (com.google.mlkit:face-detection, bundled model) — Halal search mode
+  Detects faces/people in images entirely on the device so they can be blurred; images are never
+  uploaded. Use is subject to the ML Kit Terms (https://developers.google.com/ml-kit/terms).

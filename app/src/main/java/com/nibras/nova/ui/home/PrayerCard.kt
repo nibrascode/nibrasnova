@@ -117,8 +117,9 @@ fun PrayerCard(modifier: Modifier = Modifier, onQibla: () -> Unit = {}) {
             } else {
                 val zone = remember(version) { prefs.tz?.let { runCatching { java.time.ZoneId.of(it) }.getOrNull() } ?: java.time.ZoneId.systemDefault() }
                 val next = remember(coords, now / 30_000, version) {
-                    PrayerEngine.next(coords.first, coords.second, now, zone, PrayerEngine.method(prefs.method))
+                    runCatching { PrayerEngine.next(coords.first, coords.second, now, zone, PrayerEngine.method(prefs.method)) }.getOrNull()
                 }
+                if (next == null) { Text(stringResource(R.string.pr_setup), color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 15.sp); return@Column }
                 val time = DateFormat.getTimeInstance(DateFormat.SHORT, locale).apply { timeZone = java.util.TimeZone.getTimeZone(zone) }.format(Date(next.atEpochMs))
                 Text(stringResource(R.string.pr_next, stringResource(prayerLabel(next.prayer)), time), color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
                 Text(
@@ -161,7 +162,11 @@ private fun CityPickerDialog(
     val context = LocalContext.current
     val locale = context.resources.configuration.locales[0]
     var db by remember { mutableStateOf<CityDatabase?>(null) }
-    LaunchedEffect(Unit) { db = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { CityDatabase.get(context) } }
+    var dbFailed by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        db = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { runCatching { CityDatabase.get(context) }.getOrNull() }
+        dbFailed = db == null
+    }
     var country by remember { mutableStateOf<String?>(null) }
     var query by remember { mutableStateOf("") }
 
@@ -188,7 +193,9 @@ private fun CityPickerDialog(
                 )
                 Spacer(Modifier.height(6.dp))
                 val d = db
-                if (d == null) {
+                if (d == null && dbFailed) {
+                    Text(stringResource(R.string.pr_cities_unavailable), style = MaterialTheme.typography.bodySmall)
+                } else if (d == null) {
                     Box(Modifier.fillMaxWidth().height(80.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
                 } else if (country == null) {
                     val list = remember(d, query, locale) { d.sortedCountries(locale, query) }

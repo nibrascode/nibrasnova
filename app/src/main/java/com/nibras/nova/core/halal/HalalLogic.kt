@@ -61,5 +61,12 @@ object HalalLogic {
      * threshold plus a skin-exposure check is used to also catch revealing photos.
      */
     fun isUnsafe(nsfwScore: Float, skin: Float): Boolean =
-        nsfwScore >= 0.15f || (skin >= 0.40f && nsfwScore >= 0.04f)
+        nsfwScore >= 0.08f || (skin >= 0.30f && nsfwScore >= 0.02f) || skin >= 0.45f
+
+    /**
+     * Final halal verdict. There is no reliable on-device gender classifier, so any image with a
+     * detected face/person is blurred. Unknown (no model / detector error) is blurred too.
+     */
+    fun shouldBlur(nsfwScore: Float?, skin: Float, faces: Int?): Boolean =
+        nsfwScore == null || faces == null || faces > 0 || isUnsafe(nsfwScore, skin)
 }

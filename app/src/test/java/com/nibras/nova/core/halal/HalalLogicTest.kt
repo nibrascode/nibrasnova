@@ -30,7 +30,21 @@ class HalalLogicTest {
         assertEquals(1f, HalalLogic.skinRatio(skin), 0f); assertEquals(0f, HalalLogic.skinRatio(sky), 0f)
         assertTrue(HalalLogic.isUnsafe(0.5f, 0f))
         assertTrue(HalalLogic.isUnsafe(0.06f, 0.5f))
-        assertFalse(HalalLogic.isUnsafe(0.01f, 0.5f))
+        assertFalse(HalalLogic.isUnsafe(0.01f, 0.2f))
         assertFalse(HalalLogic.isUnsafe(0.05f, 0.1f))
+    }
+
+    @Test fun blursPeopleAndUnknowns() {
+        assertTrue(HalalLogic.shouldBlur(0.0f, 0f, 1))      // any face -> blur (no gender classifier)
+        assertTrue(HalalLogic.shouldBlur(null, 0f, 0))      // no model -> blur by default
+        assertTrue(HalalLogic.shouldBlur(0.0f, 0f, null))   // detector failed -> blur
+        assertTrue(HalalLogic.shouldBlur(0.09f, 0f, 0))     // lowered NSFW threshold
+        assertFalse(HalalLogic.shouldBlur(0.01f, 0.05f, 0)) // landscape / text
+    }
+
+    @Test fun pageScriptBlursEverythingVisualByDefault() {
+        val js = HalalScript.JS
+        listOf("img:not(.nova-ok)", "video:not(.nova-ok)", "data-nova-bg", "srcset", "data-src", "poster", "requestReveal", "verdict")
+            .forEach { assertTrue(it, js.contains(it)) }
     }
 }

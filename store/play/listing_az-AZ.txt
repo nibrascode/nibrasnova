@@ -39,7 +39,7 @@ Məxfilik siyasəti: https://nibrascode.com/privacy/nibras-nova
 Əlaqə: nibrascode@gmail.com
 
 == Release notes ==
-• Nibras Nova v1.0.0: ilk buraxılış
+• Nibras Nova v1.0.2: ilk buraxılış
 • 18+ saytların bloku və Halal axtarış rejimi, cihazda
 • Namaz vaxtları (Ümmül-Qura), bildirişlər və Qiblə kompası
 • Ailə profilləri və valideyn PIN-i

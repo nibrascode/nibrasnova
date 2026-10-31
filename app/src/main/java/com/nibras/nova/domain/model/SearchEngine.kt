@@ -78,6 +78,8 @@ data class SearchEngineConfig(
         } else {
             selectedEngine.queryTemplateUrl
         }
-        return template.replace("%s", encodedQuery)
+        val url = template.replace("%s", encodedQuery)
+        // SafeSearch is always enforced; add it up front so Google gets one clean request, no redirect.
+        return if (selectedEngine == SearchEngineType.GOOGLE) "$url&safe=active" else url
     }
 }

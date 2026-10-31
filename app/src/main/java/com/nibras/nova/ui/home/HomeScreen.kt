@@ -192,15 +192,15 @@ fun HomeScreen(
             // 3. Quick-link tiles: user shortcuts (defaults when empty), pinned Nibras, add
             item {
                 val defaults = listOf(
-                    QuickShortcut(id = -1L, title = "Google", url = "https://www.google.com"),
-                    QuickShortcut(id = -2L, title = "YouTube", url = "https://www.youtube.com"),
-                    QuickShortcut(id = -3L, title = "GitHub", url = "https://github.com")
+                    QuickShortcut(id = -1L, title = "YouTube", url = "https://www.youtube.com"),
+                    QuickShortcut(id = -2L, title = "GitHub", url = "https://github.com"),
+                    QuickShortcut(id = -3L, title = "Vercel", url = "https://vercel.com")
                 )
                 val user = if (state.settings.showQuickShortcutsOnHome) {
                     state.shortcuts.filterNot { it.url.contains("nibrascode.com", ignoreCase = true) }
                 } else emptyList()
                 val tiles = (if (user.isEmpty() && state.settings.showQuickShortcutsOnHome) defaults else user) +
-                    QuickShortcut(id = PINNED_NIBRASCODE_ID, title = "Nibras", url = "https://nibrascode.com")
+                    QuickShortcut(id = PINNED_NIBRASCODE_ID, title = "Nibrascode", url = "https://nibrascode.com")
                 val cells: List<QuickShortcut?> = tiles + listOf(null)
                 Column(Modifier.padding(horizontal = 14.dp)) {
                     cells.chunked(5).forEach { row ->

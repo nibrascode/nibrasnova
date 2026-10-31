@@ -39,7 +39,7 @@ Privacy policy: https://nibrascode.com/privacy/nibras-nova
 Contact: nibrascode@gmail.com
 
 == Release notes ==
-• Nibras Nova v1.0.0: first release
+• Nibras Nova v1.0.2: first release
 • Adult sites blocked and Halal search mode image blur, on the device
 • Prayer times (Umm al-Qura), notifications and Qibla compass
 • Family profiles and parental PIN

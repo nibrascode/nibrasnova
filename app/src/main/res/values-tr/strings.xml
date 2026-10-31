@@ -806,4 +806,7 @@
     <string name="pg_t_cards">Flexbox kartları</string>
     <string name="pg_t_canvas">Canvas animasyonu</string>
     <string name="pg_t_single">Tek dosya (HTML + CSS + JS)</string>
+    <string name="set_expand">Genişlet</string>
+    <string name="set_collapse">Daralt</string>
+    <string name="pr_cities_unavailable">Şehir listesi yüklenemedi. Bunun yerine konumunuzu kullanın.</string>
 </resources>

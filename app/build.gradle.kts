@@ -24,8 +24,8 @@ android {
         applicationId = "com.nibras.nova"
         minSdk = 24
         targetSdk = 36
-        versionCode = 202
-        versionName = "1.0.0"
+        versionCode = 203
+        versionName = "1.0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // AGP 8.7 has no androidResources.localeFilters; same effect:
@@ -156,9 +156,11 @@ dependencies {
     implementation(libs.androidx.camera.view)
 
     implementation(libs.mlkit.translate)
+    // Halal mode: bundled on-device face detector (model inside the APK, works offline)
+    implementation(libs.mlkit.face)
 
     testImplementation(libs.junit)
-    testImplementation("org.robolectric:robolectric:4.14.1")
+    testImplementation("org.robolectric:robolectric:4.16")
     testImplementation(platform(libs.androidx.compose.bom))
     testImplementation(libs.androidx.compose.ui.test.junit4)
     testImplementation(libs.mockk)
@@ -172,4 +174,11 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+}
+
+
+// Robolectric loads one Android sandbox per SDK; give the test JVM room and recycle it.
+tasks.withType<Test>().configureEach {
+    maxHeapSize = "3g"
+    forkEvery = 40
 }

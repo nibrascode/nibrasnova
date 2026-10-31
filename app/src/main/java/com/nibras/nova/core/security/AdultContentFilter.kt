@@ -42,7 +42,7 @@ object AdultContentFilter {
     private fun ensureLoaded() {
         if (loaded) return
         val ctx = appContext ?: return
-        runCatching { ctx.assets.open("adult_domains.txt.gz").use { loadFrom(it) } }
+        runCatching { com.nibras.nova.core.common.Assets.openText(ctx.assets, "adult_domains.txt").use { loadFrom(it, gzipped = false) } }
     }
 
     private val HOST_KEYWORDS = listOf(

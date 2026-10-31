@@ -51,7 +51,7 @@ class HomeSnapshotTest {
                             }
                             if (prayer) Box(Modifier.padding(horizontal = 20.dp)) { PrayerCard() }
                             Row(Modifier.padding(horizontal = 14.dp)) {
-                                listOf("Google" to "https://google.com", "YouTube" to "https://youtube.com", "GitHub" to "https://github.com", "Nibras" to "https://nibrascode.com").forEach { (t, u) ->
+                                listOf("YouTube" to "https://www.youtube.com", "GitHub" to "https://github.com", "Vercel" to "https://vercel.com", "Nibrascode" to "https://nibrascode.com").forEach { (t, u) ->
                                     QuickTile(t, {}, modifier = Modifier.weight(1f)) { TileIcon(u, t) }
                                 }
                                 QuickTile(androidx.compose.ui.res.stringResource(com.nibras.nova.R.string.home_add), {}, modifier = Modifier.weight(1f)) {

@@ -25,6 +25,12 @@ interface QuickShortcutDao {
     @Update
     suspend fun updateShortcut(shortcut: QuickShortcutEntity)
 
+    @Query("SELECT * FROM quick_shortcuts ORDER BY sortOrder ASC, id ASC")
+    suspend fun getAll(): List<QuickShortcutEntity>
+
+    @Query("DELETE FROM quick_shortcuts")
+    suspend fun deleteAll()
+
     @Query("DELETE FROM quick_shortcuts WHERE id = :shortcutId")
     suspend fun deleteShortcut(shortcutId: Long)
 }

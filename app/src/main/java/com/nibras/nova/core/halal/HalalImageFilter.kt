@@ -53,11 +53,22 @@ object HalalImageFilter {
 
     fun isBlurred(url: String): Boolean = blurredUrls.get(url) == true
 
+    /** "s" = classified safe, "u" = blurred, "" = not classified (stays CSS-blurred in the page). */
+    fun verdict(url: String): String = when {
+        !enabled -> "s"
+        blurredUrls.get(url) == true -> "u"
+        unsafeCache.get(url) == false -> "s"
+        else -> ""
+    }
+
     /** Called from shouldInterceptRequest for sub-resources. Null = let the WebView load it normally. */
     fun intercept(request: WebResourceRequest, pageUrl: String?): WebResourceResponse? {
         if (!enabled || request.isForMainFrame || !request.method.equals("GET", true)) return null
         val raw = request.url?.toString() ?: return null
         if (!raw.startsWith("http")) return null
+        // Never re-fetch Google traffic ourselves: requests without the WebView's cookies trigger
+        // Google's "unusual traffic" captcha. Google results are covered by enforced SafeSearch.
+        if (com.nibras.nova.engine.ChromeUserAgent.isGoogleHost(request.url?.host)) return null
         val headers = request.requestHeaders.orEmpty()
         val (url, reveal) = HalalLogic.stripReveal(raw)
         if (!HalalLogic.looksLikeImage(url, headers.entries.firstOrNull { it.key.equals("Accept", true) }?.value)) return null
@@ -69,8 +80,11 @@ object HalalImageFilter {
         val unsafe = cached ?: run {
             val bmp = decodeSampled(bytes) ?: return respond(code, mime, bytes, extra)
             val verdict = if (bmp.width < HalalLogic.MIN_SIDE_PX || bmp.height < HalalLogic.MIN_SIDE_PX) false
-            else model()?.let { m -> runCatching { m.score(bmp) }.getOrNull()?.let { (s, skin) -> HalalLogic.isUnsafe(s, skin) } ?: true }
-                ?: HalalLogic.isImageSearch(pageUrl)
+            else {
+                val scored = model()?.let { m -> runCatching { m.score(bmp) }.getOrNull() }
+                val faces = if (scored != null && HalalLogic.isUnsafe(scored.first, scored.second)) 1 else FaceCheck.count(bmp)
+                HalalLogic.shouldBlur(scored?.first, scored?.second ?: 0f, faces)
+            }
             if (!verdict) { bmp.recycle(); unsafeCache.put(url, false); return respond(code, mime, bytes, extra) }
             unsafeCache.put(url, true)
             return blurredResponse(url, bmp, extra)
@@ -156,19 +170,22 @@ object HalalImageFilter {
         private val ref = WeakReference(webView)
         @Volatile private var last = 0L
         @JavascriptInterface fun isBlurred(url: String?): Boolean = url != null && HalalImageFilter.isBlurred(url)
+        @JavascriptInterface fun enabled(): Boolean = HalalImageFilter.enabled
+        @JavascriptInterface fun verdict(url: String?): String = if (url == null) "" else HalalImageFilter.verdict(url)
         @JavascriptInterface fun requestReveal(url: String?) {
             val now = System.currentTimeMillis()
-            if (url == null || !isBlurred(url) || now - last < 1200) return
+            if (url == null || now - last < 1200) return
             last = now
             _reveals.tryEmit(RevealRequest(ref, url))
         }
     }
 
-    const val TAP_JS = "(function(){if(window.__novaHalal)return;window.__novaHalal=1;" +
-        "document.addEventListener('click',function(e){var t=e.target;if(!t||t.tagName!=='IMG'||!window.NovaHalal)return;" +
-        "var s=t.currentSrc||t.src;if(!s||!NovaHalal.isBlurred(s))return;e.preventDefault();e.stopPropagation();NovaHalal.requestReveal(s);},true);" +
-        "window.__novaReveal=function(s){var imgs=document.getElementsByTagName('img');for(var i=0;i<imgs.length;i++){var m=imgs[i];" +
-        "if((m.currentSrc||m.src)===s){m.removeAttribute('srcset');m.src=s+(s.indexOf('?')<0?'?':'&')+'nova_reveal=1';}}};})();"
-
+    /**
+     * Document-start script: everything visual (img, picture, video + poster, CSS background images,
+     * lazy data-src/srcset swaps) is blurred by default and un-blurred only when the native filter
+     * reports the exact image as classified safe. Tap a blurred item to reveal it (PIN-protected
+     * via requestReveal when parental controls are on).
+     */
+    val TAP_JS: String = HalalScript.JS
     fun revealJs(url: String): String = "window.__novaReveal&&window.__novaReveal(" + org.json.JSONObject.quote(url) + ")"
 }

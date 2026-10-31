@@ -806,4 +806,7 @@
     <string name="pg_t_cards">Карточки Flexbox</string>
     <string name="pg_t_canvas">Анимация Canvas</string>
     <string name="pg_t_single">Один файл (HTML + CSS + JS)</string>
+    <string name="set_expand">Развернуть</string>
+    <string name="set_collapse">Свернуть</string>
+    <string name="pr_cities_unavailable">Не удалось загрузить список городов. Используйте местоположение.</string>
 </resources>

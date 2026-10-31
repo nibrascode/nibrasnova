@@ -1,5 +1,8 @@
 package com.nibras.nova.ui.settings
 
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.ui.draw.rotate
+import androidx.compose.animation.animateContentSize
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -58,14 +61,14 @@ import com.nibras.nova.ui.tools.LanSyncDialog
 private sealed class SettingRow(@StringRes val title: Int, @StringRes val info: Int) {
     class Nav(title: Int, info: Int, val value: String? = null, val onClick: () -> Unit) : SettingRow(title, info)
     class Toggle(title: Int, info: Int, val checked: Boolean, val onChange: (Boolean) -> Unit) : SettingRow(title, info)
-    class Choice(title: Int, info: Int, val options: List<Pair<String, Boolean>>, val onSelect: (Int) -> Unit) : SettingRow(title, info)
+    class Choice(title: Int, info: Int, val options: List<Pair<String, Boolean>>, val collapsible: Boolean = false, val onSelect: (Int) -> Unit) : SettingRow(title, info)
     class TextInput(title: Int, info: Int, val value: String, val onChange: (String) -> Unit) : SettingRow(title, info)
 }
 
 private fun SettingRow.guarded(g: (() -> Unit) -> Unit): SettingRow = when (this) {
     is SettingRow.Nav -> SettingRow.Nav(title, info, value) { g { onClick() } }
     is SettingRow.Toggle -> SettingRow.Toggle(title, info, checked) { v -> g { onChange(v) } }
-    is SettingRow.Choice -> SettingRow.Choice(title, info, options) { i -> g { onSelect(i) } }
+    is SettingRow.Choice -> SettingRow.Choice(title, info, options, collapsible) { i -> g { onSelect(i) } }
     is SettingRow.TextInput -> SettingRow.TextInput(title, info, value) { v -> g { onChange(v) } }
 }
 
@@ -157,7 +160,8 @@ fun GeneralSettingsScreen(
                 SettingRow.Nav(R.string.pn_title, R.string.pn_row_info) { showPrayerNotif = true },
                 SettingRow.Choice(
                     R.string.pr_method, R.string.pr_method_info,
-                    prMethods.map { com.nibras.nova.ui.home.methodLabel(context, it.name) to (it.name == prMethod) }
+                    prMethods.map { com.nibras.nova.ui.home.methodLabel(context, it.name) to (it.name == prMethod) },
+                    collapsible = true
                 ) { idx -> prMethod = prMethods[idx].name; prayerPrefs.method = prMethods[idx].name; com.nibras.nova.core.prayer.PrayerAlarms.rescheduleAsync(context) }
             )
         ),
@@ -349,18 +353,46 @@ private fun SettingRowView(row: SettingRow, onInfo: () -> Unit) {
             )
             Switch(checked = row.checked, onCheckedChange = row.onChange)
         }
-        is SettingRow.Choice -> Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 6.dp, vertical = 6.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                InfoButton(onInfo)
-                Text(title, modifier = Modifier.padding(start = 6.dp), style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium))
-            }
-            row.options.forEachIndexed { i, (label, selected) ->
+        is SettingRow.Choice -> {
+            var expanded by remember(row.title) { mutableStateOf(!row.collapsible) }
+            val arrow by androidx.compose.animation.core.animateFloatAsState(if (expanded) 180f else 0f, label = "choiceArrow")
+            Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 6.dp, vertical = 6.dp).animateContentSize()) {
                 Row(
-                    modifier = Modifier.fillMaxWidth().clickable { row.onSelect(i) }.padding(start = 40.dp),
+                    modifier = if (row.collapsible) Modifier.fillMaxWidth().clickable(
+                        onClickLabel = stringResource(if (expanded) R.string.set_collapse else R.string.set_expand)
+                    ) { expanded = !expanded } else Modifier,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    RadioButton(selected = selected, onClick = { row.onSelect(i) })
-                    Text(label, style = MaterialTheme.typography.bodyMedium)
+                    InfoButton(onInfo)
+                    Column(Modifier.weight(1f).padding(start = 6.dp)) {
+                        Text(title, style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium))
+                        if (row.collapsible) row.options.firstOrNull { it.second }?.let { (label, _) ->
+                            Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+                        }
+                    }
+                    if (row.collapsible) Icon(
+                        Icons.Filled.KeyboardArrowDown,
+                        contentDescription = stringResource(if (expanded) R.string.set_collapse else R.string.set_expand),
+                        modifier = Modifier.rotate(arrow),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                androidx.compose.animation.AnimatedVisibility(
+                    visible = expanded,
+                    enter = androidx.compose.animation.expandVertically() + androidx.compose.animation.fadeIn(),
+                    exit = androidx.compose.animation.shrinkVertically() + androidx.compose.animation.fadeOut()
+                ) {
+                    Column {
+                        row.options.forEachIndexed { i, (label, selected) ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth().clickable { row.onSelect(i) }.padding(start = 40.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                RadioButton(selected = selected, onClick = { row.onSelect(i) })
+                                Text(label, style = MaterialTheme.typography.bodyMedium)
+                            }
+                        }
+                    }
                 }
             }
         }

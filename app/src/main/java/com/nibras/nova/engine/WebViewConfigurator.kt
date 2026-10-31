@@ -34,7 +34,7 @@ class WebViewConfigurator @Inject constructor() {
         if (defaultMobileUserAgent == null) {
             // Use the platform default, never the (possibly already desktop) UA of a reused WebView.
             val base = runCatching { WebSettings.getDefaultUserAgent(webView.context) }.getOrNull() ?: ws.userAgentString
-            defaultMobileUserAgent = base + NovaConstants.MOBILE_USER_AGENT_SUFFIX
+            defaultMobileUserAgent = ChromeUserAgent.fromWebViewDefault(base)
         }
 
         // Strict Security Hardening
@@ -63,8 +63,10 @@ class WebViewConfigurator @Inject constructor() {
         val customProfile = settings.userAgentProfile
         val desktopRequested = isDesktopMode && customProfile == UserAgentProfile.ANDROID_DEFAULT
         val useDesktopViewport = isDesktopMode || customProfile.forceWideDesktopViewport
-        ws.useWideViewPort = useDesktopViewport
-        ws.loadWithOverviewMode = useDesktopViewport
+        val vp = ChromeUserAgent.viewportFor(useDesktopViewport)
+        ws.useWideViewPort = vp.first
+        ws.loadWithOverviewMode = vp.second
+        if (!useDesktopViewport) ws.textZoom = siteTextZoomPercent.coerceIn(50, 250)
 
         val targetUa = when {
             desktopRequested -> DesktopMode.desktopUserAgent(defaultMobileUserAgent)
@@ -72,6 +74,10 @@ class WebViewConfigurator @Inject constructor() {
             else -> defaultMobileUserAgent ?: ws.userAgentString
         }
         if (ws.userAgentString != targetUa) ws.userAgentString = targetUa
+        // Don't leak the package name in X-Requested-With (another WebView/bot signal for Google).
+        if (WebViewFeature.isFeatureSupported(WebViewFeature.REQUESTED_WITH_HEADER_ALLOW_LIST)) {
+            runCatching { androidx.webkit.WebSettingsCompat.setRequestedWithHeaderOriginAllowList(ws, emptySet()) }
+        }
         applyDesktopOverrides(webView, ws, if (useDesktopViewport && !DesktopMode.isMobileUserAgent(targetUa)) targetUa else null)
 
         // YouTube Restricted Mode for every profile (normal and private): set the PREF cookie from inside the page.
@@ -135,10 +141,13 @@ class WebViewConfigurator @Inject constructor() {
     }
 
     /** Client hints + document-start JS so both server and JS mobile detection see desktop. Null = restore mobile. */
+    private val defaultUaMetadata = java.util.WeakHashMap<WebView, androidx.webkit.UserAgentMetadata>()
+
     private fun applyDesktopOverrides(webView: WebView, ws: WebSettings, desktopUa: String?) {
         if (WebViewFeature.isFeatureSupported(WebViewFeature.USER_AGENT_METADATA)) {
             runCatching {
                 if (desktopUa != null) {
+                    if (defaultUaMetadata[webView] == null) defaultUaMetadata[webView] = WebSettingsCompat.getUserAgentMetadata(ws)
                     val major = DesktopMode.chromeVersion(desktopUa).substringBefore('.')
                     val brands = listOf(
                         androidx.webkit.UserAgentMetadata.BrandVersion.Builder().setBrand("Chromium").setMajorVersion(major).setFullVersion(DesktopMode.chromeVersion(desktopUa)).build(),
@@ -154,7 +163,9 @@ class WebViewConfigurator @Inject constructor() {
                             .setMobile(false).build()
                     )
                 } else {
-                    WebSettingsCompat.setUserAgentMetadata(ws, androidx.webkit.UserAgentMetadata.Builder().build())
+                    // Restore the WebView's own (mobile) client hints; an empty Builder() would send
+                    // Sec-CH-UA-Mobile ?0 / unknown platform and sites (incl. Google) serve desktop pages.
+                    defaultUaMetadata[webView]?.let { WebSettingsCompat.setUserAgentMetadata(ws, it) }
                 }
             }
         }

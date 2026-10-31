@@ -71,7 +71,7 @@ class CityDatabase(val cities: List<GeoCity>) {
 
         @Volatile private var cached: CityDatabase? = null
         fun get(context: Context): CityDatabase = cached ?: synchronized(this) {
-            cached ?: context.assets.open("cities15000.tsv.gz").use { parse(it) }.also { cached = it }
+            cached ?: com.nibras.nova.core.common.Assets.openText(context.assets, "cities15000.tsv").use { parse(it, gzipped = false) }.also { cached = it }
         }
     }
 }

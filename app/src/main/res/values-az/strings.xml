@@ -806,4 +806,7 @@
     <string name="pg_t_cards">Flexbox kartları</string>
     <string name="pg_t_canvas">Canvas animasiyası</string>
     <string name="pg_t_single">Tək fayl (HTML + CSS + JS)</string>
+    <string name="set_expand">Aç</string>
+    <string name="set_collapse">Bağla</string>
+    <string name="pr_cities_unavailable">Şəhər siyahısı yüklənmədi. Əvəzinə məkanınızdan istifadə edin.</string>
 </resources>

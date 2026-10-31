@@ -3,4 +3,6 @@
 <resources>
     <string name="set_privacy_policy">隐私政策</string>
     <string name="set_privacy_policy_info">应用保存哪些数据（仅保存在您的设备上）以及会连接哪些服务。</string>
+    <string name="set_expand">展开</string>
+    <string name="set_collapse">收起</string>
 </resources>

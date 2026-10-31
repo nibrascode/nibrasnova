@@ -8,5 +8,6 @@ object NovaConstants {
     const val DEFAULT_HOMEPAGE_SENTINEL = "nova://home"
     const val DESKTOP_USER_AGENT =
         "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 NibrasNova/1.0"
-    const val MOBILE_USER_AGENT_SUFFIX = " NibrasNova/1.0"
+    /** Not appended to the UA any more (Google flags app tokens); kept for reference. */
+    const val MOBILE_USER_AGENT_SUFFIX = ""
 }

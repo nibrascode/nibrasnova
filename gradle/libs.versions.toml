@@ -20,6 +20,7 @@ coil = "2.7.0"
 zxing = "3.5.3"
 camerax = "1.4.0"
 mlkitTranslate = "17.0.3"
+mlkitFace = "16.1.7"
 splashscreen = "1.0.1"
 junit = "4.13.2"
 mockk = "1.13.13"
@@ -75,6 +76,7 @@ androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycl
 androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax" }
 
 mlkit-translate = { group = "com.google.mlkit", name = "translate", version.ref = "mlkitTranslate" }
+mlkit-face = { group = "com.google.mlkit", name = "face-detection", version.ref = "mlkitFace" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }

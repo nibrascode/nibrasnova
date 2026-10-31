@@ -808,4 +808,7 @@
     <string name="pg_t_cards">Flexbox cards</string>
     <string name="pg_t_canvas">Canvas animation</string>
     <string name="pg_t_single">Single file (HTML + CSS + JS)</string>
+    <string name="set_expand">Expand</string>
+    <string name="set_collapse">Collapse</string>
+    <string name="pr_cities_unavailable">City list could not be loaded. Use your location instead.</string>
 </resources>

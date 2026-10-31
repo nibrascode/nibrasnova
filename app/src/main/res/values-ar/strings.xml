@@ -806,4 +806,7 @@
     <string name="pg_t_cards">بطاقات Flexbox</string>
     <string name="pg_t_canvas">رسوم Canvas متحركة</string>
     <string name="pg_t_single">ملف واحد (HTML + CSS + JS)</string>
+    <string name="set_expand">توسيع</string>
+    <string name="set_collapse">طي</string>
+    <string name="pr_cities_unavailable">تعذّر تحميل قائمة المدن. استخدم موقعك بدلًا من ذلك.</string>
 </resources>
