@@ -4,13 +4,13 @@ Language: en-US
 Nibras Nova: Browser
 
 == Short description (72/80) ==
-Family-safe browser: adult sites blocked, halal image blur, prayer times
+Family-safe browser: unethical sites blocked, image filter, prayer times
 
 == Full description (2023/4000) ==
 Nibras Nova is a fast, privacy-minded Android browser built for Muslim families. Safety features run on your device, and your browsing is not sent to us.
 
 FAMILY-SAFE BY DEFAULT
-• Adult (18+) sites are always blocked, in normal and private tabs, using an on-device list.
+• Access to unethical sites is always blocked, in normal and private tabs, using an on-device list.
 • SafeSearch is enforced on Google, Bing and DuckDuckGo, and YouTube Restricted Mode is applied.
 • Halal search mode: images on search results and web pages are checked by an on-device model, and images not judged safe are shown blurred. Images are never uploaded. Tap a blurred image to show it (PIN-protected when parental controls are on). Automatic detection can make mistakes.
 

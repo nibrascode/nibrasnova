@@ -4,13 +4,13 @@ Language: az-AZ
 Nibras Nova: Brauzer
 
 == Short description (74/80) ==
-Ailə üçün təhlükəsiz brauzer: 18+ blok, halal şəkil filtri, namaz vaxtları
+Ailə üçün təhlükəsiz brauzer: qeyri-etik saytlar bloklanır, namaz vaxtları
 
 == Full description (2054/4000) ==
 Nibras Nova müsəlman ailələri üçün hazırlanmış sürətli və məxfiliyə hörmət edən Android brauzeridir. Təhlükəsizlik funksiyaları cihazınızda işləyir, baxış məlumatlarınız bizə göndərilmir.
 
 ƏVVƏLDƏN AİLƏ ÜÇÜN TƏHLÜKƏSİZ
-• Yetkin (18+) saytlar adi və gizli vərəqlərdə həmişə bloklanır (cihazdakı siyahı ilə).
+• Qeyri-etik saytlara giriş adi və gizli vərəqlərdə həmişə bloklanır (cihazdakı siyahı ilə).
 • Google, Bing və DuckDuckGo-da Təhlükəsiz Axtarış məcburidir, YouTube-da Məhdud rejim tətbiq olunur.
 • Halal axtarış rejimi: axtarış nəticələrində və səhifələrdə şəkillər cihazdakı model ilə yoxlanılır, təhlükəsiz sayılmayanlar bulanıq göstərilir. Şəkillər heç yerə yüklənmir. Göstərmək üçün bulanıq şəklə toxunun (valideyn nəzarəti aktivdirsə PIN ilə). Avtomatik yoxlama səhv edə bilər.
 
@@ -40,7 +40,7 @@ Məxfilik siyasəti: https://nibrascode.com/privacy/nibras-nova
 
 == Release notes ==
 • Nibras Nova v1.0.2: ilk buraxılış
-• 18+ saytların bloku və Halal axtarış rejimi, cihazda
+• Qeyri-etik saytlara giriş bloku və Halal axtarış rejimi, cihazda
 • Namaz vaxtları (Ümmül-Qura), bildirişlər və Qiblə kompası
 • Ailə profilləri və valideyn PIN-i
 • Canlı önizləməli HTML test yeri
