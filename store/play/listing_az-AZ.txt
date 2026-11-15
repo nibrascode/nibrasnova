@@ -1,7 +1,7 @@
 Language: az-AZ
 
-== App name (26/30) ==
-Nibras Nova: Halal Brauzer
+== App name (20/30) ==
+Nibras Nova: Brauzer
 
 == Short description (74/80) ==
 Ailə üçün təhlükəsiz brauzer: 18+ blok, halal şəkil filtri, namaz vaxtları

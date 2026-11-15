@@ -1,7 +1,7 @@
 Language: tr-TR
 
-== App name (27/30) ==
-Nibras Nova: Helal Tarayıcı
+== App name (21/30) ==
+Nibras Nova: Tarayıcı
 
 == Short description (78/80) ==
 Aile dostu tarayıcı: +18 engeli, helal görsel bulanıklaştırma, namaz vakitleri

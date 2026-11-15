@@ -1,7 +1,7 @@
 Language: ru-RU
 
-== App name (27/30) ==
-Nibras Nova: Халяль браузер
+== App name (20/30) ==
+Nibras Nova: Браузер
 
 == Short description (66/80) ==
 Семейный браузер: блок 18+, размытие нескромных фото, время намаза

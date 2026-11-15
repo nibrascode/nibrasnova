@@ -1,7 +1,7 @@
 Language: en-US
 
-== App name (26/30) ==
-Nibras Nova: Halal Browser
+== App name (20/30) ==
+Nibras Nova: Browser
 
 == Short description (72/80) ==
 Family-safe browser: adult sites blocked, halal image blur, prayer times
