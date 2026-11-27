@@ -40,4 +40,9 @@ Because the sandbox VM environment does not have outbound internet access or a p
 
 # 3. Build R8-Minified Signed Release App Bundle (.aab) and APK (.apk)
 ./gradlew bundleRelease assembleRelease
+# Play: upload app/build/outputs/bundle/release/app-release.aab
+# Huawei AppGallery: prefer the same AAB (enable App Signing / App Bundle
+# distribution in AGC). If uploading an APK, use only the arm64 artifact
+# app/build/outputs/apk/release/app-arm64-v8a-release.apk — do not upload a
+# universal APK (it embeds x86/x86_64/armeabi-v7a and looks ~120–200 MB).
 ```

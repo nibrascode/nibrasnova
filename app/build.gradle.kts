@@ -24,8 +24,8 @@ android {
         applicationId = "com.nibras.nova"
         minSdk = 24
         targetSdk = 36
-        versionCode = 203
-        versionName = "1.0.2"
+        versionCode = 213
+        versionName = "1.0.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // AGP 8.7 has no androidResources.localeFilters; same effect:
@@ -99,6 +99,20 @@ android {
     testOptions {
         unitTests.isReturnDefaultValues = true
         unitTests.isIncludeAndroidResources = true
+    }
+
+    // Play already delivers a per-ABI slice from the AAB (~40 MB on arm64).
+    // assembleRelease was a universal APK with four ABI copies of ML Kit
+    // Translate, ML Kit Face Detection and TensorFlow Lite (~105 MB of .so),
+    // which is why AppGallery looked many times larger than Play.
+    // ABI splits affect APKs only; bundleRelease still contains every ABI.
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("arm64-v8a")
+            isUniversalApk = false
+        }
     }
 
     packaging {
